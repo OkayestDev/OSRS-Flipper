@@ -21,7 +21,7 @@ import net.runelite.client.RuneLite;
  * Read/Writes information to json file for storage
  */
 @Slf4j
-public class TradePersister {
+public class TradePersisterController {
     public static final File PARENT_DIRECTORY = new File(RuneLite.RUNELITE_DIR, "flipper");
 
     /**

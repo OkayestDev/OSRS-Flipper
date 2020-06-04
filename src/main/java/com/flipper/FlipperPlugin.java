@@ -1,5 +1,6 @@
 package com.flipper;
 
+import com.flipper.controller.GrandExchangeController;
 import com.google.inject.Provides;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -48,7 +49,8 @@ public class FlipperPlugin extends Plugin
 
 	@Subscribe
 	public void onGrandExchangeOfferChanged(GrandExchangeOfferChanged newOfferEvent) {
-		log.info(newOfferEvent.toString());
+
+		GrandExchangeController.handleOnGrandExchangeOfferChanged(newOfferEvent);
 	}
 
 	@Provides

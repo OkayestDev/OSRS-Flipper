@@ -13,12 +13,6 @@ public class OfferInfo {
     public static void fromGrandExchangeEvent(GrandExchangeOfferChanged event) {
         GrandExchangeOffer offer = event.getOffer();
 
-        boolean isBuy = offer.getState() == GrandExchangeOfferState.BOUGHT
-                || offer.getState() == GrandExchangeOfferState.CANCELLED_BUY
-                || offer.getState() == GrandExchangeOfferState.BUYING;
-
-        log.info(offer.toString());
-
 //        return new OfferInfo(
 //                isBuy,
 //                offer.getItemId(),
