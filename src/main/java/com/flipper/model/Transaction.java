@@ -13,7 +13,7 @@ import java.time.Instant;
 @AllArgsConstructor
 public class Transaction {
     private int quantity;
-    private Item item;
+    private int itemId;
     private int price;
     Instant time;
     private boolean isBuy;
