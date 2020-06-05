@@ -13,12 +13,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Read/Writes information to json file for storage
  */
-@Slf4j
 public class TradePersisterController {
     public static final File PARENT_DIRECTORY = new File(RuneLite.RUNELITE_DIR, "flipper");
     public File directory;
@@ -51,14 +49,14 @@ public class TradePersisterController {
         File file = new File(this.directory, filename);
         if (!file.exists()) {
             if (!file.createNewFile()) {
-                log.info("Failed to generate file {} ", file.getPath());
+                Log.info("Failed to generate file " + file.getPath());
             }
         }
     }
 
     private void createDirectory(File directory) throws IOException {
         if (!directory.exists()) {
-            log.info("Creating flipper directory");
+            Log.info("Creating flipper directory");
             if (!directory.mkdir()) {
                 throw new IOException("unable to create parent directory!");
             }
@@ -95,7 +93,7 @@ public class TradePersisterController {
             // Flips
             saveJson(flips, FLIPS_JSON_FILE);
         } catch (Exception error) {
-            log.info("Failed to save some transactions {}", error.toString());
+            Log.info("Failed to save some transactions " + error.toString());
             return false;
         }
 
