@@ -29,15 +29,27 @@ public class TradePersisterController {
     public TradePersisterController(String directoryPath) throws IOException {
         this.directory = new File(directoryPath);
         createDirectory(this.directory);
+        createRequiredFiles();
     }
 
     public TradePersisterController() throws IOException {
         this.directory = PARENT_DIRECTORY;
         createDirectory(PARENT_DIRECTORY);
+        createRequiredFiles();
     }
 
-    private void generateFileIfDoesNotExist(File file) throws IOException {
-        if(!file.exists()) {
+    /**
+     * Creates 3 required json files, sells, buys, flips
+     */
+    private void createRequiredFiles() throws IOException {
+        generateFileIfDoesNotExist(SELLS_JSON_FILE);
+        generateFileIfDoesNotExist(BUYS_JSON_FILE);
+        generateFileIfDoesNotExist(FLIPS_JSON_FILE);
+    }
+
+    private void generateFileIfDoesNotExist(String filename) throws IOException {
+        File file = new File(this.directory, filename);
+        if (!file.exists()) {
             if (!file.createNewFile()) {
                 log.info("Failed to generate file {} ", file.getPath());
             }
@@ -56,7 +68,6 @@ public class TradePersisterController {
     public void saveJson(List<?> list, String filename) throws IOException {
         final Gson gson = new Gson();
         File file = new File(this.directory, filename);
-        generateFileIfDoesNotExist(file);
         final String json = gson.toJson(list);
         Files.write(file.toPath(), json.getBytes());
     }
@@ -69,7 +80,8 @@ public class TradePersisterController {
 
     /**
      * Saves transaction to flipper's json
-     * @param buys list of buys
+     * 
+     * @param buys  list of buys
      * @param sells list of sells
      * @param flips list of flips
      * @return whether transactions has been successfully saved
@@ -93,21 +105,24 @@ public class TradePersisterController {
     public List<Flip> loadFlips() throws IOException {
         Gson gson = new Gson();
         String jsonString = getFileContent(FLIPS_JSON_FILE);
-        Type type = new TypeToken<List<Flip>>(){}.getType();
+        Type type = new TypeToken<List<Flip>>() {
+        }.getType();
         return gson.fromJson(jsonString, type);
     }
 
     public List<Transaction> loadBuys() throws IOException {
         Gson gson = new Gson();
         String jsonString = getFileContent(BUYS_JSON_FILE);
-        Type type = new TypeToken<List<Transaction>>(){}.getType();
+        Type type = new TypeToken<List<Transaction>>() {
+        }.getType();
         return gson.fromJson(jsonString, type);
     }
 
     public List<Transaction> loadSells() throws IOException {
         Gson gson = new Gson();
         String jsonString = getFileContent(SELLS_JSON_FILE);
-        Type type = new TypeToken<List<Transaction>>(){}.getType();
+        Type type = new TypeToken<List<Transaction>>() {
+        }.getType();
         return gson.fromJson(jsonString, type);
     }
 }
