@@ -2,24 +2,18 @@ package com.flipper.controller;
 
 import com.flipper.model.Flip;
 import com.flipper.model.Transaction;
+
 import net.runelite.client.RuneLite;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
-import com.google.gson.reflect.TypeToken;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.client.RuneLite;
 
 /**
  * Read/Writes information to json file for storage

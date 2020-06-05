@@ -1,6 +1,7 @@
 package com.flipper.controller;
 
 import com.flipper.model.Transaction;
+
 import net.runelite.api.GrandExchangeOffer;
 import net.runelite.api.GrandExchangeOfferState;
 import net.runelite.api.events.GrandExchangeOfferChanged;
@@ -48,13 +49,5 @@ public class GrandExchangeController {
         }
 
         return null;
-    }
-
-    public static void handleOnBuy(GrandExchangeOffer buy) {
-
-    }
-
-    public static void handleOnSell(GrandExchangeOffer sell) {
-
     }
 }

@@ -5,6 +5,8 @@ import com.flipper.model.Transaction;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.File;
 import java.nio.file.Path;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -57,6 +59,12 @@ public class TradePersisterControllerTest {
     @After
     public void tearDown() throws IOException {
         // Delete any generated test-result-files
+        File deleteBuys = new File(this.testFilePath + "\\" + TradePersisterController.BUYS_JSON_FILE);
+        File deleteSells = new File(this.testFilePath + "\\" + TradePersisterController.SELLS_JSON_FILE);
+        File deleteFlips = new File(this.testFilePath + "\\" + TradePersisterController.FLIPS_JSON_FILE);
+        deleteBuys.delete();
+        deleteSells.delete();
+        deleteFlips.delete();
     }
 
     @Test
@@ -64,6 +72,12 @@ public class TradePersisterControllerTest {
         boolean isSaved = tradePersisterController.saveTransactions(buys, sells, flips);
         assertTrue(isSaved);
         // Ensure the three files have been created: flipper-buys.json, flipper-sells.json, flipper-flips.json
+        File buysFile = new File(this.testFilePath + "\\" + TradePersisterController.BUYS_JSON_FILE);
+        File sellsFile = new File(this.testFilePath + "\\" + TradePersisterController.SELLS_JSON_FILE);
+        File flipsFile = new File(this.testFilePath + "\\" + TradePersisterController.FLIPS_JSON_FILE);
+        assertTrue(buysFile.exists());
+        assertTrue(sellsFile.exists());
+        assertTrue(flipsFile.exists());
     }
 
     @Test
@@ -71,7 +85,10 @@ public class TradePersisterControllerTest {
         // Create test file to load
         tradePersisterController.saveJson(flips, TradePersisterController.FLIPS_JSON_FILE);
         List<Flip> returnedFlips = tradePersisterController.loadFlips();
-        assertEquals(returnedFlips.get(0).getBuy().getItemId(), flip.getBuy().getItemId());
+        assertEquals(
+            returnedFlips.get(0).getBuy().getItemId(),
+            flip.getBuy().getItemId()
+        );
     }
 
     @Test

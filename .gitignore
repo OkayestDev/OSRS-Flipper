@@ -7,4 +7,5 @@ build
 nbactions.xml
 nb-configuration.xml
 nbproject/
+bin/
 src/test/java/com/flipper/test-result-files
