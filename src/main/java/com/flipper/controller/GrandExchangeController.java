@@ -25,6 +25,11 @@ public class GrandExchangeController {
                 state == GrandExchangeOfferState.CANCELLED_BUY;
     }
 
+    /**
+     * Potentially creates a transaction based on the GrandExchange event
+     * @param newOfferEvent
+     * @return null or newly created transaction
+     */
     public static Transaction handleOnGrandExchangeOfferChanged(GrandExchangeOfferChanged newOfferEvent) {
         GrandExchangeOffer offer = newOfferEvent.getOffer();
         GrandExchangeOfferState state = offer.getState();
@@ -40,10 +45,6 @@ public class GrandExchangeController {
                 Instant.now(),
                 isBuy
             );
-
-            // Handle potential flip here?
-            if (!isBuy) {
-            }
 
             return transaction;
         }

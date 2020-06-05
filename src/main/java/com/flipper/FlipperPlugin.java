@@ -28,18 +28,17 @@ public class FlipperPlugin extends Plugin {
 	private FlipperConfig config;
 
 	private FlipperController flipperController;
-	private TradePersisterController tradePersisterController;
 
 	@Override
 	protected void startUp() throws Exception {
 		log.info("Flipper started!");
 		flipperController = new FlipperController();
-		tradePersisterController = new TradePersisterController();
 	}
 
 	@Override
 	protected void shutDown() throws Exception {
 		log.info("Flipper stopped!");
+		flipperController.saveAll();
 	}
 
 	@Subscribe
@@ -55,6 +54,7 @@ public class FlipperPlugin extends Plugin {
 		// Transaction created. Save to json
 		if (transaction != null) {
 			// boolean isSaved = tradePersisterController.saveTransactions();
+			flipperController.addTransaction(transaction);
 		}
 	}
 
