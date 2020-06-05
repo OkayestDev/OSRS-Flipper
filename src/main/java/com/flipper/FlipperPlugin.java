@@ -1,6 +1,8 @@
 package com.flipper;
 
 import com.flipper.controller.GrandExchangeController;
+import com.flipper.controller.TradePersisterController;
+import com.flipper.model.Transaction;
 import com.google.inject.Provides;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -18,44 +20,44 @@ import net.runelite.client.plugins.PluginDescriptor;
 @PluginDescriptor(
 	name = "Flipper"
 )
-public class FlipperPlugin extends Plugin
-{
+public class FlipperPlugin extends Plugin {
 	@Inject
 	private Client client;
 
 	@Inject
 	private FlipperConfig config;
 
+	private TradePersisterController tradePersisterController;
+
 	@Override
-	protected void startUp() throws Exception
-	{
+	protected void startUp() throws Exception {
 		log.info("Flipper started!");
+		tradePersisterController = new TradePersisterController();
 	}
 
 	@Override
-	protected void shutDown() throws Exception
-	{
+	protected void shutDown() throws Exception {
 		log.info("Flipper stopped!");
 	}
 
 	@Subscribe
-	public void onGameStateChanged(GameStateChanged gameStateChanged)
-	{
-		if (gameStateChanged.getGameState() == GameState.LOGGED_IN)
-		{
+	public void onGameStateChanged(GameStateChanged gameStateChanged) {
+		if (gameStateChanged.getGameState() == GameState.LOGGED_IN) {
 			client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", "Flipper says " + config.greeting(), null);
 		}
 	}
 
 	@Subscribe
 	public void onGrandExchangeOfferChanged(GrandExchangeOfferChanged newOfferEvent) {
-
-		GrandExchangeController.handleOnGrandExchangeOfferChanged(newOfferEvent);
+		Transaction transaction = GrandExchangeController.handleOnGrandExchangeOfferChanged(newOfferEvent);
+		// Transaction created. Save to json
+		if (transaction != null) {
+//			boolean isSaved = tradePersisterController.saveTransactions();
+		}
 	}
 
 	@Provides
-	FlipperConfig provideConfig(ConfigManager configManager)
-	{
+	FlipperConfig provideConfig(ConfigManager configManager) {
 		return configManager.getConfig(FlipperConfig.class);
 	}
 }

@@ -1,17 +1,16 @@
 package com.flipper.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 /**
  * Represents a buy and sell (flip) of an item
  */
+@Data
+@AllArgsConstructor
 public class Flip {
     final private Transaction buy;
     final private Transaction sell;
-    private boolean isMarginCheck;
-
-    public Flip(Transaction buy, Transaction sell) {
-        this.buy = buy;
-        this.sell = sell;
-    }
 
     public int getTotalProfit() {
         return sell.getTotalPrice() - buy.getTotalPrice();

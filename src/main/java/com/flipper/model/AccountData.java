@@ -8,4 +8,5 @@ import java.util.List;
 public class AccountData {
     private List<Transaction> buys;
     private List<Transaction> sells;
+    private List<Flip> flips;
 }

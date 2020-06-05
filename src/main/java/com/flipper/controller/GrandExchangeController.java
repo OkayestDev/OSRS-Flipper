@@ -42,7 +42,6 @@ public class GrandExchangeController {
 
             // Handle potential flip here?
             if (!isBuy) {
-
             }
 
             return transaction;
