@@ -2,15 +2,19 @@ package com.flipper.helpers;
 
 import com.flipper.model.Flip;
 import com.flipper.model.Transaction;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.io.IOException;
+
 import java.nio.file.Paths;
+import java.nio.file.Path;
+
 import java.time.Instant;
+
 import java.util.ArrayList;
 import java.util.List;
 

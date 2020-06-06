@@ -1,18 +1,14 @@
 package com.flipper.view.buys;
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.flipper.FlipperPlugin;
+import com.flipper.helpers.Log;
 import com.flipper.model.Transaction;
-import net.runelite.client.ui.ColorScheme;
-import net.runelite.client.ui.PluginPanel;
-import net.runelite.client.ui.components.IconTextField;
-import net.runelite.client.ui.components.PluginErrorPanel;
-
-import lombok.Setter;
 
 public class BuysPanel extends JPanel {
     FlipperPlugin plugin;
@@ -27,11 +23,19 @@ public class BuysPanel extends JPanel {
     }
 
     /**
-     * Updates view with new buys list
+     * rebuilds the view based on passed buys list
      * 
      * @param buys
      */
-    public void updatePanel(List<Transaction> buys) {
-
+    public void rebuildPanel(List<Transaction> buys) {
+        Log.info("Rebuilding Buys Panel with: " + buys.toString());
+        this.removeAll();
+        Iterator<Transaction> buysIterator = buys.iterator();
+        while (buysIterator.hasNext()) {
+            Transaction buy = buysIterator.next();
+            JLabel itemIdLabel = new JLabel();
+            itemIdLabel.setText(Integer.toString(buy.getItemId()));
+            this.add(itemIdLabel);
+        }
     }
 }

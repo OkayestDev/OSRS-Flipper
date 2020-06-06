@@ -1,6 +1,7 @@
 package com.flipper.controller;
 
 import com.flipper.FlipperPlugin;
+import com.flipper.helpers.Log;
 import com.flipper.view.buys.BuysPanel;
 import com.flipper.view.sells.SellsPanel;
 import com.flipper.view.flips.FlipsPanel;
@@ -17,19 +18,16 @@ public class TabManagerController {
     private ScheduledExecutorService executor;
     private ClientToolbar clientToolbar;
 
-    private BuysController buysController;
-
     public TabManagerController(
-        FlipperPlugin flipperPlugin, 
+        FlipperPlugin flipperPlugin,
         ScheduledExecutorService executor,
         ClientToolbar clientToolbar,
-        BuysController buysController
+        BuysPanel buysPanel
     ) {
-        this.buysController = buysController;
         this.flipperPlugin = flipperPlugin;
         this.executor = executor;
-        this.clientToolbar = clientToolbar;              
-        tabManager = new TabManager(this::changeView, this.buysController.getPanel());
+        this.clientToolbar = clientToolbar;    
+        tabManager = new TabManager(buysPanel);
         setUpNavigationButton();
     }
 
@@ -41,9 +39,5 @@ public class TabManagerController {
                 .panel(tabManager)
                 .build();
         clientToolbar.addNavigation(navButton);
-    }
-
-    public void changeView(String selectedName) {
-
     }
 }

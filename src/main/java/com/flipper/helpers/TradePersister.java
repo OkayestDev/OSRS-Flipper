@@ -12,6 +12,7 @@ import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -115,7 +116,11 @@ public class TradePersister {
         String jsonString = getFileContent(FLIPS_JSON_FILE);
         Type type = new TypeToken<List<Flip>>() {
         }.getType();
-        return gson.fromJson(jsonString, type);
+        List<Flip> flips = gson.fromJson(jsonString, type);
+        if (flips == null) {
+            return new ArrayList<Flip>();
+        }
+        return flips;
     }
 
     public static List<Transaction> loadBuys() throws IOException {
@@ -123,7 +128,11 @@ public class TradePersister {
         String jsonString = getFileContent(BUYS_JSON_FILE);
         Type type = new TypeToken<List<Transaction>>() {
         }.getType();
-        return gson.fromJson(jsonString, type);
+        List<Transaction> buys = gson.fromJson(jsonString, type);
+        if (buys == null) {
+            return new ArrayList<Transaction>();
+        }
+        return buys;
     }
 
     public static List<Transaction> loadSells() throws IOException {
@@ -131,6 +140,10 @@ public class TradePersister {
         String jsonString = getFileContent(SELLS_JSON_FILE);
         Type type = new TypeToken<List<Transaction>>() {
         }.getType();
-        return gson.fromJson(jsonString, type);
+        List<Transaction> sells = gson.fromJson(jsonString, type);
+        if (sells == null) {
+            return new ArrayList<Transaction>();
+        }
+        return sells;
     }
 }

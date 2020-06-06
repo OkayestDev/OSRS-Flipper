@@ -5,8 +5,6 @@ import com.flipper.helpers.Log;
 import com.flipper.helpers.TradePersister;
 import com.flipper.controller.TabManagerController;
 import com.flipper.controller.BuysController;
-import com.flipper.controller.FlipsController;
-import com.flipper.controller.SellsController;
 import com.flipper.model.Transaction;
 import com.google.inject.Provides;
 import java.io.IOException;
@@ -39,29 +37,20 @@ public class FlipperPlugin extends Plugin {
 	@Inject
 	private ClientToolbar clientToolbar;
 	// Controllers
-	private SellsController sellsController;
 	private BuysController buysController;
-	private FlipsController flipsController;
 	private TabManagerController tabManagerController;
 
 	@Override
 	protected void startUp() throws Exception {
 		Log.info("Flipper started!");
-
-		clientThread.invokeLater(() -> {
-			try {
-				TradePersister.setUp();
-				buysController = new BuysController(this);
-				tabManagerController = new TabManagerController(
-					this,
-					executor,
-					clientToolbar,
-					buysController
-				);
-			} catch (IOException error) {
-				Log.info("Flipper start up error " + error.toString());
-			}
-		});
+		TradePersister.setUp();
+		buysController = new BuysController(this);
+		tabManagerController = new TabManagerController(
+			this,
+			executor,
+			clientToolbar,
+			buysController.getPanel()
+		);
 	}
 
 	@Override
