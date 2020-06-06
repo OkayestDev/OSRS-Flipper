@@ -1,4 +1,4 @@
-package com.flipper.view.buys;
+package com.flipper.view.sells;
 
 import java.util.List;
 
@@ -14,24 +14,24 @@ import net.runelite.client.ui.components.PluginErrorPanel;
 
 import lombok.Setter;
 
-public class BuysPanel extends JPanel {
+public class SellsPanel extends JPanel {
     FlipperPlugin plugin;
-    JLabel buyPriceVal = new JLabel();
+    JLabel sellPriceVal = new JLabel();
     JLabel profitEachVal = new JLabel();
     JLabel profitTotalVal = new JLabel();
     JLabel limitLabel = new JLabel();
     JLabel roiLabel = new JLabel();
 
-    public BuysPanel(final FlipperPlugin plugin) {
+    public SellsPanel(final FlipperPlugin plugin) {
         this.plugin = plugin;
     }
 
     /**
-     * Updates view with new buys list
+     * Updates view with new sells list
      * 
-     * @param buys
+     * @param sells
      */
-    public void updatePanel(List<Transaction> buys) {
+    public void updatePanel(List<Transaction> sells) {
 
     }
 }

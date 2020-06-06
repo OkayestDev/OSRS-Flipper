@@ -1,30 +1,21 @@
-package com.flipper.controller;
+package com.flipper.helpers;
 
 import com.flipper.mocks.MockGrandExchangeOffer;
 import com.flipper.mocks.MockGrandExchangeOfferChanged;
 import com.flipper.model.Transaction;
 import net.runelite.api.GrandExchangeOfferState;
+import com.flipper.helpers.GrandExchange;
 import org.junit.*;
 import static org.junit.Assert.*;
 
-public class GrandExchangeControllerTest {
-    @Test
-    public void testHandleOnGrandExchangeOfferChanged() {
-//        MockGrandExchangeOfferChanged mockGrandExchangeOffer = new MockGrandExchangeOfferChanged(
-//            1,
-//            new MockGrandExchangeOffer(1, 1, 1, 1, 1, GrandExchangeOfferState.BOUGHT)
-//        );
-//        boolean result = GrandExchangeController.handleOnGrandExchangeOfferChanged(mockGrandExchangeOffer);
-//        assertTrue(result);
-    }
-
+public class GrandExchangeTest {
     @Test
     public void testHandleOnGrandExchangeOfferChangedReturnsNullIfNotComplete() {
         MockGrandExchangeOfferChanged mockGrandExchangeOffer = new MockGrandExchangeOfferChanged(
                 1,
                 new MockGrandExchangeOffer(1, 1, 1, 1, 1, GrandExchangeOfferState.SELLING)
         );
-        Transaction result = GrandExchangeController.handleOnGrandExchangeOfferChanged(mockGrandExchangeOffer);
+        Transaction result = GrandExchange.handleOnGrandExchangeOfferChanged(mockGrandExchangeOffer);
         assertNull(null, result);
     }
 
@@ -34,7 +25,7 @@ public class GrandExchangeControllerTest {
                 1,
                 new MockGrandExchangeOffer(1, 1, 1, 1, 1, GrandExchangeOfferState.BOUGHT)
         );
-        Transaction result = GrandExchangeController.handleOnGrandExchangeOfferChanged(mockGrandExchangeOffer);
+        Transaction result = GrandExchange.handleOnGrandExchangeOfferChanged(mockGrandExchangeOffer);
         assertNotNull(result);
         assertTrue(result.isBuy());
     }
@@ -45,7 +36,7 @@ public class GrandExchangeControllerTest {
                 1,
                 new MockGrandExchangeOffer(1, 1, 1, 1, 1, GrandExchangeOfferState.SOLD)
         );
-        Transaction result = GrandExchangeController.handleOnGrandExchangeOfferChanged(mockGrandExchangeOffer);
+        Transaction result = GrandExchange.handleOnGrandExchangeOfferChanged(mockGrandExchangeOffer);
         assertNotNull(result);
         assertFalse(result.isBuy());
     }

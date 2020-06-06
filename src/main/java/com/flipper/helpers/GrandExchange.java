@@ -1,4 +1,4 @@
-package com.flipper.controller;
+package com.flipper.helpers;
 
 import com.flipper.model.Transaction;
 
@@ -11,7 +11,7 @@ import java.time.Instant;
 /**
  * Handles GrandExchange events
  */
-public class GrandExchangeController {
+public class GrandExchange {
     public static boolean checkIsBuy(GrandExchangeOfferState state) {
         return state == GrandExchangeOfferState.BOUGHT ||
                 state == GrandExchangeOfferState.CANCELLED_BUY ||

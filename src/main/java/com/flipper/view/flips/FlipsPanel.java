@@ -1,4 +1,4 @@
-package com.flipper.view;
+package com.flipper.view.flips;
 
 import com.flipper.FlipperPlugin;
 import com.google.common.base.Strings;
@@ -35,37 +35,37 @@ import net.runelite.client.ui.PluginPanel;
 import net.runelite.client.ui.components.IconTextField;
 import net.runelite.client.ui.components.PluginErrorPanel;
 
-public class FlipperPanel extends JPanel {
+public class FlipsPanel extends JPanel {
     private FlipperPlugin plugin;
 
     @Getter
-	private static final String WELCOME_PANEL = "WELCOME_PANEL";
-	private static final String ITEMS_PANEL = "ITEMS_PANEL";
-	private static final int DEBOUNCE_DELAY_MS = 250;
-	private static final Border TOP_PANEL_BORDER = new CompoundBorder(
-		BorderFactory.createMatteBorder(0, 0, 1, 0, ColorScheme.BRAND_ORANGE),
-		BorderFactory.createEmptyBorder(4, 0, 0, 0));
+    private static final String WELCOME_PANEL = "WELCOME_PANEL";
+    private static final String ITEMS_PANEL = "ITEMS_PANEL";
+    private static final int DEBOUNCE_DELAY_MS = 250;
+    private static final Border TOP_PANEL_BORDER = new CompoundBorder(
+            BorderFactory.createMatteBorder(0, 0, 1, 0, ColorScheme.BRAND_ORANGE),
+            BorderFactory.createEmptyBorder(4, 0, 0, 0));
 
-	//Main item panel that holds all the shown items.
-	private final JPanel flippingItemsPanel = new JPanel();
+    // Main item panel that holds all the shown items.
+    private final JPanel flippingItemsPanel = new JPanel();
 
-	private final IconTextField searchBar = new IconTextField();
-	private Future<?> runningRequest = null;
+    private final IconTextField searchBar = new IconTextField();
+    private Future<?> runningRequest = null;
 
-	//Constraints for items in the item panel.
-	private final GridBagConstraints constraints = new GridBagConstraints();
-	public final CardLayout cardLayout = new CardLayout();
+    // Constraints for items in the item panel.
+    private final GridBagConstraints constraints = new GridBagConstraints();
+    public final CardLayout cardLayout = new CardLayout();
 
-	@Getter
-	public final JPanel centerPanel = new JPanel(cardLayout);
+    @Getter
+    public final JPanel centerPanel = new JPanel(cardLayout);
 
-	// // Keeps track of all items currently displayed on the panel.
-	// private ArrayList<FlippingItemPanel> activePanels = new ArrayList<>();
+    // // Keeps track of all items currently displayed on the panel.
+    // private ArrayList<FlippingItemPanel> activePanels = new ArrayList<>();
 
-	@Getter
-	JLabel resetIcon;
+    @Getter
+    JLabel resetIcon;
 
-    public FlipperPanel(final FlipperPlugin plugin, ScheduledExecutorService executor) {
+    public FlipsPanel(final FlipperPlugin plugin, ScheduledExecutorService executor) {
         super(false);
         this.plugin = plugin;
 
@@ -101,16 +101,18 @@ public class FlipperPanel extends JPanel {
         // searchBar.setIcon(IconTextField.Icon.SEARCH);
         // searchBar.setPreferredSize(new Dimension(PluginPanel.PANEL_WIDTH - 20, 30));
         // searchBar.setBackground(ColorScheme.DARK_GRAY_COLOR);
-        // searchBar.setBorder(BorderFactory.createMatteBorder(0, 5, 5, 5, ColorScheme.DARKER_GRAY_COLOR.darker()));
+        // searchBar.setBorder(BorderFactory.createMatteBorder(0, 5, 5, 5,
+        // ColorScheme.DARKER_GRAY_COLOR.darker()));
         // searchBar.setHoverBackgroundColor(ColorScheme.DARKER_GRAY_HOVER_COLOR);
         // searchBar.setMinimumSize(new Dimension(0, 35));
         // searchBar.addActionListener(e -> executor.execute(this::updateSearch));
         // searchBar.addClearListener(e -> updateSearch());
         // searchBar.addKeyListener(key -> {
-        //     if (runningRequest != null) {
-        //         runningRequest.cancel(false);
-        //     }
-        //     runningRequest = executor.schedule(this::updateSearch, DEBOUNCE_DELAY_MS, TimeUnit.MILLISECONDS);
+        // if (runningRequest != null) {
+        // runningRequest.cancel(false);
+        // }
+        // runningRequest = executor.schedule(this::updateSearch, DEBOUNCE_DELAY_MS,
+        // TimeUnit.MILLISECONDS);
         // });
 
         // Contains a greeting message when the items panel is empty.
@@ -126,41 +128,42 @@ public class FlipperPanel extends JPanel {
         // resetIcon.setToolTipText("Reset trade history");
         // resetIcon.setPreferredSize(ICON_SIZE);
         // resetIcon.addMouseListener(new MouseAdapter() {
-        //     @Override
-        //     public void mousePressed(MouseEvent e) {
-        //         if (SwingUtilities.isLeftMouseButton(e)) {
-        //             // Display warning message
-        //             final int result = JOptionPane.showOptionDialog(resetIcon,
-        //                     "Are you sure you want to reset the flipping panel?", "Are you sure?",
-        //                     JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, new String[] { "Yes", "No" },
-        //                     "No");
+        // @Override
+        // public void mousePressed(MouseEvent e) {
+        // if (SwingUtilities.isLeftMouseButton(e)) {
+        // // Display warning message
+        // final int result = JOptionPane.showOptionDialog(resetIcon,
+        // "Are you sure you want to reset the flipping panel?", "Are you sure?",
+        // JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, new String[] {
+        // "Yes", "No" },
+        // "No");
 
-        //             // If the user pressed "Yes"
-        //             if (result == JOptionPane.YES_OPTION) {
-        //                 resetPanel();
-        //                 cardLayout.show(centerPanel, FlippingPanel.getWELCOME_PANEL());
-        //                 rebuild(plugin.getTradesForCurrentView());
-        //             }
-        //         }
-        //     }
+        // // If the user pressed "Yes"
+        // if (result == JOptionPane.YES_OPTION) {
+        // resetPanel();
+        // cardLayout.show(centerPanel, FlippingPanel.getWELCOME_PANEL());
+        // rebuild(plugin.getTradesForCurrentView());
+        // }
+        // }
+        // }
 
-        //     @Override
-        //     public void mouseEntered(MouseEvent e) {
-        //         resetIcon.setIcon(RESET_HOVER_ICON);
-        //     }
+        // @Override
+        // public void mouseEntered(MouseEvent e) {
+        // resetIcon.setIcon(RESET_HOVER_ICON);
+        // }
 
-        //     @Override
-        //     public void mouseExited(MouseEvent e) {
-        //         resetIcon.setIcon(RESET_ICON);
-        //     }
+        // @Override
+        // public void mouseExited(MouseEvent e) {
+        // resetIcon.setIcon(RESET_ICON);
+        // }
         // });
 
         // final JMenuItem clearMenuOption = new JMenuItem("Reset all panels");
         // clearMenuOption.addActionListener(e -> {
-        //     resetPanel();
-        //     plugin.getStatPanel().resetPanel();
-        //     rebuild(plugin.getTradesForCurrentView());
-        //     plugin.getStatPanel().rebuild(plugin.getTradesForCurrentView());
+        // resetPanel();
+        // plugin.getStatPanel().resetPanel();
+        // rebuild(plugin.getTradesForCurrentView());
+        // plugin.getStatPanel().rebuild(plugin.getTradesForCurrentView());
         // });
 
         // final JPopupMenu popupMenu = new JPopupMenu();
