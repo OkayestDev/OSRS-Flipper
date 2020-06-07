@@ -15,12 +15,6 @@ public class BuysController {
     private List<Transaction> buys;
     private BuysPanel buysPanel;
 
-    /**
-     * Todo figure if reference to plugin is even required?
-     * @param plugin
-     * @param TradePersister
-     * @throws IOException
-     */
     public BuysController(ItemManager itemManager) throws IOException {
         this.buysPanel = new BuysPanel(itemManager);
         this.loadBuys();

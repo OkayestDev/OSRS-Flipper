@@ -6,21 +6,18 @@ import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JScrollPane;
 
-import com.flipper.FlipperPlugin;
-import com.flipper.helpers.Log;
+import java.awt.Dimension;
+
 import com.flipper.model.Transaction;
-import com.flipper.view.components.TransactionPanel;
-
 import net.runelite.client.game.ItemManager;
+import net.runelite.client.ui.ColorScheme;
 
 public class BuysPanel extends JPanel {
     ItemManager itemManager;
-    JLabel buyPriceVal = new JLabel();
-    JLabel profitEachVal = new JLabel();
-    JLabel profitTotalVal = new JLabel();
-    JLabel limitLabel = new JLabel();
-    JLabel roiLabel = new JLabel();
+    JScrollPane buysScrollPane;
 
     public BuysPanel(ItemManager itemManager) {
         this.itemManager = itemManager;
@@ -34,12 +31,20 @@ public class BuysPanel extends JPanel {
     public void rebuildPanel(List<Transaction> buys) {
         SwingUtilities.invokeLater(() -> {
             this.removeAll();
+
+            // buysScrollPane = new JScrollPane();
+            // buysScrollPane.setBackground(ColorScheme.DARK_GRAY_COLOR);
+            // buysScrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(5, 0));
+            // buysScrollPane.getVerticalScrollBar().setBorder(new EmptyBorder(0, 0, 0, 0));
+
             Iterator<Transaction> buysIterator = buys.iterator();
             while (buysIterator.hasNext()) {
                 Transaction buy = buysIterator.next();
-                TransactionPanel buyTransactionPanel = new TransactionPanel(buy, itemManager);
+                BuyPanel buyTransactionPanel = new BuyPanel(buy, itemManager);
                 this.add(buyTransactionPanel);
             }
+
+            // this.add(buysScrollPane);
         });
     }
 }

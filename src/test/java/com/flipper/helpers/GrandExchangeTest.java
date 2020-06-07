@@ -16,13 +16,14 @@ import static org.junit.Assert.*;
 public class GrandExchangeTest {
     ItemManager itemManager;
     ItemComposition itemComposition;
+    String testItemName = "Test Item Name";
 
     @Before
     public void setUp() {
         itemManager = mock(ItemManager.class);
         itemComposition = mock(ItemComposition.class);
         when(itemManager.getItemComposition(1)).thenReturn(itemComposition);
-        when(itemComposition.getName()).thenReturn("Test Item Name");
+        when(itemComposition.getName()).thenReturn(testItemName);
     }
 
     @Test
@@ -44,6 +45,7 @@ public class GrandExchangeTest {
         Transaction result = GrandExchange.handleOnGrandExchangeOfferChanged(mockGrandExchangeOffer, itemManager);
         assertNotNull(result);
         assertTrue(result.isBuy());
+        assertEquals(result.getItemName(), testItemName);
     }
 
     @Test
@@ -55,5 +57,6 @@ public class GrandExchangeTest {
         Transaction result = GrandExchange.handleOnGrandExchangeOfferChanged(mockGrandExchangeOffer, itemManager);
         assertNotNull(result);
         assertFalse(result.isBuy());
+        assertEquals(result.getItemName(), testItemName);
     }
 }
