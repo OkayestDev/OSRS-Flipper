@@ -13,12 +13,14 @@ import javax.inject.Inject;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
+import net.runelite.api.ItemComposition;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GrandExchangeOfferChanged;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ClientShutdown;
+import net.runelite.client.game.ItemManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.ClientToolbar;
@@ -36,15 +38,17 @@ public class FlipperPlugin extends Plugin {
 	private ClientThread clientThread;
 	@Inject
 	private ClientToolbar clientToolbar;
+	@Inject
+	private ItemManager itemManager;
 	// Controllers
 	private BuysController buysController;
 	private TabManagerController tabManagerController;
 
+	/** @todo figure how to run panel updates on dispatch thread */
 	@Override
 	protected void startUp() throws Exception {
-		Log.info("Flipper started!");
 		TradePersister.setUp();
-		buysController = new BuysController(this);
+		buysController = new BuysController(itemManager);
 		tabManagerController = new TabManagerController(
 			this,
 			executor,
@@ -53,10 +57,14 @@ public class FlipperPlugin extends Plugin {
 		);
 	}
 
+	@Subscribe
+	public void onGameStateChanged(GameStateChanged event) {
+	}
+
 	@Override
 	protected void shutDown() throws Exception {
 		Log.info("Flipper stopped!");
-		// flipperController.saveAll();
+		buysController.saveBuys();
 	}
 
 	/**
@@ -69,20 +77,13 @@ public class FlipperPlugin extends Plugin {
 	 */
 	@Subscribe(priority = 101)
 	public void onClientShutdown(ClientShutdown clientShutdownEvent) {
-		// flipperController.saveAll();
-	}
-
-	@Subscribe
-	public void onGameStateChanged(GameStateChanged gameStateChanged) {
-		if (gameStateChanged.getGameState() == GameState.LOGGED_IN) {
-			client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", "Flipper says " + config.greeting(), null);
-		}
+		buysController.saveBuys();
 	}
 
 	@Subscribe
 	public void onGrandExchangeOfferChanged(GrandExchangeOfferChanged newOfferEvent) {
-		Log.info("Grand Exchange Event: " + newOfferEvent.toString());
-		Transaction transaction = GrandExchange.handleOnGrandExchangeOfferChanged(newOfferEvent);
+		Log.info("New Offer" + newOfferEvent.toString());
+		Transaction transaction = GrandExchange.handleOnGrandExchangeOfferChanged(newOfferEvent, itemManager);
 		if (transaction != null) {
 			if (transaction.isBuy()) {
 				buysController.addBuy(transaction);

@@ -14,10 +14,8 @@ public class Transaction {
     private int quantity;
     private int itemId;
     private int price;
+    private int totalPrice;
+    private String itemName;
     Instant time;
     private boolean isBuy;
-
-    public int getTotalPrice() {
-        return this.quantity * this.price;
-    }
 }

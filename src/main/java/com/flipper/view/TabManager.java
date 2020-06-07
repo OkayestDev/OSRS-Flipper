@@ -3,8 +3,6 @@ package com.flipper.view;
 import java.awt.BorderLayout;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Consumer;
-import javax.inject.Inject;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -26,7 +24,6 @@ public class TabManager extends PluginPanel {
      * selected, the corresponding panel will be displayed below along with
      * indication of what tab is selected.
      */
-    @Inject
     public TabManager(BuysPanel buysPanel) {
         JPanel display = new JPanel();
         JPanel header = new JPanel(new BorderLayout());

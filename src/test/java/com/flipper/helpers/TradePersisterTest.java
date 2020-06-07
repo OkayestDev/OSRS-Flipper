@@ -39,8 +39,8 @@ public class TradePersisterTest {
                 + "\\src\\test\\java\\com\\flipper\\test-result-files";
         TradePersister.setUp(testFilePath);
 
-        buy = new Transaction(1, 1, 1, Instant.now(), true);
-        sell = new Transaction(2, 2, 2, Instant.now(), false);
+        buy = new Transaction(1, 1, 1, 1, "Coal", Instant.now(), true);
+        sell = new Transaction(2, 2, 2, 1, "Coal", Instant.now(), false);
         flip = new Flip(buy, sell);
 
         buys.add(buy);

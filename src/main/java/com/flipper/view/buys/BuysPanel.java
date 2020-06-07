@@ -5,21 +5,25 @@ import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import com.flipper.FlipperPlugin;
 import com.flipper.helpers.Log;
 import com.flipper.model.Transaction;
+import com.flipper.view.components.TransactionPanel;
+
+import net.runelite.client.game.ItemManager;
 
 public class BuysPanel extends JPanel {
-    FlipperPlugin plugin;
+    ItemManager itemManager;
     JLabel buyPriceVal = new JLabel();
     JLabel profitEachVal = new JLabel();
     JLabel profitTotalVal = new JLabel();
     JLabel limitLabel = new JLabel();
     JLabel roiLabel = new JLabel();
 
-    public BuysPanel(final FlipperPlugin plugin) {
-        this.plugin = plugin;
+    public BuysPanel(ItemManager itemManager) {
+        this.itemManager = itemManager;
     }
 
     /**
@@ -28,14 +32,14 @@ public class BuysPanel extends JPanel {
      * @param buys
      */
     public void rebuildPanel(List<Transaction> buys) {
-        Log.info("Rebuilding Buys Panel with: " + buys.toString());
-        this.removeAll();
-        Iterator<Transaction> buysIterator = buys.iterator();
-        while (buysIterator.hasNext()) {
-            Transaction buy = buysIterator.next();
-            JLabel itemIdLabel = new JLabel();
-            itemIdLabel.setText(Integer.toString(buy.getItemId()));
-            this.add(itemIdLabel);
-        }
+        SwingUtilities.invokeLater(() -> {
+            this.removeAll();
+            Iterator<Transaction> buysIterator = buys.iterator();
+            while (buysIterator.hasNext()) {
+                Transaction buy = buysIterator.next();
+                TransactionPanel buyTransactionPanel = new TransactionPanel(buy, itemManager);
+                this.add(buyTransactionPanel);
+            }
+        });
     }
 }
