@@ -27,36 +27,36 @@ public class GrandExchangeTest {
     }
 
     @Test
-    public void testHandleOnGrandExchangeOfferChangedReturnsNullIfNotComplete() {
-        MockGrandExchangeOfferChanged mockGrandExchangeOffer = new MockGrandExchangeOfferChanged(
-                1,
-                new MockGrandExchangeOffer(1, 1, 1, 1, 1, GrandExchangeOfferState.SELLING)
-        );
-        Transaction result = GrandExchange.handleOnGrandExchangeOfferChanged(mockGrandExchangeOffer, itemManager);
-        assertNull(null, result);
-    }
-
-    @Test
-    public void testHandleOnGrandExchangeOfferChangedReturnsBuyTransaction() {
-        MockGrandExchangeOfferChanged mockGrandExchangeOffer = new MockGrandExchangeOfferChanged(
-                1,
-                new MockGrandExchangeOffer(1, 1, 1, 1, 1, GrandExchangeOfferState.BOUGHT)
-        );
-        Transaction result = GrandExchange.handleOnGrandExchangeOfferChanged(mockGrandExchangeOffer, itemManager);
+    public void testCreateTransactionFromOfferReturnsBuyTransaction() {
+        MockGrandExchangeOffer mockGrandExchangeOffer = new MockGrandExchangeOffer(1, 1, 1, 1, 1, GrandExchangeOfferState.BOUGHT);
+        Transaction result = GrandExchange.createTransactionFromOffer(mockGrandExchangeOffer, itemManager);
         assertNotNull(result);
         assertTrue(result.isBuy());
         assertEquals(result.getItemName(), testItemName);
     }
 
     @Test
-    public void testHandleOnGrandExchangeOfferChangedReturnsSellTransaction() {
-        MockGrandExchangeOfferChanged mockGrandExchangeOffer = new MockGrandExchangeOfferChanged(
-                1,
-                new MockGrandExchangeOffer(1, 1, 1, 1, 1, GrandExchangeOfferState.SOLD)
-        );
-        Transaction result = GrandExchange.handleOnGrandExchangeOfferChanged(mockGrandExchangeOffer, itemManager);
+    public void testCreateTransactionFromOfferReturnsSellTransaction() {
+        MockGrandExchangeOffer mockGrandExchangeOffer = new MockGrandExchangeOffer(1, 1, 1, 1, 1, GrandExchangeOfferState.SOLD);
+        Transaction result = GrandExchange.createTransactionFromOffer(mockGrandExchangeOffer, itemManager);
         assertNotNull(result);
         assertFalse(result.isBuy());
         assertEquals(result.getItemName(), testItemName);
+    }
+
+    @Test
+    public void testCheckIsOfferPartOfTransactionReturnsTrue() {
+        Transaction buy = new Transaction(
+            1,
+            1,
+            453,
+            1,
+            testItemName,
+            true,
+            false
+        );
+        MockGrandExchangeOffer offer = new MockGrandExchangeOffer(1, 453, 1, 1, 1, GrandExchangeOfferState.BOUGHT);
+        boolean result = GrandExchange.checkIsOfferPartOfTransaction(buy, offer);
+        assertTrue(result);
     }
 }

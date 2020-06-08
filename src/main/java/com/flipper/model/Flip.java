@@ -23,7 +23,7 @@ public class Flip {
      */
     private void setMarginCheck() {
         isMarginCheck = buy.getQuantity() == 1
-                && buy.getPrice() > sell.getPrice();
+                && buy.getPricePer() > sell.getPricePer();
     }
 
     /**
@@ -32,6 +32,6 @@ public class Flip {
      */
     public int getTotalProfit() {
         int quantitySold = sell.getQuantity();
-        return sell.getTotalPrice() - (quantitySold * buy.getPrice());
+        return sell.getTotalPrice() - (quantitySold * buy.getPricePer());
     }
 }

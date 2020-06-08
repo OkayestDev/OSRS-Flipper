@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
+import net.runelite.api.GrandExchangeOffer;
 import net.runelite.api.ItemComposition;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GrandExchangeOfferChanged;
@@ -82,15 +83,14 @@ public class FlipperPlugin extends Plugin {
 
 	@Subscribe
 	public void onGrandExchangeOfferChanged(GrandExchangeOfferChanged newOfferEvent) {
-		Log.info("New Offer" + newOfferEvent.toString());
-		Transaction transaction = GrandExchange.handleOnGrandExchangeOfferChanged(newOfferEvent, itemManager);
-		if (transaction != null) {
-			if (transaction.isBuy()) {
-				buysController.addBuy(transaction);
-			} else {
-				// Add sell
-			}
+		GrandExchangeOffer offer = newOfferEvent.getOffer();
+		boolean isBuy = GrandExchange.checkIsBuy(offer.getState());
+		if (isBuy) {
+			buysController.createBuy(offer);
+		} else {
+			// add sell
 		}
+		
 	}
 
 	@Provides

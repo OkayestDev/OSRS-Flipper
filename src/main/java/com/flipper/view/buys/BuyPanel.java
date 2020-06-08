@@ -28,30 +28,27 @@ import net.runelite.client.ui.FontManager;
  *  Item Information (buy info)
  */
 public class BuyPanel extends JPanel {
-    private Transaction buy;
-    private ItemManager itemManager;
-	private Color background;
-
 	private static final Border ITEM_INFO_BORDER = new CompoundBorder(
 		BorderFactory.createMatteBorder(0, 0, 0, 0, ColorScheme.DARK_GRAY_COLOR),
 		BorderFactory.createLineBorder(ColorScheme.DARKER_GRAY_COLOR.darker(), 3));
 
-	/* Panels */
-	JPanel titlePanel = new JPanel(new BorderLayout());
-	JPanel itemInfo = new JPanel(new BorderLayout());
-	JPanel leftInfoTextPanel = new JPanel(new GridLayout(7, 1));
-    JPanel rightValuesPanel = new JPanel(new GridLayout(7, 1));
-    
-    JLabel itemName;
+    private Transaction buy;
+    private ItemManager itemManager;
+    private JLabel itemName;
+	private JPanel titlePanel = new JPanel(new BorderLayout());
+	private JPanel itemInfo = new JPanel(new BorderLayout());
+	private JPanel leftInfoTextPanel = new JPanel(new GridLayout(7, 1));
+    private JPanel rightValuesPanel = new JPanel(new GridLayout(7, 1));
 
     public BuyPanel(Transaction buy, ItemManager itemManager) {
 		this.itemManager = itemManager;
 		this.buy = buy;
+		this.setSize(400, 400);
         setLayout(new BorderLayout());
-		setBackground(ColorScheme.DARKER_GRAY_COLOR);
-		background = getBackground();
+		setBackground(ColorScheme.DARK_GRAY_COLOR);
 		constructHeader();
 		constructItemInfo();
+		this.setBorder(new EmptyBorder(0, 0, 5, 0));
     }
 
 	/**
@@ -68,14 +65,13 @@ public class BuyPanel extends JPanel {
 			itemImage.addTo(itemIcon);
 		}
 		JPanel itemClearPanel = new JPanel(new BorderLayout());
-		itemClearPanel.setBackground(background.darker());
+		itemClearPanel.setBackground(ColorScheme.DARKER_GRAY_COLOR.darker());
 		itemClearPanel.add(itemIcon, BorderLayout.WEST);
 		itemName = new JLabel(buy.getItemName(), SwingConstants.CENTER);
 		itemName.setForeground(Color.WHITE);
 		itemName.setFont(FontManager.getRunescapeBoldFont());
-		itemName.setPreferredSize(new Dimension(0, 0)); // Make sure the item name fits
-		// titlePanel.setComponentPopupMenu(UIUtilities.createGeTrackerLinksPopup(flippingItem));
-		titlePanel.setBackground(background.darker());
+		itemName.setPreferredSize(new Dimension(0, 0));
+		titlePanel.setBackground(ColorScheme.DARKER_GRAY_COLOR.darker());
 		titlePanel.add(itemClearPanel, BorderLayout.WEST);
 		titlePanel.add(itemName, BorderLayout.CENTER);
 		titlePanel.setBorder(new EmptyBorder(2, 1, 2, 1));
@@ -85,7 +81,7 @@ public class BuyPanel extends JPanel {
 	private void constructItemInfo() {
 		constructLeftLabels();
 		constructRightLabels();
-		itemInfo.setBackground(background);
+		itemInfo.setBackground(ColorScheme.DARK_GRAY_COLOR);
 		itemInfo.add(leftInfoTextPanel, BorderLayout.WEST);
 		itemInfo.add(rightValuesPanel, BorderLayout.EAST);
 		itemInfo.setBorder(ITEM_INFO_BORDER);
@@ -110,7 +106,7 @@ public class BuyPanel extends JPanel {
 	 *  Total Amount: 
 	 */
     private void constructLeftLabels() {
-		leftInfoTextPanel.setBackground(background);
+		leftInfoTextPanel.setBackground(ColorScheme.DARK_GRAY_COLOR);
 
 		JLabel quantityBoughtText = newLeftLabel("Amount Bought: ");
 		JLabel buyPriceText = newLeftLabel("Price Per: ");
@@ -120,7 +116,7 @@ public class BuyPanel extends JPanel {
 		addLeftLabel(buyPriceText);
 		addLeftLabel(totalAmountText);
 
-		leftInfoTextPanel.setBorder(new EmptyBorder(2, 5, 2, 5));
+		leftInfoTextPanel.setBorder(new EmptyBorder(2, 5, 2, 10));
 	}
 	
 	private JLabel newRightLabel(int value) {
@@ -143,16 +139,16 @@ public class BuyPanel extends JPanel {
 	 *  Total Amount:
 	 */
     private void constructRightLabels() {
-		rightValuesPanel.setBackground(background);
+		rightValuesPanel.setBackground(ColorScheme.DARK_GRAY_COLOR);
 
 		JLabel quantityBoughtValueLabel = newRightLabel(buy.getQuantity());
-		JLabel priceEachValueLabel = newRightLabel(buy.getPrice());
+		JLabel priceEachValueLabel = newRightLabel(buy.getPricePer());
 		JLabel totalPriceValueLabel = newRightLabel(buy.getTotalPrice());
 		
 		addRightLabel(quantityBoughtValueLabel);
 		addRightLabel(priceEachValueLabel);
 		addRightLabel(totalPriceValueLabel);
 
-		rightValuesPanel.setBorder(new EmptyBorder(2, 5, 2, 5));
+		rightValuesPanel.setBorder(new EmptyBorder(2, 5, 2, 10));
 	}
 }

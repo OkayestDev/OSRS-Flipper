@@ -1,17 +1,17 @@
 package com.flipper.view.buys;
 
-import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
-import javax.swing.JLabel;
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JScrollPane;
 
-import java.awt.Dimension;
+import java.awt.BorderLayout;
 
 import com.flipper.model.Transaction;
+
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.ui.ColorScheme;
 
@@ -21,6 +21,8 @@ public class BuysPanel extends JPanel {
 
     public BuysPanel(ItemManager itemManager) {
         this.itemManager = itemManager;
+        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        this.setBackground(ColorScheme.DARK_GRAY_COLOR);
     }
 
     /**
@@ -31,20 +33,24 @@ public class BuysPanel extends JPanel {
     public void rebuildPanel(List<Transaction> buys) {
         SwingUtilities.invokeLater(() -> {
             this.removeAll();
+            
+            JPanel container = new JPanel();
+            container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
+            container.setBackground(ColorScheme.DARK_GRAY_COLOR);
 
-            // buysScrollPane = new JScrollPane();
-            // buysScrollPane.setBackground(ColorScheme.DARK_GRAY_COLOR);
-            // buysScrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(5, 0));
-            // buysScrollPane.getVerticalScrollBar().setBorder(new EmptyBorder(0, 0, 0, 0));
+            JScrollPane scrollPane = new JScrollPane(container);
+            scrollPane.setBackground(ColorScheme.LIGHT_GRAY_COLOR);
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-            Iterator<Transaction> buysIterator = buys.iterator();
-            while (buysIterator.hasNext()) {
-                Transaction buy = buysIterator.next();
+            // Reverse list to show newest first
+            ListIterator<Transaction> buysIterator = buys.listIterator(buys.size());
+            while(buysIterator.hasPrevious()) {
+                Transaction buy = buysIterator.previous();
                 BuyPanel buyTransactionPanel = new BuyPanel(buy, itemManager);
-                this.add(buyTransactionPanel);
+                container.add(buyTransactionPanel);
             }
 
-            // this.add(buysScrollPane);
+            this.add(container, BorderLayout.WEST);
         });
     }
 }

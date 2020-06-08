@@ -1,14 +1,8 @@
 package com.flipper.view.buys;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-
-import java.awt.BorderLayout;
 
 import com.flipper.model.Transaction;
-
-import org.junit.Before;
-import org.junit.Test;
 
 import net.runelite.api.ItemComposition;
 import net.runelite.client.game.ItemManager;
@@ -33,11 +27,11 @@ public class BuyPanelTest {
         mainWindow = new JFrame("Test Frame");
         buy = new Transaction(
             1,
+            1000,
             453,
             100,
-            1000,
             testItemName,
-            Instant.now(),
+            true,
             true
         );
     }

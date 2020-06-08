@@ -13,8 +13,6 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.nio.file.Path;
 
-import java.time.Instant;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,8 +37,8 @@ public class TradePersisterTest {
                 + "\\src\\test\\java\\com\\flipper\\test-result-files";
         TradePersister.setUp(testFilePath);
 
-        buy = new Transaction(1, 1, 1, 1, "Coal", Instant.now(), true);
-        sell = new Transaction(2, 2, 2, 1, "Coal", Instant.now(), false);
+        buy = new Transaction(1, 1, 1, 1, "Coal", true, true);
+        sell = new Transaction(2, 2, 2, 1, "Coal", false, true);
         flip = new Flip(buy, sell);
 
         buys.add(buy);
