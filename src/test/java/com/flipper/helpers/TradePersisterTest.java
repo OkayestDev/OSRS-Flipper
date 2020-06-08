@@ -1,7 +1,7 @@
 package com.flipper.helpers;
 
-import com.flipper.model.Flip;
-import com.flipper.model.Transaction;
+import com.flipper.models.Flip;
+import com.flipper.models.Transaction;
 
 import org.junit.After;
 import org.junit.Before;

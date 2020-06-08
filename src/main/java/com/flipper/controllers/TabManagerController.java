@@ -1,10 +1,12 @@
-package com.flipper.controller;
+package com.flipper.controllers;
 
-import com.flipper.view.buys.BuysPanel;
-import com.flipper.view.sells.SellsPanel;
-import com.flipper.view.TabManager;
 import net.runelite.client.util.ImageUtil;
 import net.runelite.client.ui.NavigationButton;
+
+import com.flipper.views.TabManager;
+import com.flipper.views.buys.BuysPanel;
+import com.flipper.views.sells.SellsPanel;
+
 import net.runelite.client.ui.ClientToolbar;
 
 public class TabManagerController {

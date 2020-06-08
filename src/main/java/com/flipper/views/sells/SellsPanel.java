@@ -1,4 +1,4 @@
-package com.flipper.view.sells;
+package com.flipper.views.sells;
 
 import java.util.List;
 import java.util.ListIterator;
@@ -10,7 +10,7 @@ import javax.swing.JScrollPane;
 
 import java.awt.BorderLayout;
 
-import com.flipper.model.Transaction;
+import com.flipper.models.Transaction;
 
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.ui.ColorScheme;
@@ -26,7 +26,7 @@ public class SellsPanel extends JPanel {
     }
 
     /**
-     * rebuilds the view based on passed sells list
+     * rebuilds the views based on passed sells list
      * 
      * @param sells
      */

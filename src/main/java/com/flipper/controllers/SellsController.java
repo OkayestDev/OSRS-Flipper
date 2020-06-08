@@ -1,4 +1,4 @@
-package com.flipper.controller;
+package com.flipper.controllers;
 
 import java.io.IOException;
 import java.util.List;
@@ -7,8 +7,8 @@ import java.util.ListIterator;
 import com.flipper.FlipperPlugin;
 import com.flipper.helpers.GrandExchange;
 import com.flipper.helpers.TradePersister;
-import com.flipper.model.Transaction;
-import com.flipper.view.sells.SellsPanel;
+import com.flipper.models.Transaction;
+import com.flipper.views.sells.SellsPanel;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -46,7 +46,7 @@ public class SellsController {
         TradePersister.saveSells(sells);
     }
 
-    public void createSell(GrandExchangeOffer offer) {
+    public Transaction createSell(GrandExchangeOffer offer) {
         // Check to see if there is an incomplete transaction we can fill
         ListIterator<Transaction> sellsIterator = sells.listIterator(sells.size());
         while (sellsIterator.hasPrevious()) {
@@ -55,12 +55,13 @@ public class SellsController {
             if (GrandExchange.checkIsOfferPartOfTransaction(sell, offer)) {
                 sellsIterator.set(sell.updateTransaction(offer));
                 this.sellsPanel.rebuildPanel(sells);
-                return;
+                return sell;
             }
         }
 
         // It's a new sell, create one
         Transaction newSell = GrandExchange.createTransactionFromOffer(offer, itemManager);
         this.addSell(newSell);
+        return newSell;
     }
 }

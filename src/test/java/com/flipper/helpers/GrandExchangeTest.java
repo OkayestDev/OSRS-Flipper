@@ -1,8 +1,7 @@
 package com.flipper.helpers;
 
 import com.flipper.mocks.MockGrandExchangeOffer;
-import com.flipper.mocks.MockGrandExchangeOfferChanged;
-import com.flipper.model.Transaction;
+import com.flipper.models.Transaction;
 
 import net.runelite.api.GrandExchangeOfferState;
 import net.runelite.api.ItemComposition;

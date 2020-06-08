@@ -1,11 +1,13 @@
 package com.flipper;
 
+import com.flipper.controllers.BuysController;
+import com.flipper.controllers.FlipsController;
+import com.flipper.controllers.SellsController;
+import com.flipper.controllers.TabManagerController;
 import com.flipper.helpers.GrandExchange;
 import com.flipper.helpers.Log;
 import com.flipper.helpers.TradePersister;
-import com.flipper.controller.TabManagerController;
-import com.flipper.controller.BuysController;
-import com.flipper.controller.SellsController;
+import com.flipper.models.Transaction;
 import com.google.inject.Provides;
 import java.util.concurrent.ScheduledExecutorService;
 import javax.inject.Inject;
@@ -40,14 +42,15 @@ public class FlipperPlugin extends Plugin {
     // Controllers
     private BuysController buysController;
     private SellsController sellsController;
+    private FlipsController flipsController;
     private TabManagerController tabManagerController;
 
-    /** @todo figure how to run panel updates on dispatch thread */
     @Override
     protected void startUp() throws Exception {
         TradePersister.setUp();
         buysController = new BuysController(itemManager);
         sellsController = new SellsController(itemManager);
+        flipsController = new FlipsController(itemManager);
         tabManagerController = new TabManagerController(
             clientToolbar,
             buysController.getPanel(),
@@ -88,7 +91,8 @@ public class FlipperPlugin extends Plugin {
             if (isBuy) {
                 buysController.createBuy(offer);
             } else {
-                sellsController.createSell(offer);
+                Transaction sell = sellsController.createSell(offer);
+                flipsController.createFlip(sell, buysController.getBuys());
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.flipper.controller;
+package com.flipper.controllers;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +19,7 @@ import java.util.List;
 
 import com.flipper.helpers.TradePersister;
 import com.flipper.mocks.MockGrandExchangeOffer;
-import com.flipper.model.Transaction;
+import com.flipper.models.Transaction;
 
 public class SellsControllerTest {
     SellsController sellsController;

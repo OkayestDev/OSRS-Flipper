@@ -1,4 +1,4 @@
-package com.flipper.view.sells;
+package com.flipper.views.buys;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -15,7 +15,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 
 import com.flipper.helpers.UiUtilities;
-import com.flipper.model.Transaction;
+import com.flipper.models.Transaction;
 
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.game.ItemManager;
@@ -27,7 +27,7 @@ import net.runelite.client.ui.FontManager;
  * 	Item Header (item image and name)
  *  Item Information (buy info)
  */
-public class SellPanel extends JPanel {
+public class BuyPanel extends JPanel {
 	private static final Border ITEM_INFO_BORDER = new CompoundBorder(
 		BorderFactory.createMatteBorder(0, 0, 0, 0, ColorScheme.DARK_GRAY_COLOR),
 		BorderFactory.createLineBorder(ColorScheme.DARKER_GRAY_COLOR.darker(), 3));
@@ -40,7 +40,7 @@ public class SellPanel extends JPanel {
 	private JPanel leftInfoTextPanel = new JPanel(new GridLayout(7, 1));
     private JPanel rightValuesPanel = new JPanel(new GridLayout(7, 1));
 
-    public SellPanel(Transaction buy, ItemManager itemManager) {
+    public BuyPanel(Transaction buy, ItemManager itemManager) {
 		this.itemManager = itemManager;
 		this.buy = buy;
 		this.setSize(400, 400);
@@ -108,9 +108,9 @@ public class SellPanel extends JPanel {
     private void constructLeftLabels() {
 		leftInfoTextPanel.setBackground(ColorScheme.DARK_GRAY_COLOR);
 
-		JLabel quantityBoughtText = newLeftLabel("Amount Sold: ");
+		JLabel quantityBoughtText = newLeftLabel("Amount Bought: ");
 		JLabel buyPriceText = newLeftLabel("Price Per: ");
-		JLabel totalAmountText = newLeftLabel("Total Amount: ");
+		JLabel totalAmountText = newLeftLabel("Total Cost: ");
 
 		addLeftLabel(quantityBoughtText);
 		addLeftLabel(buyPriceText);

@@ -1,6 +1,6 @@
 package com.flipper.helpers;
 
-import com.flipper.model.Transaction;
+import com.flipper.models.Transaction;
 
 import net.runelite.api.GrandExchangeOffer;
 import net.runelite.api.GrandExchangeOfferState;
@@ -52,5 +52,10 @@ public class GrandExchange {
             transaction.getItemId() == offer.getItemId() &&
             transaction.getTotalQuantity() == offer.getTotalQuantity() &&
             transaction.getPricePer() == offer.getPrice();
+    }
+
+    public static boolean checkIsSellAFlipOfBuy(Transaction sell, Transaction buy) {
+        boolean isSameItem = sell.getItemId() == buy.getItemId();
+        return true;
     }
 }

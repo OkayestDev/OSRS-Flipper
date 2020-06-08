@@ -1,7 +1,7 @@
 package com.flipper.helpers;
 
-import com.flipper.model.Flip;
-import com.flipper.model.Transaction;
+import com.flipper.models.Flip;
+import com.flipper.models.Transaction;
 
 import net.runelite.client.RuneLite;
 import com.google.gson.Gson;

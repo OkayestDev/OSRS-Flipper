@@ -1,11 +1,11 @@
-package com.flipper.controller;
+package com.flipper.controllers;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.ListIterator;
 
-import com.flipper.model.Transaction;
-import com.flipper.view.buys.BuysPanel;
+import com.flipper.models.Transaction;
+import com.flipper.views.buys.BuysPanel;
 import com.flipper.helpers.GrandExchange;
 import com.flipper.helpers.TradePersister;
 

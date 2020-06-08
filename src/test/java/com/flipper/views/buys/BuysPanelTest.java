@@ -1,8 +1,9 @@
-package com.flipper.view.buys;
+package com.flipper.views.buys;
 
 import javax.swing.JFrame;
 
-import com.flipper.model.Transaction;
+import com.flipper.models.Transaction;
+import com.flipper.views.buys.BuysPanel;
 
 import net.runelite.api.ItemComposition;
 import net.runelite.client.game.ItemManager;

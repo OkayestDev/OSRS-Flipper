@@ -1,4 +1,4 @@
-package com.flipper.view;
+package com.flipper.views;
 
 import java.awt.BorderLayout;
 import java.util.HashSet;
@@ -7,8 +7,8 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import com.flipper.view.buys.BuysPanel;
-import com.flipper.view.sells.SellsPanel;
+import com.flipper.views.buys.BuysPanel;
+import com.flipper.views.sells.SellsPanel;
 
 import lombok.Getter;
 import net.runelite.client.ui.ColorScheme;
@@ -18,7 +18,7 @@ import net.runelite.client.ui.components.materialtabs.MaterialTabGroup;
 
 public class TabManager extends PluginPanel {
     @Getter
-    private JComboBox<String> viewSelector;
+    private JComboBox<String> viewselector;
 
     /**
      * This manages the tab navigation bar at the top of the panel. Once a tab is
@@ -45,10 +45,10 @@ public class TabManager extends PluginPanel {
         add(display, BorderLayout.CENTER);
     }
 
-    public Set<String> getViewSelectorItems() {
+    public Set<String> getviewselectorItems() {
         Set<String> items = new HashSet<>();
-        for (int i = 0; i < viewSelector.getItemCount(); i++) {
-            items.add(viewSelector.getItemAt(i));
+        for (int i = 0; i < viewselector.getItemCount(); i++) {
+            items.add(viewselector.getItemAt(i));
         }
         return items;
     }

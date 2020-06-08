@@ -1,4 +1,4 @@
-package com.flipper.model;
+package com.flipper.models;
 
 import lombok.Data;
 
