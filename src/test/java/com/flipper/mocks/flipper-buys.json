@@ -1,20 +1,20 @@
 [
   {
     "quantity": 12,
+    "totalQuantity": 100,
     "itemId": 453,
-    "price": 1200,
-    "totalPrice": 1440,
+    "pricePer": 1200,
     "itemName": "Coal",
-    "time": { "seconds": 1591467378, "nanos": 748000000 },
+    "createdTime": { "seconds": 1591467378, "nanos": 748000000 },
     "isBuy": true
   },
   {
     "quantity": 10,
+    "totalQuantity": 100,
     "itemId": 884,
-    "price": 7,
-    "totalPrice": 70,
+    "pricePer": 7,
     "itemName": "Iron Arrow",
-    "time": { "seconds": 1591498957, "nanos": 132000000 },
+    "createdTime": { "seconds": 1591498957, "nanos": 132000000 },
     "isBuy": true
   }
 ]

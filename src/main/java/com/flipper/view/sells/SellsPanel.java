@@ -1,37 +1,56 @@
 package com.flipper.view.sells;
 
 import java.util.List;
+import java.util.ListIterator;
 
-import javax.swing.JLabel;
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.JScrollPane;
 
-import com.flipper.FlipperPlugin;
+import java.awt.BorderLayout;
+
 import com.flipper.model.Transaction;
-import net.runelite.client.ui.ColorScheme;
-import net.runelite.client.ui.PluginPanel;
-import net.runelite.client.ui.components.IconTextField;
-import net.runelite.client.ui.components.PluginErrorPanel;
 
-import lombok.Setter;
+import net.runelite.client.game.ItemManager;
+import net.runelite.client.ui.ColorScheme;
 
 public class SellsPanel extends JPanel {
-    FlipperPlugin plugin;
-    JLabel sellPriceVal = new JLabel();
-    JLabel profitEachVal = new JLabel();
-    JLabel profitTotalVal = new JLabel();
-    JLabel limitLabel = new JLabel();
-    JLabel roiLabel = new JLabel();
+    ItemManager itemManager;
+    JScrollPane sellsScrollPane;
 
-    public SellsPanel(final FlipperPlugin plugin) {
-        this.plugin = plugin;
+    public SellsPanel(ItemManager itemManager) {
+        this.itemManager = itemManager;
+        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        this.setBackground(ColorScheme.DARK_GRAY_COLOR);
     }
 
     /**
-     * Updates view with new sells list
+     * rebuilds the view based on passed sells list
      * 
      * @param sells
      */
-    public void updatePanel(List<Transaction> sells) {
+    public void rebuildPanel(List<Transaction> sells) {
+        SwingUtilities.invokeLater(() -> {
+            this.removeAll();
+            
+            JPanel container = new JPanel();
+            container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
+            container.setBackground(ColorScheme.DARK_GRAY_COLOR);
 
+            JScrollPane scrollPane = new JScrollPane(container);
+            scrollPane.setBackground(ColorScheme.LIGHT_GRAY_COLOR);
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+            // Reverse list to show newest first
+            ListIterator<Transaction> sellsIterator = sells.listIterator(sells.size());
+            while(sellsIterator.hasPrevious()) {
+                Transaction sell = sellsIterator.previous();
+                SellPanel sellTransactionPanel = new SellPanel(sell, itemManager);
+                container.add(sellTransactionPanel);
+            }
+
+            this.add(container, BorderLayout.WEST);
+        });
     }
 }

@@ -111,6 +111,16 @@ public class TradePersister {
         }
     }
 
+    public static boolean saveSells(List<Transaction> sells) {
+        try {
+            saveJson(sells, SELLS_JSON_FILE);
+            return true;
+        } catch (Exception error) {
+            Log.info("Failed to save sells " + error.toString());
+            return false;
+        }
+    }
+
     public static List<Flip> loadFlips() throws IOException {
         Gson gson = new Gson();
         String jsonString = getFileContent(FLIPS_JSON_FILE);

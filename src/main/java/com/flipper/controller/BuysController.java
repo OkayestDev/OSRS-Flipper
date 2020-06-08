@@ -10,11 +10,17 @@ import com.flipper.helpers.GrandExchange;
 import com.flipper.helpers.TradePersister;
 
 import lombok.Getter;
+import lombok.Setter;
 import net.runelite.api.GrandExchangeOffer;
 import net.runelite.client.game.ItemManager;
 
+/**
+ * @todo weird edge cases where user logs in with complete GE trnasaction. Duplicates buy
+ * (i.e. 6800 cannonballs duplicated)
+ */
 public class BuysController {
     @Getter
+    @Setter
     private List<Transaction> buys;
     private BuysPanel buysPanel;
     private ItemManager itemManager;
@@ -43,16 +49,12 @@ public class BuysController {
         TradePersister.saveBuys(buys);
     }
 
-    public void updateBuy(int index, GrandExchange offer) {
-
-    }
-
     public void createBuy(GrandExchangeOffer offer) {
         // Check to see if there is an incomplete buy transaction we can full fill
         ListIterator<Transaction> buysIterator = buys.listIterator(buys.size());
         while (buysIterator.hasPrevious()) {
             Transaction buy = buysIterator.previous();
-            // Incomplete buy found, update it
+            // Incomplete buy transaction found, update it
             if (GrandExchange.checkIsOfferPartOfTransaction(buy, offer)) {
                 buysIterator.set(buy.updateTransaction(offer));
                 this.buysPanel.rebuildPanel(buys);

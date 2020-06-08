@@ -5,17 +5,13 @@ import com.flipper.helpers.Log;
 import com.flipper.helpers.TradePersister;
 import com.flipper.controller.TabManagerController;
 import com.flipper.controller.BuysController;
-import com.flipper.model.Transaction;
+import com.flipper.controller.SellsController;
 import com.google.inject.Provides;
-import java.io.IOException;
 import java.util.concurrent.ScheduledExecutorService;
 import javax.inject.Inject;
-import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
-import net.runelite.api.GameState;
 import net.runelite.api.GrandExchangeOffer;
-import net.runelite.api.ItemComposition;
-import net.runelite.api.events.GameStateChanged;
+import net.runelite.api.GrandExchangeOfferState;
 import net.runelite.api.events.GrandExchangeOfferChanged;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
@@ -43,6 +39,7 @@ public class FlipperPlugin extends Plugin {
 	private ItemManager itemManager;
 	// Controllers
 	private BuysController buysController;
+	private SellsController sellsController;
 	private TabManagerController tabManagerController;
 
 	/** @todo figure how to run panel updates on dispatch thread */
@@ -50,22 +47,23 @@ public class FlipperPlugin extends Plugin {
 	protected void startUp() throws Exception {
 		TradePersister.setUp();
 		buysController = new BuysController(itemManager);
+		sellsController = new SellsController(itemManager);
 		tabManagerController = new TabManagerController(
-			this,
-			executor,
 			clientToolbar,
-			buysController.getPanel()
+			buysController.getPanel(),
+			sellsController.getPanel()
 		);
 	}
 
-	@Subscribe
-	public void onGameStateChanged(GameStateChanged event) {
+	private void saveAll() {
+		buysController.saveBuys();
+		sellsController.saveSells();
 	}
 
 	@Override
 	protected void shutDown() throws Exception {
 		Log.info("Flipper stopped!");
-		buysController.saveBuys();
+		this.saveAll();
 	}
 
 	/**
@@ -78,19 +76,21 @@ public class FlipperPlugin extends Plugin {
 	 */
 	@Subscribe(priority = 101)
 	public void onClientShutdown(ClientShutdown clientShutdownEvent) {
-		buysController.saveBuys();
+		this.saveAll();
 	}
 
 	@Subscribe
 	public void onGrandExchangeOfferChanged(GrandExchangeOfferChanged newOfferEvent) {
 		GrandExchangeOffer offer = newOfferEvent.getOffer();
-		boolean isBuy = GrandExchange.checkIsBuy(offer.getState());
-		if (isBuy) {
-			buysController.createBuy(offer);
-		} else {
-			// add sell
+		// Ignore empty state event offers or offers that haven't bought/sold any
+		if (offer.getState() != GrandExchangeOfferState.EMPTY && offer.getQuantitySold() != 0) {
+			boolean isBuy = GrandExchange.checkIsBuy(offer.getState());
+			if (isBuy) {
+				buysController.createBuy(offer);
+			} else {
+				sellsController.createSell(offer);
+			}
 		}
-		
 	}
 
 	@Provides

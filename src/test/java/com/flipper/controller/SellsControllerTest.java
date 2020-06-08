@@ -21,8 +21,8 @@ import com.flipper.helpers.TradePersister;
 import com.flipper.mocks.MockGrandExchangeOffer;
 import com.flipper.model.Transaction;
 
-public class BuysControllerTest {
-    BuysController buysController;
+public class SellsControllerTest {
+    SellsController sellsController;
     ItemManager itemManager;
     ItemComposition itemComposition;
     MockGrandExchangeOffer offerToCreateNewTransaction;
@@ -52,34 +52,34 @@ public class BuysControllerTest {
         TradePersister.setUp(testFilePath);
         when(itemManager.getItemComposition(mockItemId)).thenReturn(itemComposition);
         when(itemComposition.getName()).thenReturn("Test Name");
-        buysController = new BuysController(itemManager);
+        sellsController = new SellsController(itemManager);
     }
 
     @Test
-    public void testCreateBuyCreatesANewBuy() throws IOException {
-        BuysController buysController = new BuysController(itemManager);
-        buysController.setBuys(new ArrayList<Transaction>());
-        buysController.createBuy(offerToCreateNewTransaction);
-        List<Transaction> buys = buysController.getBuys();
-        assertEquals(1, buys.size());
-        Transaction createdBuy = buys.get(0);
-        assertEquals(mockItemId, createdBuy.getItemId());
+    public void testCreateSellCreatesANewSell() throws IOException {
+        SellsController sellsController = new SellsController(itemManager);
+        sellsController.setSells(new ArrayList<Transaction>());
+        sellsController.createSell(offerToCreateNewTransaction);
+        List<Transaction> sells = sellsController.getSells();
+        assertEquals(1, sells.size());
+        Transaction createdSell = sells.get(0);
+        assertEquals(mockItemId, createdSell.getItemId());
     }
 
     @Test
-    public void testCreateBuyUpdatesAnExistingBuy() throws IOException {
-        BuysController buysController = new BuysController(itemManager);
-        // Add partially complete buy to see if we're updating transactions correctly
-        List<Transaction> buys = new ArrayList<Transaction>();
-        buys.add(transactionToUpdate);
-        buysController.setBuys(buys);
+    public void testCreateSellUpdatesAnExistingSell() throws IOException {
+        SellsController sellsController = new SellsController(itemManager);
+        // Add partially complete sell to see if we're updating transactions correctly
+        List<Transaction> sells = new ArrayList<Transaction>();
+        sells.add(transactionToUpdate);
+        sellsController.setSells(sells);
 
-        buysController.createBuy(offerToUpdateTransaction);
-        // Ensure buys list is still only one (only updated transaction);
-        List<Transaction> updatedBuys = buysController.getBuys();
-        assertEquals(1, updatedBuys.size());
+        sellsController.createSell(offerToUpdateTransaction);
+        // Ensure sells list is still only one (only updated transaction);
+        List<Transaction> updatedSells = sellsController.getSells();
+        assertEquals(1, updatedSells.size());
 
-        Transaction updateBuy = updatedBuys.get(0);
-        assertTrue(updateBuy.isComplete());
+        Transaction updateSell = updatedSells.get(0);
+        assertTrue(updateSell.isComplete());
     }
 }
