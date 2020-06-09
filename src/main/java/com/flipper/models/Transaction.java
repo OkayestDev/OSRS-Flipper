@@ -53,6 +53,7 @@ public class Transaction {
         this.isComplete = GrandExchange.checkIsComplete(offer.getState());
         if (this.isComplete) {
             completedTime = Instant.now();
+            this.totalQuantity = offer.getQuantitySold();
         }
         return this;
     }

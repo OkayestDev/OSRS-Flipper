@@ -71,7 +71,7 @@ public class ItemHeader extends JPanel {
 	
 	private JLabel constructCostPerLabel() {
 		String costPerString = Integer.toString(transaction.getPricePer());
-		JLabel amountOutOfQuantityLabel = new JLabel(costPerString);
+		JLabel amountOutOfQuantityLabel = new JLabel(costPerString + " gp");
 		amountOutOfQuantityLabel.setForeground(ColorScheme.GRAND_EXCHANGE_ALCH);
 		return amountOutOfQuantityLabel;
 	}

@@ -7,8 +7,8 @@ public class SellPanelTest {
     public static void main(String[] args) throws Exception {
         ViewTestSetup.setUp();
         Transaction sell = new Transaction(
-            1,
-            1000,
+            5,
+            10,
             ViewTestSetup.mockItemId,
             100,
             ViewTestSetup.testItemName,
