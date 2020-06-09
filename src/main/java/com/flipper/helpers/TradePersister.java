@@ -38,7 +38,7 @@ public class TradePersister {
     }
 
     /**
-     * Creates 3 required json files, sells, buys, flips
+     * Creates 3 required json files: sells, buys, flips
      */
     private static void createRequiredFiles() throws IOException {
         generateFileIfDoesNotExist(SELLS_JSON_FILE);
@@ -117,6 +117,16 @@ public class TradePersister {
             return true;
         } catch (Exception error) {
             Log.info("Failed to save sells " + error.toString());
+            return false;
+        }
+    }
+
+    public static boolean saveFlips(List<Flip> flips) {
+        try {
+            saveJson(flips, FLIPS_JSON_FILE);
+            return true;
+        } catch (Exception error) {
+            Log.info("Failed to save flips " + error.toString());
             return false;
         }
     }

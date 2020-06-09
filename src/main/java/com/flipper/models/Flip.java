@@ -1,5 +1,8 @@
 package com.flipper.models;
 
+import java.time.Instant;
+import java.util.UUID;
+
 import lombok.Data;
 
 /**
@@ -7,14 +10,28 @@ import lombok.Data;
  */
 @Data
 public class Flip {
-    final private Transaction buy;
-    final private Transaction sell;
+    final UUID id;
+    private Transaction buy;
+    private Transaction sell;
+    private Instant createdTime;
+    private Instant completedTime;
     private boolean isMarginCheck;
 
     public Flip(Transaction buy, Transaction sell) {
+        id = UUID.randomUUID();
         this.buy = buy;
         this.sell = sell;
+        this.createdTime = Instant.now();
         setMarginCheck();
+    }
+
+    public Flip updateFlip(Transaction sell, Transaction buy) {
+        this.buy = buy;
+        this.sell = sell;
+        if (buy.isComplete() && sell.isComplete()) {
+            completedTime = Instant.now();
+        }
+        return this;
     }
 
     /**

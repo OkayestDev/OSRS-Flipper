@@ -1,26 +1,19 @@
 package com.flipper.views.buys;
 
-import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
-import java.awt.Component;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 
 import com.flipper.helpers.UiUtilities;
 import com.flipper.models.Transaction;
+import com.flipper.views.components.ItemHeader;
 
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.game.ItemManager;
-import net.runelite.client.util.AsyncBufferedImage;
-import net.runelite.client.ui.FontManager;
 
 /**
  * Construct of two main components
@@ -28,55 +21,19 @@ import net.runelite.client.ui.FontManager;
  *  Item Information (buy info)
  */
 public class BuyPanel extends JPanel {
-	private static final Border ITEM_INFO_BORDER = new CompoundBorder(
-		BorderFactory.createMatteBorder(0, 0, 0, 0, ColorScheme.DARK_GRAY_COLOR),
-		BorderFactory.createLineBorder(ColorScheme.DARKER_GRAY_COLOR.darker(), 3));
-
     private Transaction buy;
-    private ItemManager itemManager;
-    private JLabel itemName;
-	private JPanel titlePanel = new JPanel(new BorderLayout());
 	private JPanel itemInfo = new JPanel(new BorderLayout());
 	private JPanel leftInfoTextPanel = new JPanel(new GridLayout(7, 1));
     private JPanel rightValuesPanel = new JPanel(new GridLayout(7, 1));
 
     public BuyPanel(Transaction buy, ItemManager itemManager) {
-		this.itemManager = itemManager;
 		this.buy = buy;
-		this.setSize(400, 400);
         setLayout(new BorderLayout());
 		setBackground(ColorScheme.DARK_GRAY_COLOR);
-		constructHeader();
+		this.add(new ItemHeader(buy, itemManager), BorderLayout.NORTH);
 		constructItemInfo();
 		this.setBorder(new EmptyBorder(0, 0, 5, 0));
     }
-
-	/**
-	 * Constructs header
-	 *  ItemImage / ItemName
-	 */
-    private void constructHeader() {
-		int itemId = buy.getItemId();
-		AsyncBufferedImage itemImage = itemManager.getImage(itemId);
-		JLabel itemIcon = new JLabel();
-		itemIcon.setAlignmentX(Component.LEFT_ALIGNMENT);
-		itemIcon.setPreferredSize(UiUtilities.ICON_SIZE);
-		if (itemImage != null) {
-			itemImage.addTo(itemIcon);
-		}
-		JPanel itemClearPanel = new JPanel(new BorderLayout());
-		itemClearPanel.setBackground(ColorScheme.DARKER_GRAY_COLOR.darker());
-		itemClearPanel.add(itemIcon, BorderLayout.WEST);
-		itemName = new JLabel(buy.getItemName(), SwingConstants.CENTER);
-		itemName.setForeground(Color.WHITE);
-		itemName.setFont(FontManager.getRunescapeBoldFont());
-		itemName.setPreferredSize(new Dimension(0, 0));
-		titlePanel.setBackground(ColorScheme.DARKER_GRAY_COLOR.darker());
-		titlePanel.add(itemClearPanel, BorderLayout.WEST);
-		titlePanel.add(itemName, BorderLayout.CENTER);
-		titlePanel.setBorder(new EmptyBorder(2, 1, 2, 1));
-		add(titlePanel, BorderLayout.NORTH);
-	}
 	
 	private void constructItemInfo() {
 		constructLeftLabels();
@@ -84,7 +41,7 @@ public class BuyPanel extends JPanel {
 		itemInfo.setBackground(ColorScheme.DARK_GRAY_COLOR);
 		itemInfo.add(leftInfoTextPanel, BorderLayout.WEST);
 		itemInfo.add(rightValuesPanel, BorderLayout.EAST);
-		itemInfo.setBorder(ITEM_INFO_BORDER);
+		itemInfo.setBorder(UiUtilities.ITEM_INFO_BORDER);
 		add(itemInfo, BorderLayout.CENTER);
 	}
 

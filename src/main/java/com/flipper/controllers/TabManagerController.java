@@ -5,6 +5,7 @@ import net.runelite.client.ui.NavigationButton;
 
 import com.flipper.views.TabManager;
 import com.flipper.views.buys.BuysPanel;
+import com.flipper.views.flips.FlipsPanel;
 import com.flipper.views.sells.SellsPanel;
 
 import net.runelite.client.ui.ClientToolbar;
@@ -17,10 +18,11 @@ public class TabManagerController {
     public TabManagerController(
         ClientToolbar clientToolbar,
         BuysPanel buysPanel,
-        SellsPanel sellsPanel
+        SellsPanel sellsPanel,
+        FlipsPanel flipsPanel
     ) {
         this.clientToolbar = clientToolbar;    
-        tabManager = new TabManager(buysPanel, sellsPanel);
+        tabManager = new TabManager(buysPanel, sellsPanel, flipsPanel);
         setUpNavigationButton();
     }
 

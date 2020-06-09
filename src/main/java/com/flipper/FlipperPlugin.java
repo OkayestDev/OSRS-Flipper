@@ -54,13 +54,15 @@ public class FlipperPlugin extends Plugin {
         tabManagerController = new TabManagerController(
             clientToolbar,
             buysController.getPanel(),
-            sellsController.getPanel()
+            sellsController.getPanel(),
+            flipsController.getPanel()
         );
     }
 
     private void saveAll() {
         buysController.saveBuys();
         sellsController.saveSells();
+        flipsController.saveFlips();
     }
 
     @Override

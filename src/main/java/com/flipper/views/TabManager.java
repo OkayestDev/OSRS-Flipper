@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import com.flipper.views.buys.BuysPanel;
+import com.flipper.views.flips.FlipsPanel;
 import com.flipper.views.sells.SellsPanel;
 
 import lombok.Getter;
@@ -17,15 +18,12 @@ import net.runelite.client.ui.components.materialtabs.MaterialTab;
 import net.runelite.client.ui.components.materialtabs.MaterialTabGroup;
 
 public class TabManager extends PluginPanel {
-    @Getter
-    private JComboBox<String> viewselector;
-
     /**
      * This manages the tab navigation bar at the top of the panel. Once a tab is
      * selected, the corresponding panel will be displayed below along with
      * indication of what tab is selected.
      */
-    public TabManager(BuysPanel buysPanel, SellsPanel sellsPanel) {
+    public TabManager(BuysPanel buysPanel, SellsPanel sellsPanel, FlipsPanel flipsPanel) {
         JPanel display = new JPanel();
         JPanel header = new JPanel(new BorderLayout());
         header.setBackground(ColorScheme.DARKER_GRAY_COLOR.darker());
@@ -33,7 +31,7 @@ public class TabManager extends PluginPanel {
 		MaterialTabGroup tabGroup = new MaterialTabGroup(display);
         MaterialTab buysTab = new MaterialTab("Buys", tabGroup, buysPanel);
         MaterialTab sellsTab = new MaterialTab("Sells", tabGroup, sellsPanel);
-        MaterialTab flipsTab = new MaterialTab("Flips", tabGroup, new JPanel());
+        MaterialTab flipsTab = new MaterialTab("Flips", tabGroup, flipsPanel);
 		tabGroup.setBorder(new EmptyBorder(5, 0, 2, 0));
         tabGroup.addTab(buysTab);
         tabGroup.addTab(sellsTab);
@@ -43,13 +41,5 @@ public class TabManager extends PluginPanel {
 		header.add(tabGroup, BorderLayout.CENTER);
 		add(header, BorderLayout.NORTH);
         add(display, BorderLayout.CENTER);
-    }
-
-    public Set<String> getviewselectorItems() {
-        Set<String> items = new HashSet<>();
-        for (int i = 0; i < viewselector.getItemCount(); i++) {
-            items.add(viewselector.getItemAt(i));
-        }
-        return items;
     }
 }

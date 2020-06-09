@@ -1,15 +1,9 @@
-package com.flipper.views.buys;
-
-import javax.swing.JFrame;
+package com.flipper.views.components;
 
 import com.flipper.models.Transaction;
 import com.flipper.views.ViewTestSetup;
 
-import net.runelite.api.ItemComposition;
-import net.runelite.client.game.ItemManager;
-
-
-public class BuyPanelTest {
+public class ItemHeaderTest {
     static Transaction buy;
 
     public static void setUp() {
@@ -27,7 +21,7 @@ public class BuyPanelTest {
     public static void main(String[] args) throws Exception {
         setUp();
         ViewTestSetup.setUp();
-        BuyPanel buyPanel = new BuyPanel(buy, ViewTestSetup.itemManager);
-        ViewTestSetup.launch(buyPanel);
+        ItemHeader itemHeader = new ItemHeader(buy, ViewTestSetup.itemManager);
+        ViewTestSetup.launch(itemHeader);
     }
 }

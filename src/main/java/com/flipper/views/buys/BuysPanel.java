@@ -25,11 +25,6 @@ public class BuysPanel extends JPanel {
         this.setBackground(ColorScheme.DARK_GRAY_COLOR);
     }
 
-    /**
-     * rebuilds the views based on passed buys list
-     * 
-     * @param buys
-     */
     public void rebuildPanel(List<Transaction> buys) {
         SwingUtilities.invokeLater(() -> {
             this.removeAll();

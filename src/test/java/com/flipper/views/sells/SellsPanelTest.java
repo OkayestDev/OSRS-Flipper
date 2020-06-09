@@ -3,14 +3,11 @@ package com.flipper.views.sells;
 import javax.swing.JFrame;
 
 import com.flipper.models.Transaction;
-import com.flipper.views.sells.SellsPanel;
+import com.flipper.views.ViewTestSetup;
 
 import net.runelite.api.ItemComposition;
 import net.runelite.client.game.ItemManager;
 
-import static org.mockito.Mockito.*;
-
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,12 +20,6 @@ public class SellsPanelTest {
     static List<Transaction> sells;
 
     public static void setUp() {
-        itemManager = mock(ItemManager.class);
-        itemComposition = mock(ItemComposition.class);
-        when(itemManager.getItemComposition(453)).thenReturn(itemComposition);
-        when(itemComposition.getName()).thenReturn(testItemName);
-        when(itemManager.getImage(453)).thenReturn(null);
-        mainWindow = new JFrame("Test Frame");
         sells = new ArrayList<Transaction>();
         sells.add(new Transaction(
             1,
@@ -52,10 +43,9 @@ public class SellsPanelTest {
 
     public static void main(String[] args) throws Exception {
         setUp();
-        SellsPanel sellsPanel = new SellsPanel(itemManager);
+        ViewTestSetup.setUp();
+        SellsPanel sellsPanel = new SellsPanel(ViewTestSetup.itemManager);
         sellsPanel.rebuildPanel(sells);
-        mainWindow.getContentPane().add(sellsPanel);
-        mainWindow.pack();
-        mainWindow.setVisible(true);
+        ViewTestSetup.launch(sellsPanel);
     }
 }

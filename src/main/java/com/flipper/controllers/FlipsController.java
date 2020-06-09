@@ -3,6 +3,7 @@ package com.flipper.controllers;
 import java.io.IOException;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.UUID;
 
 import com.flipper.helpers.GrandExchange;
 import com.flipper.helpers.TradePersister;
@@ -10,15 +11,17 @@ import com.flipper.models.Flip;
 import com.flipper.models.Transaction;
 import com.flipper.views.flips.FlipsPanel;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.runelite.client.game.ItemManager;
 
 public class FlipsController {
-    private ItemManager itemManager;
+    @Getter
+    @Setter
     private List<Flip> flips;
     private FlipsPanel flipsPanel;
 
     public FlipsController(ItemManager itemManager) throws IOException {
-        this.itemManager = itemManager;
         this.flipsPanel = new FlipsPanel(itemManager);
         this.loadFlips(); 
     }
@@ -34,6 +37,17 @@ public class FlipsController {
 
     private void loadFlips() throws IOException {
         this.flips = TradePersister.loadFlips();
+        this.flipsPanel.rebuildPanel(flips);
+    }
+
+    public void saveFlips() {
+        TradePersister.saveFlips(flips);
+    }
+
+    private Flip updateFlip(Transaction sell, Transaction buy, Flip flip) {
+        flip.updateFlip(sell, buy);
+        this.flipsPanel.rebuildPanel(flips);
+        return flip;
     }
 
     /**
@@ -42,17 +56,34 @@ public class FlipsController {
      * @param buys
      */
     public void createFlip(Transaction sell, List<Transaction> buys) {
-        if (sell.isComplete()) {
-            return;
-        }
-
         ListIterator<Transaction> buysIterator = buys.listIterator(buys.size());
-        while (buysIterator.hasPrevious()) {
-            Transaction buy = buysIterator.previous();
-
-            if (GrandExchange.checkIsSellAFlipOfBuy(sell, buy)) {
-                Flip flip = new Flip(buy, sell);
-                this.addFlip(flip);
+        // If sell has already been flipped, look for it's corresponding buy and update the flip
+        if (sell.isFlipped()) {
+            ListIterator<Flip> flipsIterator = flips.listIterator(flips.size());
+            while (flipsIterator.hasPrevious()) {
+                Flip flip = flipsIterator.previous();
+                if (flip.getSell().id == sell.id) {
+                    // Now find the corresponding buy
+                    while (buysIterator.hasPrevious()) {
+                        Transaction buy = buysIterator.previous();
+                        if (buy.id == flip.getBuy().id) {
+                            flipsIterator.set(updateFlip(sell, buy, flip));
+                            return;
+                        }
+                    }
+                }
+            }
+        } else {
+            // Attempt to match sell to a buy
+            while (buysIterator.hasPrevious()) {
+                Transaction buy = buysIterator.previous();
+                if (GrandExchange.checkIsSellAFlipOfBuy(sell, buy)) {
+                    Flip flip = new Flip(buy, sell);
+                    buy.setIsFlipped(true);
+                    sell.setIsFlipped(true);
+                    this.addFlip(flip);
+                    return;
+                }
             }
         }
     }

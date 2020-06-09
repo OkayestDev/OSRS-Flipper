@@ -22,7 +22,6 @@ import com.flipper.mocks.MockGrandExchangeOffer;
 import com.flipper.models.Transaction;
 
 public class BuysControllerTest {
-    BuysController buysController;
     ItemManager itemManager;
     ItemComposition itemComposition;
     MockGrandExchangeOffer offerToCreateNewTransaction;
@@ -52,7 +51,6 @@ public class BuysControllerTest {
         TradePersister.setUp(testFilePath);
         when(itemManager.getItemComposition(mockItemId)).thenReturn(itemComposition);
         when(itemComposition.getName()).thenReturn("Test Name");
-        buysController = new BuysController(itemManager);
     }
 
     @Test

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.ListIterator;
 
-import com.flipper.FlipperPlugin;
 import com.flipper.helpers.GrandExchange;
 import com.flipper.helpers.TradePersister;
 import com.flipper.models.Transaction;

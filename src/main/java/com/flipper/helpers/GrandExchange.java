@@ -1,5 +1,9 @@
 package com.flipper.helpers;
 
+import java.util.List;
+import java.util.ListIterator;
+
+import com.flipper.models.Flip;
 import com.flipper.models.Transaction;
 
 import net.runelite.api.GrandExchangeOffer;
@@ -50,12 +54,12 @@ public class GrandExchange {
         return 
             !transaction.isComplete() && 
             transaction.getItemId() == offer.getItemId() &&
-            transaction.getTotalQuantity() == offer.getTotalQuantity() &&
-            transaction.getPricePer() == offer.getPrice();
+            transaction.getTotalQuantity() == offer.getTotalQuantity();
     }
 
     public static boolean checkIsSellAFlipOfBuy(Transaction sell, Transaction buy) {
         boolean isSameItem = sell.getItemId() == buy.getItemId();
-        return true;
+        boolean hasTransactionsBeenFlipped = sell.isFlipped() && buy.isFlipped();
+        return isSameItem && !hasTransactionsBeenFlipped;
     }
 }
