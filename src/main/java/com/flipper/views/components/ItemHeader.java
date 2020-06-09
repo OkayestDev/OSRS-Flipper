@@ -18,9 +18,35 @@ import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
 import net.runelite.client.util.AsyncBufferedImage;
 
+/**
+ * Item header:
+ * 	Item Icon / Item Name / Number bought/soul out of total
+ */
 public class ItemHeader extends JPanel {
-    public ItemHeader(Transaction transaction, ItemManager itemManager) {
+	private static final long serialVersionUID = 6953863323192783140L;
+	
+	private ItemManager itemManager;
+	private Transaction transaction;
+
+    public ItemHeader(Transaction transaction, ItemManager itemManager, boolean isAddCostPer) {
+		this.transaction = transaction;
+		this.itemManager = itemManager;
 		this.setLayout(new BorderLayout());
+
+		JPanel itemIconPanel = constructItemIcon();
+		JLabel itemName = constructItemName();
+		if (isAddCostPer) {
+			JLabel amountOutOfQuantityLabel = constructCostPerLabel();
+			add(amountOutOfQuantityLabel, BorderLayout.EAST);
+		}
+
+		setBackground(ColorScheme.DARKER_GRAY_COLOR.darker());
+		add(itemIconPanel, BorderLayout.WEST);
+		add(itemName, BorderLayout.CENTER);
+		setBorder(new EmptyBorder(2, 1, 2, 5));
+	}
+
+	private JPanel constructItemIcon() {
         int itemId = transaction.getItemId();
 		AsyncBufferedImage itemImage = itemManager.getImage(itemId);
 		JLabel itemIcon = new JLabel();
@@ -29,17 +55,24 @@ public class ItemHeader extends JPanel {
 		if (itemImage != null) {
 			itemImage.addTo(itemIcon);
 		}
-		JPanel itemClearPanel = new JPanel(new BorderLayout());
-		itemClearPanel.setBackground(ColorScheme.DARKER_GRAY_COLOR.darker());
-		itemClearPanel.add(itemIcon, BorderLayout.WEST);
+		JPanel itemIconPanel = new JPanel(new BorderLayout());
+		itemIconPanel.setBackground(ColorScheme.DARKER_GRAY_COLOR.darker());
+		itemIconPanel.add(itemIcon, BorderLayout.WEST);
+		return itemIconPanel;
+	}
+
+	private JLabel constructItemName() {
 		JLabel itemName = new JLabel(transaction.getItemName(), SwingConstants.CENTER);
 		itemName.setForeground(Color.WHITE);
 		itemName.setFont(FontManager.getRunescapeBoldFont());
-        itemName.setPreferredSize(new Dimension(0, 0));
-        // JPanel titlePanel = new JPanel(new BorderLayout());
-		setBackground(ColorScheme.DARKER_GRAY_COLOR.darker());
-		add(itemClearPanel, BorderLayout.WEST);
-		add(itemName, BorderLayout.CENTER);
-		setBorder(new EmptyBorder(2, 1, 2, 1));
-    }
+		itemName.setPreferredSize(new Dimension(0, 0));
+		return itemName;
+	}
+	
+	private JLabel constructCostPerLabel() {
+		String costPerString = Integer.toString(transaction.getPricePer());
+		JLabel amountOutOfQuantityLabel = new JLabel(costPerString);
+		amountOutOfQuantityLabel.setForeground(ColorScheme.GRAND_EXCHANGE_ALCH);
+		return amountOutOfQuantityLabel;
+	}
 }

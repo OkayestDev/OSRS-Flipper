@@ -16,8 +16,9 @@ import net.runelite.client.game.ItemManager;
 import net.runelite.client.ui.ColorScheme;
 
 public class FlipsPanel extends JPanel {
-    ItemManager itemManager;
-    JScrollPane flipsScrollPane;
+    private static final long serialVersionUID = -2680984300396244041L;
+    
+	private ItemManager itemManager;
 
     public FlipsPanel(ItemManager itemManager) {
         this.itemManager = itemManager;
@@ -38,7 +39,7 @@ public class FlipsPanel extends JPanel {
             scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
             // Reverse list to show newest first
-            ListIterator<Flip> flipsIterator = flips.listIterator();
+            ListIterator<Flip> flipsIterator = flips.listIterator(flips.size());
             while(flipsIterator.hasPrevious()) {
                 Flip flip = flipsIterator.previous();
                 FlipPanel flipPanel = new FlipPanel(flip, itemManager);

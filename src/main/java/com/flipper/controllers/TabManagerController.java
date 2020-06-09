@@ -3,6 +3,7 @@ package com.flipper.controllers;
 import net.runelite.client.util.ImageUtil;
 import net.runelite.client.ui.NavigationButton;
 
+import com.flipper.helpers.UiUtilities;
 import com.flipper.views.TabManager;
 import com.flipper.views.buys.BuysPanel;
 import com.flipper.views.flips.FlipsPanel;
@@ -30,7 +31,7 @@ public class TabManagerController {
         navButton = NavigationButton
                 .builder()
                 .tooltip("Flipper")
-                .icon(ImageUtil.getResourceStreamFromClass(getClass(), "/flipper_nav_button.png")).priority(1)
+                .icon(ImageUtil.getResourceStreamFromClass(getClass(), UiUtilities.flipperNavIcon)).priority(1)
                 .panel(tabManager)
                 .build();
         clientToolbar.addNavigation(navButton);

@@ -21,7 +21,9 @@ import net.runelite.client.game.ItemManager;
  *  Item Information (buy info)
  */
 public class BuyPanel extends JPanel {
-    private Transaction buy;
+	private static final long serialVersionUID = -6576417948629423220L;
+	
+	private Transaction buy;
 	private JPanel itemInfo = new JPanel(new BorderLayout());
 	private JPanel leftInfoTextPanel = new JPanel(new GridLayout(7, 1));
     private JPanel rightValuesPanel = new JPanel(new GridLayout(7, 1));
@@ -30,7 +32,7 @@ public class BuyPanel extends JPanel {
 		this.buy = buy;
         setLayout(new BorderLayout());
 		setBackground(ColorScheme.DARK_GRAY_COLOR);
-		this.add(new ItemHeader(buy, itemManager), BorderLayout.NORTH);
+		this.add(new ItemHeader(buy, itemManager, true), BorderLayout.NORTH);
 		constructItemInfo();
 		this.setBorder(new EmptyBorder(0, 0, 5, 0));
     }

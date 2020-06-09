@@ -1,9 +1,5 @@
 package com.flipper.helpers;
 
-import java.util.List;
-import java.util.ListIterator;
-
-import com.flipper.models.Flip;
 import com.flipper.models.Transaction;
 
 import net.runelite.api.GrandExchangeOffer;

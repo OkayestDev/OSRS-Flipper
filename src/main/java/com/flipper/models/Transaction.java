@@ -1,7 +1,6 @@
 package com.flipper.models;
 
 import lombok.Data;
-import lombok.Getter;
 import net.runelite.api.GrandExchangeOffer;
 
 import java.time.Instant;

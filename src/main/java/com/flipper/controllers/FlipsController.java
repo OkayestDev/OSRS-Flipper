@@ -3,7 +3,6 @@ package com.flipper.controllers;
 import java.io.IOException;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.UUID;
 
 import com.flipper.helpers.GrandExchange;
 import com.flipper.helpers.TradePersister;

@@ -1,35 +1,23 @@
 package com.flipper.views.flips;
 
-import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
-import java.awt.Component;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.awt.Color;
-import java.awt.Dimension;
 
-import com.flipper.helpers.UiUtilities;
 import com.flipper.models.Flip;
 import com.flipper.models.Transaction;
 import com.flipper.views.components.ItemHeader;
 
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.game.ItemManager;
-import net.runelite.client.util.AsyncBufferedImage;
-import net.runelite.client.ui.FontManager;
 
 public class FlipPanel extends JPanel {
-	private static final Border ITEM_INFO_BORDER = new CompoundBorder(
-		BorderFactory.createMatteBorder(0, 0, 0, 0, ColorScheme.DARK_GRAY_COLOR),
-		BorderFactory.createLineBorder(ColorScheme.DARKER_GRAY_COLOR.darker(), 3));
+	private static final long serialVersionUID = 3879605322279273963L;
 
-    private Flip flip;
+	private Flip flip;
     private Transaction buy;
     private Transaction sell;
     private ItemManager itemManager;
@@ -46,7 +34,7 @@ public class FlipPanel extends JPanel {
         this.buy = flip.getBuy();
         setLayout(new BorderLayout());
 		setBackground(ColorScheme.DARK_GRAY_COLOR);
-		this.add(new ItemHeader(this.buy, itemManager), BorderLayout.NORTH);
+		this.add(new ItemHeader(this.buy, itemManager, false), BorderLayout.NORTH);
 		// constructItemInfo();
 		this.setBorder(new EmptyBorder(0, 0, 5, 0));
     }

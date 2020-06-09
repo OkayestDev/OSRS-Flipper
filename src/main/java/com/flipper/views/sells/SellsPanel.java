@@ -16,8 +16,9 @@ import net.runelite.client.game.ItemManager;
 import net.runelite.client.ui.ColorScheme;
 
 public class SellsPanel extends JPanel {
-    ItemManager itemManager;
-    JScrollPane sellsScrollPane;
+    private static final long serialVersionUID = -5441336522969800315L;
+    
+	private ItemManager itemManager;
 
     public SellsPanel(ItemManager itemManager) {
         this.itemManager = itemManager;

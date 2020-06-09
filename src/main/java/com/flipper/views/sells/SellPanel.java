@@ -1,10 +1,7 @@
 package com.flipper.views.sells;
 
-import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
 import java.awt.BorderLayout;
@@ -24,7 +21,9 @@ import net.runelite.client.game.ItemManager;
  *  Item Information (sell info)
  */
 public class SellPanel extends JPanel {
-    private Transaction sell;
+	private static final long serialVersionUID = -3722286075820009130L;
+
+	private Transaction sell;
 	private JPanel itemInfo = new JPanel(new BorderLayout());
 	private JPanel leftInfoTextPanel = new JPanel(new GridLayout(7, 1));
     private JPanel rightValuesPanel = new JPanel(new GridLayout(7, 1));
@@ -33,7 +32,7 @@ public class SellPanel extends JPanel {
 		this.sell = sell;
         setLayout(new BorderLayout());
 		setBackground(ColorScheme.DARK_GRAY_COLOR);
-		this.add(new ItemHeader(sell, itemManager), BorderLayout.NORTH);
+		this.add(new ItemHeader(sell, itemManager, true), BorderLayout.NORTH);
 		constructItemInfo();
 		this.setBorder(new EmptyBorder(0, 0, 5, 0));
     }

@@ -21,7 +21,7 @@ public class ItemHeaderTest {
     public static void main(String[] args) throws Exception {
         setUp();
         ViewTestSetup.setUp();
-        ItemHeader itemHeader = new ItemHeader(buy, ViewTestSetup.itemManager);
+        ItemHeader itemHeader = new ItemHeader(buy, ViewTestSetup.itemManager, true);
         ViewTestSetup.launch(itemHeader);
     }
 }
