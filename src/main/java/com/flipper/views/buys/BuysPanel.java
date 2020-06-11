@@ -18,7 +18,7 @@ import net.runelite.client.ui.ColorScheme;
 public class BuysPanel extends JPanel {
     private static final long serialVersionUID = 4764109045121749116L;
     
-	private ItemManager itemManager;
+    private ItemManager itemManager;
 
     public BuysPanel(ItemManager itemManager) {
         this.itemManager = itemManager;

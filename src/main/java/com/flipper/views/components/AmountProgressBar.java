@@ -21,64 +21,64 @@ import net.runelite.client.ui.components.DimmableJPanel;
  * Shows a progress par of amount bought/sold out of total quantity
  */
 public class AmountProgressBar extends DimmableJPanel {
-	private static final long serialVersionUID = 1910372592064348629L;
+    private static final long serialVersionUID = 1910372592064348629L;
 
-	private int maximumValue;
-	private int value;
-	private List<Integer> positions = Collections.emptyList();
-	private final JLabel leftLabel = new JLabel();
-	private final JLabel rightLabel = new JLabel();
+    private int maximumValue;
+    private int value;
+    private List<Integer> positions = Collections.emptyList();
+    private final JLabel leftLabel = new JLabel();
+    private final JLabel rightLabel = new JLabel();
 
-	public AmountProgressBar(Transaction transaction) {
-		setLayout(new BorderLayout());
+    public AmountProgressBar(Transaction transaction) {
+        setLayout(new BorderLayout());
 
-		maximumValue = transaction.getTotalQuantity();
-		value = transaction.getQuantity();
+        maximumValue = transaction.getTotalQuantity();
+        value = transaction.getQuantity();
 
-		setLabel(leftLabel, value);
-		setLabel(rightLabel, maximumValue);
+        setLabel(leftLabel, value);
+        setLabel(rightLabel, maximumValue);
 
-		setBackground(ColorScheme.DARKER_GRAY_COLOR);
-		setForeground(Color.GREEN.darker().darker());
+        setBackground(ColorScheme.DARKER_GRAY_COLOR);
+        setForeground(Color.GREEN.darker().darker());
 
-		setPreferredSize(new Dimension(100, 16));
+        setPreferredSize(new Dimension(100, 16));
 
-		// Adds components to be automatically redrawn when paintComponents is called
-		add(leftLabel, BorderLayout.WEST);
-		add(rightLabel, BorderLayout.EAST);
-	}
+        // Adds components to be automatically redrawn when paintComponents is called
+        add(leftLabel, BorderLayout.WEST);
+        add(rightLabel, BorderLayout.EAST);
+    }
 
-	private void setLabel(JLabel jLabel, int value) {
-		String valueAsString = Integer.toString(value);
-		jLabel.setText(valueAsString);
-		jLabel.setForeground(Color.WHITE);
-		jLabel.setFont(FontManager.getRunescapeBoldFont());
-		jLabel.setBorder(new EmptyBorder(2, 5, 0, 2));
-	}
+    private void setLabel(JLabel jLabel, int value) {
+        String valueAsString = Integer.toString(value);
+        jLabel.setText(valueAsString);
+        jLabel.setForeground(Color.WHITE);
+        jLabel.setFont(FontManager.getRunescapeBoldFont());
+        jLabel.setBorder(new EmptyBorder(2, 5, 0, 2));
+    }
 
-	@Override
-	public void paint(Graphics g) {
-		int percentage = getPercentage();
-		int topWidth = (int) (getSize().width * (percentage / 100f));
+    @Override
+    public void paint(Graphics g) {
+        int percentage = getPercentage();
+        int topWidth = (int) (getSize().width * (percentage / 100f));
 
-		super.paint(g);
-		g.setColor(getForeground());
-		g.fillRect(0, 0, topWidth, 16);
+        super.paint(g);
+        g.setColor(getForeground());
+        g.fillRect(0, 0, topWidth, 16);
 
-		for (final Integer position : positions) {
-			final int xCord = getSize().width * position / maximumValue;
-			if (xCord > topWidth) {
-				g.fillRect(xCord, 0, 1, 16);
-			}
-		}
+        for (final Integer position : positions) {
+            final int xCord = getSize().width * position / maximumValue;
+            if (xCord > topWidth) {
+                g.fillRect(xCord, 0, 1, 16);
+            }
+        }
 
-		super.paintComponents(g);
-	}
+        super.paintComponents(g);
+    }
 
-	private int getPercentage() {
-		if (value == 0) {
-			return 0;
-		}
-		return (value * 100) / maximumValue;
-	}
+    private int getPercentage() {
+        if (value == 0) {
+            return 0;
+        }
+        return (value * 100) / maximumValue;
+    }
 }
