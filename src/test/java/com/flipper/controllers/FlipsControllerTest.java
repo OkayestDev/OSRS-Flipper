@@ -6,10 +6,12 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.flipper.TestUtilities;
 import com.flipper.helpers.TradePersister;
 import com.flipper.models.Flip;
 import com.flipper.models.Transaction;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,6 +37,11 @@ public class FlipsControllerTest {
         TradePersister.setUp(testFilePath);
         when(itemManager.getItemComposition(mockItemId)).thenReturn(itemComposition);
         when(itemComposition.getName()).thenReturn("Test Name");
+    }
+
+    @After
+    public void tearDown() {
+        TestUtilities.cleanTestResultFiles();
     }
 
     @Test

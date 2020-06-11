@@ -1,5 +1,6 @@
 package com.flipper.helpers;
 
+import com.flipper.TestUtilities;
 import com.flipper.models.Flip;
 import com.flipper.models.Transaction;
 
@@ -48,13 +49,7 @@ public class TradePersisterTest {
 
     @After
     public void tearDown() throws IOException {
-        // Delete any generated test-result-files
-        File deleteBuys = new File(this.testFilePath + "\\" + TradePersister.BUYS_JSON_FILE);
-        File deleteSells = new File(this.testFilePath + "\\" + TradePersister.SELLS_JSON_FILE);
-        File deleteFlips = new File(this.testFilePath + "\\" + TradePersister.FLIPS_JSON_FILE);
-        deleteBuys.delete();
-        deleteSells.delete();
-        deleteFlips.delete();
+        TestUtilities.cleanTestResultFiles();
     }
     
     @Test
