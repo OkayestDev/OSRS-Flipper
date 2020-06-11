@@ -24,6 +24,11 @@ public class GrandExchange {
                 state == GrandExchangeOfferState.CANCELLED_BUY;
     }
 
+    public static boolean checkIsCancelState(GrandExchangeOfferState state) {
+        return state == GrandExchangeOfferState.CANCELLED_BUY ||
+                state == GrandExchangeOfferState.CANCELLED_SELL;
+    }
+
     /**
      * Potentially creates a transaction based on the GrandExchange event
      * @param newOfferEvent

@@ -54,7 +54,7 @@ public class FlipsController {
      * @param sell
      * @param buys
      */
-    public void createFlip(Transaction sell, List<Transaction> buys) {
+    public Flip createFlip(Transaction sell, List<Transaction> buys) {
         ListIterator<Transaction> buysIterator = buys.listIterator(buys.size());
         // If sell has already been flipped, look for it's corresponding buy and update the flip
         if (sell.isFlipped()) {
@@ -66,8 +66,13 @@ public class FlipsController {
                     while (buysIterator.hasPrevious()) {
                         Transaction buy = buysIterator.previous();
                         if (buy.id == flip.getBuy().id) {
-                            flipsIterator.set(updateFlip(sell, buy, flip));
-                            return;
+                            Flip updatedFlip = updateFlip(sell, buy, flip);
+                            if (updatedFlip.isMarginCheck()) {
+                                flipsIterator.remove();
+                            } else {
+                                flipsIterator.set(updatedFlip);
+                            }
+                            return updatedFlip;
                         }
                     }
                 }
@@ -80,10 +85,14 @@ public class FlipsController {
                     Flip flip = new Flip(buy, sell);
                     buy.setIsFlipped(true);
                     sell.setIsFlipped(true);
-                    this.addFlip(flip);
-                    return;
+                    if (!flip.isMarginCheck()) {
+                        this.addFlip(flip);
+                    }
+                    return flip;
                 }
             }
         }
+
+		return null;
     }
 }

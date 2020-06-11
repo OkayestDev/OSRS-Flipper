@@ -24,6 +24,7 @@ public class TradePersister {
     public static final String SELLS_JSON_FILE = "flipper-sells.json";
     public static final String BUYS_JSON_FILE = "flipper-buys.json";
     public static final String FLIPS_JSON_FILE = "flipper-flips.json";
+    public static final String MARGINS_JSON_FILE = "flipper-margins.json";
 
     public static void setUp(String directoryPath) throws IOException {
         directory = new File(directoryPath);
@@ -44,6 +45,7 @@ public class TradePersister {
         generateFileIfDoesNotExist(SELLS_JSON_FILE);
         generateFileIfDoesNotExist(BUYS_JSON_FILE);
         generateFileIfDoesNotExist(FLIPS_JSON_FILE);
+        generateFileIfDoesNotExist(MARGINS_JSON_FILE);
     }
 
     private static void generateFileIfDoesNotExist(String filename) throws IOException {
@@ -77,30 +79,6 @@ public class TradePersister {
         return new String(fileBytes);
     }
 
-    /**
-     * Saves transaction to flipper's json
-     * 
-     * @param buys  list of buys
-     * @param sells list of sells
-     * @param flips list of flips
-     * @return whether transactions has been successfully saved
-     */
-    public static boolean saveTransactions(List<Transaction> buys, List<Transaction> sells, List<Flip> flips) {
-        try {
-            // Buys
-            saveJson(buys, BUYS_JSON_FILE);
-            // Sells
-            saveJson(sells, SELLS_JSON_FILE);
-            // Flips
-            saveJson(flips, FLIPS_JSON_FILE);
-        } catch (Exception error) {
-            Log.info("Failed to save some transactions " + error.toString());
-            return false;
-        }
-
-        return true;
-    }
-
     public static boolean saveBuys(List<Transaction> buys) {
         try {
             saveJson(buys, BUYS_JSON_FILE);
@@ -131,6 +109,16 @@ public class TradePersister {
         }
     }
 
+    public static boolean saveMargins(List<Flip> margins) {
+        try {
+            saveJson(margins, MARGINS_JSON_FILE);
+            return true;
+        } catch (Exception error) {
+            Log.info("Failed to save flips " + error.toString());
+            return false;
+        }
+    }
+
     public static List<Flip> loadFlips() throws IOException {
         Gson gson = new Gson();
         String jsonString = getFileContent(FLIPS_JSON_FILE);
@@ -141,6 +129,18 @@ public class TradePersister {
             return new ArrayList<Flip>();
         }
         return flips;
+    }
+
+    public static List<Flip> loadMargins() throws IOException {
+        Gson gson = new Gson();
+        String jsonString = getFileContent(MARGINS_JSON_FILE);
+        Type type = new TypeToken<List<Flip>>() {
+        }.getType();
+        List<Flip> margins = gson.fromJson(jsonString, type);
+        if (margins == null) {
+            return new ArrayList<Flip>();
+        }
+        return margins;
     }
 
     public static List<Transaction> loadBuys() throws IOException {

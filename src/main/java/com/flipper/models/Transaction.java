@@ -24,6 +24,15 @@ public class Transaction {
     private boolean isFlipped;
     private Instant completedTime;
     private Instant createdTime;
+    /**
+     * RuneLite grand exchange subscribing is odd. 
+     * Interactions are duplicated.
+     * This is only an issue when cancelling buy/sells as the
+     * Transaction is being marked as completed resulting in the second
+     * GrandExchangeEvent duplicating the Transaction
+     * See FlipperPlugin::onGrandExchangeOfferChanged
+     */
+    private boolean hasCancelledOnce = false;
 
     public Transaction(
         int quantity,
@@ -44,13 +53,23 @@ public class Transaction {
         this.isComplete = isComplete;
         this.createdTime = Instant.now();
         this.isFlipped = false;
+        this.hasCancelledOnce = false;
     }
 
     public Transaction updateTransaction(GrandExchangeOffer offer) {
         this.quantity = offer.getQuantitySold();
         this.totalQuantity = offer.getTotalQuantity();
         this.pricePer = offer.getSpent() / offer.getQuantitySold();
-        this.isComplete = GrandExchange.checkIsComplete(offer.getState());
+        boolean isCancelState = GrandExchange.checkIsCancelState(offer.getState());
+
+        if (!isCancelState || (this.hasCancelledOnce && isCancelState)) {
+            this.isComplete = GrandExchange.checkIsComplete(offer.getState());
+        }
+
+        if (isCancelState) {
+            this.hasCancelledOnce = true;
+        }
+
         if (this.isComplete) {
             completedTime = Instant.now();
             this.totalQuantity = offer.getQuantitySold();

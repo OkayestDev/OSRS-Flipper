@@ -56,21 +56,7 @@ public class TradePersisterTest {
         deleteSells.delete();
         deleteFlips.delete();
     }
-
-    @Test
-    public void testSaveTransactionsSuccessfullySavesTransactions() {
-        boolean isSaved = TradePersister.saveTransactions(buys, sells, flips);
-        assertTrue(isSaved);
-        // Ensure the three files have been created: flipper-buys.json,
-        // flipper-sells.json, flipper-flips.json
-        File buysFile = new File(this.testFilePath + "\\" + TradePersister.BUYS_JSON_FILE);
-        File sellsFile = new File(this.testFilePath + "\\" + TradePersister.SELLS_JSON_FILE);
-        File flipsFile = new File(this.testFilePath + "\\" + TradePersister.FLIPS_JSON_FILE);
-        assertTrue(buysFile.exists());
-        assertTrue(sellsFile.exists());
-        assertTrue(flipsFile.exists());
-    }
-
+    
     @Test
     public void testLoadFlipsReturnsListOfFlips() throws IOException {
         // Create test file to load

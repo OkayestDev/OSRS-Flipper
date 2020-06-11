@@ -3,6 +3,7 @@ package com.flipper.controllers;
 import java.io.IOException;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.UUID;
 
 import com.flipper.helpers.GrandExchange;
 import com.flipper.helpers.TradePersister;
@@ -62,5 +63,17 @@ public class SellsController {
         Transaction newSell = GrandExchange.createTransactionFromOffer(offer, itemManager);
         this.addSell(newSell);
         return newSell;
+    }
+
+    public void removeSell(UUID id) {
+        ListIterator<Transaction> sellsIterator = sells.listIterator(sells.size());
+        while (sellsIterator.hasPrevious()) {
+            Transaction sell = sellsIterator.previous();
+            if (sell.id == id) {
+                sellsIterator.remove();
+                this.sellsPanel.rebuildPanel(sells);
+                return;
+            }
+        }
     }
 }

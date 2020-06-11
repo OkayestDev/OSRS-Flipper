@@ -2,20 +2,18 @@ package com.flipper;
 
 import com.flipper.controllers.BuysController;
 import com.flipper.controllers.FlipsController;
+import com.flipper.controllers.MarginsController;
 import com.flipper.controllers.SellsController;
 import com.flipper.controllers.TabManagerController;
 import com.flipper.helpers.GrandExchange;
-import com.flipper.helpers.Log;
 import com.flipper.helpers.TradePersister;
+import com.flipper.models.Flip;
 import com.flipper.models.Transaction;
 import com.google.inject.Provides;
-import java.util.concurrent.ScheduledExecutorService;
 import javax.inject.Inject;
-import net.runelite.api.Client;
 import net.runelite.api.GrandExchangeOffer;
 import net.runelite.api.GrandExchangeOfferState;
 import net.runelite.api.events.GrandExchangeOfferChanged;
-import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ClientShutdown;
@@ -28,14 +26,6 @@ import net.runelite.client.ui.ClientToolbar;
 public class FlipperPlugin extends Plugin {
     // Injects
     @Inject
-    private Client client;
-    @Inject
-    private FlipperConfig config;
-    @Inject
-    private ScheduledExecutorService executor;
-    @Inject
-    private ClientThread clientThread;
-    @Inject
     private ClientToolbar clientToolbar;
     @Inject
     private ItemManager itemManager;
@@ -43,7 +33,7 @@ public class FlipperPlugin extends Plugin {
     private BuysController buysController;
     private SellsController sellsController;
     private FlipsController flipsController;
-    private TabManagerController tabManagerController;
+    private MarginsController marginsController;
 
     @Override
     protected void startUp() throws Exception {
@@ -51,11 +41,13 @@ public class FlipperPlugin extends Plugin {
         buysController = new BuysController(itemManager);
         sellsController = new SellsController(itemManager);
         flipsController = new FlipsController(itemManager);
-        tabManagerController = new TabManagerController(
+        marginsController = new MarginsController(itemManager);
+        new TabManagerController(
             clientToolbar,
             buysController.getPanel(),
             sellsController.getPanel(),
-            flipsController.getPanel()
+            flipsController.getPanel(),
+            marginsController.getPanel()
         );
     }
 
@@ -63,11 +55,11 @@ public class FlipperPlugin extends Plugin {
         buysController.saveBuys();
         sellsController.saveSells();
         flipsController.saveFlips();
+        marginsController.saveMargins();
     }
 
     @Override
     protected void shutDown() throws Exception {
-        Log.info("Flipper stopped!");
         this.saveAll();
     }
 
@@ -94,7 +86,13 @@ public class FlipperPlugin extends Plugin {
                 buysController.createBuy(offer);
             } else {
                 Transaction sell = sellsController.createSell(offer);
-                flipsController.createFlip(sell, buysController.getBuys());
+                Flip flip = flipsController.createFlip(sell, buysController.getBuys());
+                if (flip != null && flip.isMarginCheck()) {
+                    // Remove buy and sell from buy and sell lists since they're part of margin checks
+                    buysController.removeBuy(flip.getBuy().id);
+                    sellsController.removeSell(sell.id);
+                    marginsController.addMargin(flip);
+                }
             }
         }
     }

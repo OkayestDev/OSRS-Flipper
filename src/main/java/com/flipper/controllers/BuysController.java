@@ -3,6 +3,7 @@ package com.flipper.controllers;
 import java.io.IOException;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.UUID;
 
 import com.flipper.models.Transaction;
 import com.flipper.views.buys.BuysPanel;
@@ -65,5 +66,17 @@ public class BuysController {
         // It's a new buy, create one
         Transaction newBuy = GrandExchange.createTransactionFromOffer(offer, itemManager);
         this.addBuy(newBuy);
+    }
+
+    public void removeBuy(UUID id) {
+        ListIterator<Transaction> buysIterator = buys.listIterator(buys.size());
+        while (buysIterator.hasPrevious()) {
+            Transaction buy = buysIterator.previous();
+            if (buy.id == id) {
+                buysIterator.remove();
+                this.buysPanel.rebuildPanel(buys);
+                return;
+            }
+        }
     }
 }

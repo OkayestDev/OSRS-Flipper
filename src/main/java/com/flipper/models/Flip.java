@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 import lombok.Data;
+import lombok.Getter;
 
 /**
  * Represents a buy and sell (flip) of an item
@@ -15,7 +16,8 @@ public class Flip {
     private Transaction sell;
     private Instant createdTime;
     private Instant completedTime;
-    private boolean isMarginCheck;
+    @Getter
+    private boolean isMarginCheck = false;
 
     public Flip(Transaction buy, Transaction sell) {
         id = UUID.randomUUID();
@@ -31,16 +33,20 @@ public class Flip {
         if (buy.isComplete() && sell.isComplete()) {
             completedTime = Instant.now();
         }
+        setMarginCheck();
         return this;
     }
 
     /**
      * We know a flip is a margin check when only 1 is bought
-     * and it's bought for a higher price than it's sold for
+     * and it's bought for a greater to or equal price than sold for
      */
     private void setMarginCheck() {
-        isMarginCheck = buy.getQuantity() == 1
-                && buy.getPricePer() > sell.getPricePer();
+        isMarginCheck = 
+            buy.isComplete() &&
+            sell.isComplete() &&
+            buy.getTotalQuantity() == 1 &&
+            buy.getPricePer() >= sell.getPricePer();
     }
 
     /**
