@@ -44,13 +44,15 @@ public class FlipsController {
     }
 
     private Flip updateFlip(Transaction sell, Transaction buy, Flip flip) {
-        flip.updateFlip(sell, buy);
+        Flip updatedFlip = flip.updateFlip(sell, buy);
         this.flipsPanel.rebuildPanel(flips);
-        return flip;
+        return updatedFlip;
     }
 
     /**
      * Potentially creates a flip if the sell is complete and has a corresponding buy
+     * @todo Bugfix: debug "Granite Gloves glitch": Bought 8, Started Sell, Sold 1 (created flip), Sold 7 more but didn't update flip
+     * Seems to be bug with logging on and receiving updated sell
      * @param sell
      * @param buys
      */
@@ -61,12 +63,13 @@ public class FlipsController {
             ListIterator<Flip> flipsIterator = flips.listIterator(flips.size());
             while (flipsIterator.hasPrevious()) {
                 Flip flip = flipsIterator.previous();
-                if (flip.getSell().id == sell.id) {
+                if (flip.getSell().id.equals(sell.id)) {
                     // Now find the corresponding buy
                     while (buysIterator.hasPrevious()) {
                         Transaction buy = buysIterator.previous();
-                        if (buy.id == flip.getBuy().id) {
+                        if (buy.id.equals(flip.getBuy().id)) {
                             Flip updatedFlip = updateFlip(sell, buy, flip);
+                            flipsIterator.set(updatedFlip);
                             if (updatedFlip.isMarginCheck()) {
                                 flipsIterator.remove();
                             } else {

@@ -13,7 +13,7 @@ import com.flipper.helpers.GrandExchange;
  */
 @Data
 public class Transaction {
-    final public UUID id;
+    public final UUID id;
     private int quantity;
     private int totalQuantity;
     private int itemId;

@@ -53,9 +53,10 @@ public class SellsController {
             Transaction sell = sellsIterator.previous();
             // Incomplete sell transaction found, update it
             if (GrandExchange.checkIsOfferPartOfTransaction(sell, offer)) {
-                sellsIterator.set(sell.updateTransaction(offer));
+                Transaction updatedSell = sell.updateTransaction(offer);
+                sellsIterator.set(updatedSell);
                 this.sellsPanel.rebuildPanel(sells);
-                return sell;
+                return updatedSell;
             }
         }
 
@@ -69,7 +70,7 @@ public class SellsController {
         ListIterator<Transaction> sellsIterator = sells.listIterator(sells.size());
         while (sellsIterator.hasPrevious()) {
             Transaction sell = sellsIterator.previous();
-            if (sell.id == id) {
+            if (sell.id.equals(id)) {
                 sellsIterator.remove();
                 this.sellsPanel.rebuildPanel(sells);
                 return;

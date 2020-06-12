@@ -113,7 +113,7 @@ public class FlipperPlugin extends Plugin {
                 Transaction sell = sellsController.createSell(offer);
                 Flip flip = flipsController.createFlip(sell, buysController.getBuys());
                 if (flip != null && flip.isMarginCheck()) {
-                    // Remove buy and sell from buy and sell lists since they're part of margin checks
+                    // Remove buy and sell from buy and sell lists since they're part of a margin check
                     buysController.removeBuy(flip.getBuy().id);
                     sellsController.removeSell(sell.id);
                     marginsController.addMargin(flip);

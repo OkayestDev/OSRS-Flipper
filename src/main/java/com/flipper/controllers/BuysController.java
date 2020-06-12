@@ -72,7 +72,7 @@ public class BuysController {
         ListIterator<Transaction> buysIterator = buys.listIterator(buys.size());
         while (buysIterator.hasPrevious()) {
             Transaction buy = buysIterator.previous();
-            if (buy.id == id) {
+            if (buy.id.equals(id)) {
                 buysIterator.remove();
                 this.buysPanel.rebuildPanel(buys);
                 return;

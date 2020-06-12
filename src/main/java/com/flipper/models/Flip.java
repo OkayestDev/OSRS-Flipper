@@ -11,8 +11,10 @@ import lombok.Getter;
  */
 @Data
 public class Flip {
-    final UUID id;
+    public final UUID id;
+    @Getter
     private Transaction buy;
+    @Getter
     private Transaction sell;
     private Instant createdTime;
     private Instant completedTime;
