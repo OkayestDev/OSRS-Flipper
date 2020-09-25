@@ -74,7 +74,7 @@ public class TradePersister {
     }
 
     private static String getFileContent(String filename) throws IOException {
-        Path filePath = Paths.get(directory + "\\" + filename);
+        Path filePath = Paths.get(directory + "/" + filename);
         byte[] fileBytes = Files.readAllBytes(filePath);
         return new String(fileBytes);
     }
