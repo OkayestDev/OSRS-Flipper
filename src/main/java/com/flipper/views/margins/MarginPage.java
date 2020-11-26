@@ -1,40 +1,36 @@
-package com.flipper.views.sells;
+package com.flipper.views.margins;
 
 import java.util.List;
 import java.util.ListIterator;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 
 import java.awt.BorderLayout;
 
-import com.flipper.models.Transaction;
+import com.flipper.models.Flip;
 
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.ui.ColorScheme;
 
-public class SellsPanel extends JPanel {
-    private static final long serialVersionUID = -5441336522969800315L;
-    
-	private ItemManager itemManager;
+public class MarginPage extends JPanel {
+    private static final long serialVersionUID = -2680984300396244041L;
 
-    public SellsPanel(ItemManager itemManager) {
+    private ItemManager itemManager;
+    private int totalProfit;
+
+    public MarginPage(ItemManager itemManager) {
         this.itemManager = itemManager;
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.setBackground(ColorScheme.DARK_GRAY_COLOR);
     }
 
-    /**
-     * rebuilds the views based on passed sells list
-     * 
-     * @param sells
-     */
-    public void rebuildPanel(List<Transaction> sells) {
+    public void rebuildPanel(List<Flip> margins) {
         SwingUtilities.invokeLater(() -> {
             this.removeAll();
-            
+
             JPanel container = new JPanel();
             container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
             container.setBackground(ColorScheme.DARK_GRAY_COLOR);
@@ -44,11 +40,12 @@ public class SellsPanel extends JPanel {
             scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
             // Reverse list to show newest first
-            ListIterator<Transaction> sellsIterator = sells.listIterator(sells.size());
-            while(sellsIterator.hasPrevious()) {
-                Transaction sell = sellsIterator.previous();
-                SellPanel sellTransactionPanel = new SellPanel(sell, itemManager);
-                container.add(sellTransactionPanel);
+            ListIterator<Flip> marginsIterator = margins.listIterator(margins.size());
+            while (marginsIterator.hasPrevious()) {
+                Flip margin = marginsIterator.previous();
+                MarginPanel flipPanel = new MarginPanel(margin, itemManager);
+                totalProfit += margin.getTotalProfit();
+                container.add(flipPanel);
             }
 
             this.add(container, BorderLayout.WEST);

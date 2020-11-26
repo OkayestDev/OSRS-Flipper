@@ -6,7 +6,7 @@ import java.util.ListIterator;
 import java.util.UUID;
 
 import com.flipper.models.Transaction;
-import com.flipper.views.buys.BuysPanel;
+import com.flipper.views.buys.BuyPage;
 import com.flipper.helpers.GrandExchange;
 import com.flipper.helpers.TradePersister;
 
@@ -16,34 +16,34 @@ import net.runelite.api.GrandExchangeOffer;
 import net.runelite.client.game.ItemManager;
 
 /**
- * @todo weird edge cases where user logs in with complete GE trnasaction. Duplicates buy
- * (i.e. 6800 cannonballs duplicated)
+ * @todo weird edge cases where user logs in with complete GE trnasaction.
+ *       Duplicates buy (i.e. 6800 cannonballs duplicated)
  */
 public class BuysController {
     @Getter
     @Setter
     private List<Transaction> buys;
-    private BuysPanel buysPanel;
+    private BuyPage buyPage;
     private ItemManager itemManager;
 
     public BuysController(ItemManager itemManager) throws IOException {
         this.itemManager = itemManager;
-        this.buysPanel = new BuysPanel(itemManager);
+        this.buyPage = new BuyPage(itemManager);
         this.loadBuys();
     }
 
     public void addBuy(Transaction buy) {
         this.buys.add(buy);
-        this.buysPanel.rebuildPanel(buys);
+        this.buyPage.rebuildPanel(buys);
     }
 
-    public BuysPanel getPanel() {
-        return this.buysPanel;
+    public BuyPage getPanel() {
+        return this.buyPage;
     }
 
     public void loadBuys() throws IOException {
         this.buys = TradePersister.loadBuys();
-        this.buysPanel.rebuildPanel(this.buys);
+        this.buyPage.rebuildPanel(this.buys);
     }
 
     public void saveBuys() {
@@ -58,7 +58,7 @@ public class BuysController {
             // Incomplete buy transaction found, update it
             if (GrandExchange.checkIsOfferPartOfTransaction(buy, offer)) {
                 buysIterator.set(buy.updateTransaction(offer));
-                this.buysPanel.rebuildPanel(buys);
+                this.buyPage.rebuildPanel(buys);
                 return;
             }
         }
@@ -74,7 +74,7 @@ public class BuysController {
             Transaction buy = buysIterator.previous();
             if (buy.id.equals(id)) {
                 buysIterator.remove();
-                this.buysPanel.rebuildPanel(buys);
+                this.buyPage.rebuildPanel(buys);
                 return;
             }
         }

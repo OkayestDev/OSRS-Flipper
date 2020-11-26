@@ -8,7 +8,7 @@ import java.util.UUID;
 import com.flipper.helpers.GrandExchange;
 import com.flipper.helpers.TradePersister;
 import com.flipper.models.Transaction;
-import com.flipper.views.sells.SellsPanel;
+import com.flipper.views.sells.SellPage;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,27 +19,27 @@ public class SellsController {
     @Getter
     @Setter
     private List<Transaction> sells;
-    private SellsPanel sellsPanel;
+    private SellPage sellPage;
     private ItemManager itemManager;
 
     public SellsController(ItemManager itemManager) throws IOException {
         this.itemManager = itemManager;
-        this.sellsPanel = new SellsPanel(itemManager);
+        this.sellPage = new SellPage(itemManager);
         this.loadSells();
     }
 
     public void addSell(Transaction sell) {
         this.sells.add(sell);
-        this.sellsPanel.rebuildPanel(sells);
+        this.sellPage.rebuildPanel(sells);
     }
 
-    public SellsPanel getPanel() {
-        return this.sellsPanel;
+    public SellPage getPanel() {
+        return this.sellPage;
     }
 
     public void loadSells() throws IOException {
         this.sells = TradePersister.loadSells();
-        this.sellsPanel.rebuildPanel(sells);
+        this.sellPage.rebuildPanel(sells);
     }
 
     public void saveSells() {
@@ -55,7 +55,7 @@ public class SellsController {
             if (GrandExchange.checkIsOfferPartOfTransaction(sell, offer)) {
                 Transaction updatedSell = sell.updateTransaction(offer);
                 sellsIterator.set(updatedSell);
-                this.sellsPanel.rebuildPanel(sells);
+                this.sellPage.rebuildPanel(sells);
                 return updatedSell;
             }
         }
@@ -72,7 +72,7 @@ public class SellsController {
             Transaction sell = sellsIterator.previous();
             if (sell.id.equals(id)) {
                 sellsIterator.remove();
-                this.sellsPanel.rebuildPanel(sells);
+                this.sellPage.rebuildPanel(sells);
                 return;
             }
         }

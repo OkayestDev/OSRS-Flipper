@@ -11,7 +11,7 @@ import net.runelite.client.game.ItemManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SellsPanelTest {
+public class SellPageTest {
     static JFrame mainWindow;
     static ItemManager itemManager;
     static ItemComposition itemComposition;
@@ -21,31 +21,15 @@ public class SellsPanelTest {
 
     public static void setUp() {
         sells = new ArrayList<Transaction>();
-        sells.add(new Transaction(
-            1,
-            453,
-            100,
-            1000,
-            testItemName,
-            true,
-            true
-        ));
-        sells.add(new Transaction(
-            1,
-            453,
-            101,
-            1001,
-            testItemName,
-            true,
-            false
-        ));
+        sells.add(new Transaction(1, 453, 100, 1000, testItemName, true, true));
+        sells.add(new Transaction(1, 453, 101, 1001, testItemName, true, false));
     }
 
     public static void main(String[] args) throws Exception {
         setUp();
         ViewTestSetup.setUp();
-        SellsPanel sellsPanel = new SellsPanel(ViewTestSetup.itemManager);
-        sellsPanel.rebuildPanel(sells);
-        ViewTestSetup.launch(sellsPanel);
+        SellPage sellPage = new SellPage(ViewTestSetup.itemManager);
+        sellPage.rebuildPanel(sells);
+        ViewTestSetup.launch(sellPage);
     }
 }

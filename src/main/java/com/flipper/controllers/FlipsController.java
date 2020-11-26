@@ -8,7 +8,7 @@ import com.flipper.helpers.GrandExchange;
 import com.flipper.helpers.TradePersister;
 import com.flipper.models.Flip;
 import com.flipper.models.Transaction;
-import com.flipper.views.flips.FlipsPanel;
+import com.flipper.views.flips.FlipPage;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -18,25 +18,25 @@ public class FlipsController {
     @Getter
     @Setter
     private List<Flip> flips;
-    private FlipsPanel flipsPanel;
+    private FlipPage flipPage;
 
     public FlipsController(ItemManager itemManager) throws IOException {
-        this.flipsPanel = new FlipsPanel(itemManager);
-        this.loadFlips(); 
+        this.flipPage = new FlipPage(itemManager);
+        this.loadFlips();
     }
 
     public void addFlip(Flip flip) {
         this.flips.add(flip);
-        this.flipsPanel.rebuildPanel(flips);
+        this.flipPage.rebuildPanel(flips);
     }
 
-    public FlipsPanel getPanel() {
-        return this.flipsPanel;
+    public FlipPage getPanel() {
+        return this.flipPage;
     }
 
     private void loadFlips() throws IOException {
         this.flips = TradePersister.loadFlips();
-        this.flipsPanel.rebuildPanel(flips);
+        this.flipPage.rebuildPanel(flips);
     }
 
     public void saveFlips() {
@@ -45,20 +45,24 @@ public class FlipsController {
 
     private Flip updateFlip(Transaction sell, Transaction buy, Flip flip) {
         Flip updatedFlip = flip.updateFlip(sell, buy);
-        this.flipsPanel.rebuildPanel(flips);
+        this.flipPage.rebuildPanel(flips);
         return updatedFlip;
     }
 
     /**
-     * Potentially creates a flip if the sell is complete and has a corresponding buy
-     * @todo Bugfix: debug "Granite Gloves glitch": Bought 8, Started Sell, Sold 1 (created flip), Sold 7 more but didn't update flip
-     * Seems to be bug with logging on and receiving updated sell
+     * Potentially creates a flip if the sell is complete and has a corresponding
+     * buy
+     * 
+     * @todo Bugfix: debug "Granite Gloves glitch": Bought 8, Started Sell, Sold 1
+     *       (created flip), Sold 7 more but didn't update flip Seems to be bug with
+     *       logging on and receiving updated sell
      * @param sell
      * @param buys
      */
     public Flip createFlip(Transaction sell, List<Transaction> buys) {
         ListIterator<Transaction> buysIterator = buys.listIterator(buys.size());
-        // If sell has already been flipped, look for it's corresponding buy and update the flip
+        // If sell has already been flipped, look for it's corresponding buy and update
+        // the flip
         if (sell.isFlipped()) {
             ListIterator<Flip> flipsIterator = flips.listIterator(flips.size());
             while (flipsIterator.hasPrevious()) {
@@ -96,6 +100,6 @@ public class FlipsController {
             }
         }
 
-		return null;
+        return null;
     }
 }

@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.flipper.helpers.TradePersister;
 import com.flipper.models.Flip;
-import com.flipper.views.margins.MarginsPanel;
+import com.flipper.views.margins.MarginPage;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,25 +15,25 @@ public class MarginsController {
     @Getter
     @Setter
     private List<Flip> margins;
-    private MarginsPanel marginsPanel;
+    private MarginPage marginPage;
 
     public MarginsController(ItemManager itemManager) throws IOException {
-        this.marginsPanel = new MarginsPanel(itemManager);
+        this.marginPage = new MarginPage(itemManager);
         this.loadMargins();
     }
 
     public void addMargin(Flip margin) {
         this.margins.add(margin);
-        this.marginsPanel.rebuildPanel(margins);
+        this.marginPage.rebuildPanel(margins);
     }
 
-    public MarginsPanel getPanel() {
-        return this.marginsPanel;
+    public MarginPage getPanel() {
+        return this.marginPage;
     }
 
     private void loadMargins() throws IOException {
         this.margins = TradePersister.loadMargins();
-        this.marginsPanel.rebuildPanel(margins);
+        this.marginPage.rebuildPanel(margins);
     }
 
     public void saveMargins() {

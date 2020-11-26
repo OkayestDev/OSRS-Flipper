@@ -22,13 +22,13 @@ import net.runelite.client.game.ItemManager;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
 
-public class FlipsPanel extends JPanel {
+public class FlipPage extends JPanel {
     private static final long serialVersionUID = -2680984300396244041L;
-    
+
     private ItemManager itemManager;
     private int totalProfit = 0;
 
-    public FlipsPanel(ItemManager itemManager) {
+    public FlipPage(ItemManager itemManager) {
         this.itemManager = itemManager;
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.setBackground(ColorScheme.DARK_GRAY_COLOR);
@@ -38,9 +38,9 @@ public class FlipsPanel extends JPanel {
         SwingUtilities.invokeLater(() -> {
             this.removeAll();
             this.totalProfit = 0;
-            JPanel flipsPanel = constructFlips(flips);
+            JPanel flipPage = constructFlips(flips);
             constructTotalProfit();
-            this.add(flipsPanel, BorderLayout.WEST);
+            this.add(flipPage, BorderLayout.WEST);
         });
     }
 
@@ -55,7 +55,7 @@ public class FlipsPanel extends JPanel {
 
         // Reverse list to show newest first
         ListIterator<Flip> flipsIterator = flips.listIterator(flips.size());
-        while(flipsIterator.hasPrevious()) {
+        while (flipsIterator.hasPrevious()) {
             Flip flip = flipsIterator.previous();
             FlipPanel flipPanel = new FlipPanel(flip, itemManager);
             totalProfit += flip.getTotalProfit();
@@ -71,20 +71,14 @@ public class FlipsPanel extends JPanel {
         JPanel totalProfitContainer = new JPanel(new GridLayout(2, 1));
 
         JLabel totalProfitLabel = new JLabel("Total Profit");
-        totalProfitLabel.setFont(new Font(
-            FontManager.getRunescapeBoldFont().getName(), 
-            FontManager.getRunescapeBoldFont().getStyle(), 
-            16
-        ));
+        totalProfitLabel.setFont(new Font(FontManager.getRunescapeBoldFont().getName(),
+                FontManager.getRunescapeBoldFont().getStyle(), 16));
         totalProfitLabel.setHorizontalAlignment(JLabel.CENTER);
         totalProfitLabel.setForeground(Color.WHITE);
 
         JLabel totalProfitValueLabel = new JLabel(Integer.toString(totalProfit));
-        totalProfitValueLabel.setFont(new Font(
-            FontManager.getRunescapeFont().getName(), 
-            FontManager.getRunescapeFont().getStyle(), 
-            24
-        ));
+        totalProfitValueLabel.setFont(
+                new Font(FontManager.getRunescapeFont().getName(), FontManager.getRunescapeFont().getStyle(), 24));
         totalProfitValueLabel.setHorizontalAlignment(JLabel.CENTER);
         Color totalProfitColor = ColorScheme.GRAND_EXCHANGE_ALCH;
         totalProfitValueLabel.setForeground(totalProfitColor);

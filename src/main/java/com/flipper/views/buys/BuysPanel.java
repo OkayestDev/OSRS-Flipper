@@ -15,12 +15,12 @@ import com.flipper.models.Transaction;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.ui.ColorScheme;
 
-public class BuysPanel extends JPanel {
+public class BuyPage extends JPanel {
     private static final long serialVersionUID = 4764109045121749116L;
-    
+
     private ItemManager itemManager;
 
-    public BuysPanel(ItemManager itemManager) {
+    public BuyPage(ItemManager itemManager) {
         this.itemManager = itemManager;
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.setBackground(ColorScheme.DARK_GRAY_COLOR);
@@ -29,7 +29,7 @@ public class BuysPanel extends JPanel {
     public void rebuildPanel(List<Transaction> buys) {
         SwingUtilities.invokeLater(() -> {
             this.removeAll();
-            
+
             JPanel container = new JPanel();
             container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
             container.setBackground(ColorScheme.DARK_GRAY_COLOR);
@@ -40,7 +40,7 @@ public class BuysPanel extends JPanel {
 
             // Reverse list to show newest first
             ListIterator<Transaction> buysIterator = buys.listIterator(buys.size());
-            while(buysIterator.hasPrevious()) {
+            while (buysIterator.hasPrevious()) {
                 Transaction buy = buysIterator.previous();
                 BuyPanel buyTransactionPanel = new BuyPanel(buy, itemManager);
                 container.add(buyTransactionPanel);
