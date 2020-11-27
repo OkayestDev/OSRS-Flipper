@@ -60,8 +60,6 @@ public class FlipperPlugin extends Plugin {
     private FlipsController flipsController;
     private MarginsController marginsController;
 
-    private Boolean hasSaved;
-
     @Override
     protected void startUp() throws Exception {
         TradePersister.setUp();
@@ -71,7 +69,6 @@ public class FlipperPlugin extends Plugin {
         marginsController = new MarginsController(itemManager);
         new TabManagerController(clientToolbar, buysController.getPanel(), sellsController.getPanel(),
                 flipsController.getPanel(), marginsController.getPanel());
-        this.hasSaved = false;
     }
 
     private void saveAll() {
