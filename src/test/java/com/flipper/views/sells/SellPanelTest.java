@@ -5,17 +5,11 @@ import com.flipper.views.ViewTestSetup;
 
 public class SellPanelTest {
     public static void main(String[] args) throws Exception {
-        ViewTestSetup.setUp();
-        Transaction sell = new Transaction(
-            5,
-            10,
-            ViewTestSetup.mockItemId,
-            100,
-            ViewTestSetup.testItemName,
-            true,
-            true
-        );
-        SellPanel sellPanel = new SellPanel(sell, ViewTestSetup.itemManager);
-        ViewTestSetup.launch(sellPanel);
+        // ViewTestSetup.setUp();
+        // Transaction sell = new Transaction(5, 10, ViewTestSetup.mockItemId, 100,
+        // ViewTestSetup.testItemName, true,
+        // true);
+        // SellPanel sellPanel = new SellPanel(sell, ViewTestSetup.itemManager);
+        // ViewTestSetup.launch(sellPanel);
     }
 }
