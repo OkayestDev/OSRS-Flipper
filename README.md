@@ -34,4 +34,8 @@ Track Margins:
 
 ## Changelog
 
-v1.0 - Plugin added!
+v1.0 <br /> 
+    - Plugin added!
+
+v1.1.0 <br />
+    - Added ability to delete flips, margin checks, buys, and sells
