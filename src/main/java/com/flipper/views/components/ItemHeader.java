@@ -68,6 +68,20 @@ public class ItemHeader extends JPanel {
                 hoverButton.setVisible(false);
             }
         });
+
+        hoverButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent me) {
+                hoverButton.setVisible(true);
+                costPerLabel.setVisible(false);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent me) {
+                costPerLabel.setVisible(true);
+                hoverButton.setVisible(false);
+            }
+        });
     }
 
     private JPanel constructItemIcon() {

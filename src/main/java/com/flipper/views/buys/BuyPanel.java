@@ -1,5 +1,6 @@
 package com.flipper.views.buys;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -11,15 +12,14 @@ import com.flipper.helpers.UiUtilities;
 import com.flipper.models.Transaction;
 import com.flipper.views.components.AmountProgressBar;
 import com.flipper.views.components.ItemHeader;
+
 import net.runelite.client.ui.ColorScheme;
-import net.runelite.client.ui.FontManager;
+import net.runelite.client.util.ImageUtil;
 import net.runelite.client.game.ItemManager;
-import java.awt.Color;
 
 import java.awt.event.*;
 import java.util.UUID;
 import java.util.function.Consumer;
-import java.awt.Dimension;
 
 /**
  * Construct of two main components Item Header (item image and name) Item
@@ -32,7 +32,13 @@ public class BuyPanel extends JPanel {
         setLayout(new BorderLayout());
         setBackground(ColorScheme.DARK_GRAY_COLOR);
 
-        JButton deleteBuyButton = new JButton("X");
+        JButton deleteBuyButton = new JButton();
+        ImageIcon deleteIcon = new ImageIcon(ImageUtil.getResourceStreamFromClass(getClass(), UiUtilities.deleteX));
+        deleteBuyButton.setIcon(deleteIcon);
+        deleteBuyButton.setBorderPainted(false);
+        deleteBuyButton.setContentAreaFilled(false);
+        deleteBuyButton.setFocusPainted(true);
+        deleteBuyButton.setOpaque(false);
         deleteBuyButton.addActionListener((ActionEvent action) -> {
             String describedBuy = buy.describeTransaction();
             int input = JOptionPane.showConfirmDialog(null, "Delete Buy of " + describedBuy + "?");
