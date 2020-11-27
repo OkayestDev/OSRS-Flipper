@@ -25,9 +25,7 @@ public class FlipsController {
     private List<Flip> flips;
     private FlipPage flipPage;
     private ItemManager itemManager;
-
     private Consumer<UUID> removeFlipConsumer;
-
     private int totalProfit = 0;
 
     public FlipsController(ItemManager itemManager) throws IOException {

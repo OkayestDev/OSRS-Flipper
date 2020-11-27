@@ -2,6 +2,7 @@ package com.flipper.views.margins;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -11,15 +12,18 @@ import java.awt.GridLayout;
 import com.flipper.helpers.UiUtilities;
 import com.flipper.models.Flip;
 import com.flipper.models.Transaction;
+import com.flipper.views.components.DeleteButton;
 import com.flipper.views.components.ItemHeader;
 
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.game.ItemManager;
+import java.awt.event.*;
+import java.util.UUID;
+import java.util.function.Consumer;
 
 public class MarginPanel extends JPanel {
     private static final long serialVersionUID = 3879605322279273963L;
 
-    private Flip margin;
     private Transaction buy;
     private Transaction sell;
 
@@ -27,13 +31,21 @@ public class MarginPanel extends JPanel {
     private JPanel leftInfoTextPanel = new JPanel(new GridLayout(3, 1));
     private JPanel rightValuesPanel = new JPanel(new GridLayout(3, 1));
 
-    public MarginPanel(Flip flip, ItemManager itemManager) {
-        this.margin = flip;
+    public MarginPanel(Flip margin, ItemManager itemManager, Consumer<UUID> removeMarginConsumer) {
         this.sell = margin.getSell();
         this.buy = margin.getBuy();
+
+        DeleteButton deleteMarginButton = new DeleteButton((ActionEvent action) -> {
+            int input = JOptionPane.showConfirmDialog(null, "Delete margin check?");
+            if (input == 0) {
+                removeMarginConsumer.accept(margin.getId());
+                setVisible(false);
+            }
+        });
+
         setLayout(new BorderLayout());
         setBackground(ColorScheme.DARK_GRAY_COLOR);
-        this.add(new ItemHeader(this.buy, itemManager, false, new JButton()), BorderLayout.NORTH);
+        this.add(new ItemHeader(this.buy, itemManager, false, deleteMarginButton), BorderLayout.NORTH);
         constructItemInfo();
         this.setBorder(new EmptyBorder(0, 0, 5, 0));
     }
