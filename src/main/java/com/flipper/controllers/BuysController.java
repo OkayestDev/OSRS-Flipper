@@ -4,9 +4,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.UUID;
+import java.util.function.Consumer;
+
+import javax.swing.SwingUtilities;
 
 import com.flipper.models.Transaction;
 import com.flipper.views.buys.BuyPage;
+import com.flipper.views.buys.BuyPanel;
 import com.flipper.helpers.GrandExchange;
 import com.flipper.helpers.TradePersister;
 
@@ -26,15 +30,18 @@ public class BuysController {
     private BuyPage buyPage;
     private ItemManager itemManager;
 
+    private Consumer<UUID> removeBuyConsumer;
+
     public BuysController(ItemManager itemManager) throws IOException {
         this.itemManager = itemManager;
-        this.buyPage = new BuyPage(itemManager);
+        this.removeBuyConsumer = id -> this.removeBuy(id);
+        this.buyPage = new BuyPage();
         this.loadBuys();
     }
 
     public void addBuy(Transaction buy) {
         this.buys.add(buy);
-        this.buyPage.rebuildPanel(buys);
+        this.buildView();
     }
 
     public BuyPage getPanel() {
@@ -43,7 +50,7 @@ public class BuysController {
 
     public void loadBuys() throws IOException {
         this.buys = TradePersister.loadBuys();
-        this.buyPage.rebuildPanel(this.buys);
+        this.buildView();
     }
 
     public void saveBuys() {
@@ -58,7 +65,7 @@ public class BuysController {
             // Incomplete buy transaction found, update it
             if (GrandExchange.checkIsOfferPartOfTransaction(buy, offer)) {
                 buysIterator.set(buy.updateTransaction(offer));
-                this.buyPage.rebuildPanel(buys);
+                this.buildView();
                 return;
             }
         }
@@ -74,9 +81,24 @@ public class BuysController {
             Transaction buy = buysIterator.previous();
             if (buy.id.equals(id)) {
                 buysIterator.remove();
-                this.buyPage.rebuildPanel(buys);
+                this.buildView();
                 return;
             }
         }
+    }
+
+    public void buildView() {
+        SwingUtilities.invokeLater(() -> {
+            this.buyPage.removeAll();
+            this.buyPage.build();
+
+            ListIterator<Transaction> buysIterator = buys.listIterator(buys.size());
+
+            while (buysIterator.hasPrevious()) {
+                Transaction buy = buysIterator.previous();
+                BuyPanel buyPanel = new BuyPanel(buy, itemManager, this.removeBuyConsumer);
+                this.buyPage.addBuyPanel(buyPanel);
+            }
+        });
     }
 }

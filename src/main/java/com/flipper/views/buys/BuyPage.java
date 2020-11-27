@@ -1,4 +1,4 @@
-package com.flipper.views.sells;
+package com.flipper.views.buys;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
@@ -8,12 +8,12 @@ import java.awt.BorderLayout;
 
 import net.runelite.client.ui.ColorScheme;
 
-public class SellPage extends JPanel {
+public class BuyPage extends JPanel {
     private static final long serialVersionUID = 4764109045121749116L;
 
     private JPanel container;
 
-    public SellPage() {
+    public BuyPage() {
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.setBackground(ColorScheme.DARK_GRAY_COLOR);
     }
@@ -30,7 +30,7 @@ public class SellPage extends JPanel {
         this.add(container, BorderLayout.WEST);
     }
 
-    public void addSellPanel(SellPanel sellPanel) {
-        container.add(sellPanel);
+    public void addBuyPanel(BuyPanel buyPanel) {
+        container.add(buyPanel);
     }
 }

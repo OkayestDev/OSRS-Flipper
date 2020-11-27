@@ -25,24 +25,15 @@ public class Transaction {
     private Instant completedTime;
     private Instant createdTime;
     /**
-     * RuneLite grand exchange subscribing is odd. 
-     * Interactions are duplicated.
-     * This is only an issue when cancelling buy/sells as the
-     * Transaction is being marked as completed resulting in the second
-     * GrandExchangeEvent duplicating the Transaction
-     * See FlipperPlugin::onGrandExchangeOfferChanged
+     * RuneLite grand exchange subscribing is odd. Interactions are duplicated. This
+     * is only an issue when cancelling buy/sells as the Transaction is being marked
+     * as completed resulting in the second GrandExchangeEvent duplicating the
+     * Transaction See FlipperPlugin::onGrandExchangeOfferChanged
      */
     private boolean hasCancelledOnce = false;
 
-    public Transaction(
-        int quantity,
-        int totalQuantity,
-        int itemId,
-        int pricePer,
-        String itemName,
-        boolean isBuy,
-        boolean isComplete
-    ) {
+    public Transaction(int quantity, int totalQuantity, int itemId, int pricePer, String itemName, boolean isBuy,
+            boolean isComplete) {
         id = UUID.randomUUID();
         this.quantity = quantity;
         this.totalQuantity = totalQuantity;
@@ -75,6 +66,10 @@ public class Transaction {
             this.totalQuantity = offer.getQuantitySold();
         }
         return this;
+    }
+
+    public String describeTransaction() {
+        return String.valueOf(this.quantity) + " " + this.itemName + "(s)";
     }
 
     public void setIsFlipped(boolean isFlipped) {

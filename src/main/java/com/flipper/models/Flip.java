@@ -40,19 +40,21 @@ public class Flip {
     }
 
     /**
-     * We know a flip is a margin check when only 1 is bought
-     * and it's bought for a greater to or equal price than sold for
+     * We know a flip is a margin check when only 1 is bought and it's bought for a
+     * greater to or equal price than sold for
      */
     private void setMarginCheck() {
-        isMarginCheck = 
-            buy.isComplete() &&
-            sell.isComplete() &&
-            buy.getTotalQuantity() == 1 &&
-            buy.getPricePer() >= sell.getPricePer();
+        isMarginCheck = buy.isComplete() && sell.isComplete() && buy.getTotalQuantity() == 1
+                && buy.getPricePer() >= sell.getPricePer();
+    }
+
+    public String describeFlip() {
+        return String.valueOf(buy.getQuantity()) + " " + buy.getItemName() + "(s)";
     }
 
     /**
      * We only concern ourselves with the amount sold (ignore extra bought and kept)
+     * 
      * @return profit of flip
      */
     public int getTotalProfit() {

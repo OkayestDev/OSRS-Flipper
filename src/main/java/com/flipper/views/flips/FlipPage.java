@@ -25,47 +25,19 @@ import net.runelite.client.ui.FontManager;
 public class FlipPage extends JPanel {
     private static final long serialVersionUID = -2680984300396244041L;
 
-    private ItemManager itemManager;
-    private int totalProfit = 0;
+    private JPanel container;
+    private JLabel totalProfitValueLabel;
 
-    public FlipPage(ItemManager itemManager) {
-        this.itemManager = itemManager;
+    public FlipPage() {
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.setBackground(ColorScheme.DARK_GRAY_COLOR);
     }
 
-    public void rebuildPanel(List<Flip> flips) {
-        SwingUtilities.invokeLater(() -> {
-            this.removeAll();
-            this.totalProfit = 0;
-            JPanel flipPage = constructFlips(flips);
-            constructTotalProfit();
-            this.add(flipPage, BorderLayout.WEST);
-        });
+    public void addFlipPanel(FlipPanel flipPanel) {
+        container.add(flipPanel);
     }
 
-    private JPanel constructFlips(List<Flip> flips) {
-        JPanel container = new JPanel();
-        container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
-        container.setBackground(ColorScheme.DARK_GRAY_COLOR);
-
-        JScrollPane scrollPane = new JScrollPane(container);
-        scrollPane.setBackground(ColorScheme.LIGHT_GRAY_COLOR);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-
-        // Reverse list to show newest first
-        ListIterator<Flip> flipsIterator = flips.listIterator(flips.size());
-        while (flipsIterator.hasPrevious()) {
-            Flip flip = flipsIterator.previous();
-            FlipPanel flipPanel = new FlipPanel(flip, itemManager);
-            totalProfit += flip.getTotalProfit();
-            container.add(flipPanel);
-        }
-
-        return container;
-    }
-
-    private void constructTotalProfit() {
+    private void constructTotalProfit(int totalProfit) {
         JPanel container = new JPanel();
         container.setLayout(new BorderLayout());
         JPanel totalProfitContainer = new JPanel(new GridLayout(2, 1));
@@ -76,7 +48,7 @@ public class FlipPage extends JPanel {
         totalProfitLabel.setHorizontalAlignment(JLabel.CENTER);
         totalProfitLabel.setForeground(Color.WHITE);
 
-        JLabel totalProfitValueLabel = new JLabel(Integer.toString(totalProfit));
+        totalProfitValueLabel = new JLabel("0");
         totalProfitValueLabel.setFont(
                 new Font(FontManager.getRunescapeFont().getName(), FontManager.getRunescapeFont().getStyle(), 24));
         totalProfitValueLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -89,6 +61,23 @@ public class FlipPage extends JPanel {
 
         container.add(totalProfitContainer);
         container.setBorder(new EmptyBorder(0, 0, 3, 0));
+        this.add(container, BorderLayout.WEST);
+    }
+
+    public void setTotalProfit(int totalProfit) {
+        totalProfitValueLabel.setText(String.valueOf(totalProfit));
+    }
+
+    public void build() {
+        constructTotalProfit(0);
+        container = new JPanel();
+        container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
+        container.setBackground(ColorScheme.DARK_GRAY_COLOR);
+
+        JScrollPane scrollPane = new JScrollPane(container);
+        scrollPane.setBackground(ColorScheme.LIGHT_GRAY_COLOR);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
         this.add(container, BorderLayout.WEST);
     }
 }

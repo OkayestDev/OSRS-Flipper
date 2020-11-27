@@ -3,12 +3,17 @@ package com.flipper.controllers;
 import java.io.IOException;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.UUID;
+import java.util.function.Consumer;
+
+import javax.swing.SwingUtilities;
 
 import com.flipper.helpers.GrandExchange;
 import com.flipper.helpers.TradePersister;
 import com.flipper.models.Flip;
 import com.flipper.models.Transaction;
 import com.flipper.views.flips.FlipPage;
+import com.flipper.views.flips.FlipPanel;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,15 +24,36 @@ public class FlipsController {
     @Setter
     private List<Flip> flips;
     private FlipPage flipPage;
+    private ItemManager itemManager;
+    private Consumer<UUID> removeFlipConsumer;
+    private int totalProfit = 0;
 
     public FlipsController(ItemManager itemManager) throws IOException {
-        this.flipPage = new FlipPage(itemManager);
+        this.itemManager = itemManager;
+        this.removeFlipConsumer = id -> this.removeFlip(id);
+        this.flipPage = new FlipPage();
         this.loadFlips();
     }
 
     public void addFlip(Flip flip) {
         this.flips.add(flip);
-        this.flipPage.rebuildPanel(flips);
+        this.buildView();
+    }
+
+    public boolean removeFlip(UUID flipId) {
+        ListIterator<Flip> flipsIterator = this.flips.listIterator();
+
+        while (flipsIterator.hasNext()) {
+            Flip iterFlip = flipsIterator.next();
+
+            if (iterFlip.getId().equals(flipId)) {
+                flipsIterator.remove();
+                this.buildView();
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public FlipPage getPanel() {
@@ -36,7 +62,7 @@ public class FlipsController {
 
     private void loadFlips() throws IOException {
         this.flips = TradePersister.loadFlips();
-        this.flipPage.rebuildPanel(flips);
+        this.buildView();
     }
 
     public void saveFlips() {
@@ -45,7 +71,7 @@ public class FlipsController {
 
     private Flip updateFlip(Transaction sell, Transaction buy, Flip flip) {
         Flip updatedFlip = flip.updateFlip(sell, buy);
-        this.flipPage.rebuildPanel(flips);
+        this.buildView();
         return updatedFlip;
     }
 
@@ -53,9 +79,6 @@ public class FlipsController {
      * Potentially creates a flip if the sell is complete and has a corresponding
      * buy
      * 
-     * @todo Bugfix: debug "Granite Gloves glitch": Bought 8, Started Sell, Sold 1
-     *       (created flip), Sold 7 more but didn't update flip Seems to be bug with
-     *       logging on and receiving updated sell
      * @param sell
      * @param buys
      */
@@ -101,5 +124,24 @@ public class FlipsController {
         }
 
         return null;
+    }
+
+    public void buildView() {
+        SwingUtilities.invokeLater(() -> {
+            this.flipPage.removeAll();
+            this.flipPage.build();
+
+            ListIterator<Flip> flipsIterator = flips.listIterator(flips.size());
+            this.totalProfit = 0;
+
+            while (flipsIterator.hasPrevious()) {
+                Flip flip = flipsIterator.previous();
+                FlipPanel flipPanel = new FlipPanel(flip, itemManager, this.removeFlipConsumer);
+                this.flipPage.addFlipPanel(flipPanel);
+                this.totalProfit += flip.getTotalProfit();
+            }
+
+            this.flipPage.setTotalProfit(totalProfit);
+        });
     }
 }

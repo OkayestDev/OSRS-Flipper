@@ -28,8 +28,7 @@ public class SellPageTest {
     public static void main(String[] args) throws Exception {
         setUp();
         ViewTestSetup.setUp();
-        SellPage sellPage = new SellPage(ViewTestSetup.itemManager);
-        sellPage.rebuildPanel(sells);
+        SellPage sellPage = new SellPage();
         ViewTestSetup.launch(sellPage);
     }
 }

@@ -10,7 +10,7 @@ repositories {
 	mavenCentral()
 }
 
-def runeLiteVersion = '1.6.27'
+def runeLiteVersion = '1.6.32'
 
 dependencies {
 	compileOnly group: 'net.runelite', name:'client', version: runeLiteVersion
@@ -29,7 +29,7 @@ dependencies {
 }
 
 group = 'com.flipper'
-version = '1.0-SNAPSHOT'
+version = '1.1.0'
 sourceCompatibility = '1.8'
 
 tasks.withType(JavaCompile) {

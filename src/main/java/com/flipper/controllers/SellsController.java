@@ -4,11 +4,15 @@ import java.io.IOException;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.UUID;
+import java.util.function.Consumer;
+
+import javax.swing.SwingUtilities;
 
 import com.flipper.helpers.GrandExchange;
 import com.flipper.helpers.TradePersister;
 import com.flipper.models.Transaction;
 import com.flipper.views.sells.SellPage;
+import com.flipper.views.sells.SellPanel;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -22,15 +26,18 @@ public class SellsController {
     private SellPage sellPage;
     private ItemManager itemManager;
 
+    private Consumer<UUID> removeSellConsumer;
+
     public SellsController(ItemManager itemManager) throws IOException {
         this.itemManager = itemManager;
-        this.sellPage = new SellPage(itemManager);
+        this.removeSellConsumer = id -> this.removeSell(id);
+        this.sellPage = new SellPage();
         this.loadSells();
     }
 
     public void addSell(Transaction sell) {
         this.sells.add(sell);
-        this.sellPage.rebuildPanel(sells);
+        this.buildView();
     }
 
     public SellPage getPanel() {
@@ -39,7 +46,7 @@ public class SellsController {
 
     public void loadSells() throws IOException {
         this.sells = TradePersister.loadSells();
-        this.sellPage.rebuildPanel(sells);
+        this.buildView();
     }
 
     public void saveSells() {
@@ -55,7 +62,7 @@ public class SellsController {
             if (GrandExchange.checkIsOfferPartOfTransaction(sell, offer)) {
                 Transaction updatedSell = sell.updateTransaction(offer);
                 sellsIterator.set(updatedSell);
-                this.sellPage.rebuildPanel(sells);
+                this.buildView();
                 return updatedSell;
             }
         }
@@ -72,9 +79,24 @@ public class SellsController {
             Transaction sell = sellsIterator.previous();
             if (sell.id.equals(id)) {
                 sellsIterator.remove();
-                this.sellPage.rebuildPanel(sells);
+                this.buildView();
                 return;
             }
         }
+    }
+
+    public void buildView() {
+        SwingUtilities.invokeLater(() -> {
+            this.sellPage.removeAll();
+            this.sellPage.build();
+
+            ListIterator<Transaction> sellsIterator = sells.listIterator(sells.size());
+
+            while (sellsIterator.hasPrevious()) {
+                Transaction sell = sellsIterator.previous();
+                SellPanel sellPanel = new SellPanel(sell, itemManager, this.removeSellConsumer);
+                this.sellPage.addSellPanel(sellPanel);
+            }
+        });
     }
 }
