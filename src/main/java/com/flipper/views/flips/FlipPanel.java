@@ -1,5 +1,6 @@
 package com.flipper.views.flips;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -22,7 +23,7 @@ public class FlipPanel extends JPanel {
     private Flip flip;
     private Transaction buy;
     private Transaction sell;
-    
+
     private JPanel itemInfo = new JPanel(new BorderLayout());
     private JPanel leftInfoTextPanel = new JPanel(new GridLayout(3, 1));
     private JPanel rightValuesPanel = new JPanel(new GridLayout(3, 1));
@@ -33,11 +34,11 @@ public class FlipPanel extends JPanel {
         this.buy = flip.getBuy();
         setLayout(new BorderLayout());
         setBackground(ColorScheme.DARK_GRAY_COLOR);
-        this.add(new ItemHeader(this.buy, itemManager, false), BorderLayout.NORTH);
+        this.add(new ItemHeader(this.buy, itemManager, false, new JButton()), BorderLayout.NORTH);
         constructItemInfo();
         this.setBorder(new EmptyBorder(0, 0, 5, 0));
     }
-    
+
     private void constructItemInfo() {
         constructLeftLabels();
         constructRightLabels();
@@ -71,7 +72,7 @@ public class FlipPanel extends JPanel {
 
         leftInfoTextPanel.setBorder(new EmptyBorder(2, 5, 2, 10));
     }
-    
+
     private JLabel newRightLabel(String value, Color fontColor) {
         JLabel newRightLabel = new JLabel(value);
         newRightLabel.setHorizontalAlignment(JLabel.RIGHT);
@@ -98,9 +99,10 @@ public class FlipPanel extends JPanel {
         Color profitEachColor = profitEach > 0 ? ColorScheme.GRAND_EXCHANGE_ALCH : ColorScheme.PROGRESS_ERROR_COLOR;
         JLabel profitEachLabel = newRightLabel(profitEachText, profitEachColor);
 
-        Color profitColor = flip.getTotalProfit() > 0 ? ColorScheme.GRAND_EXCHANGE_ALCH : ColorScheme.PROGRESS_ERROR_COLOR;
+        Color profitColor = flip.getTotalProfit() > 0 ? ColorScheme.GRAND_EXCHANGE_ALCH
+                : ColorScheme.PROGRESS_ERROR_COLOR;
         JLabel totalProfitLabel = newRightLabel(totalProfitText, profitColor);
-        
+
         addRightLabel(amountFlippedLabel);
         addRightLabel(profitEachLabel);
         addRightLabel(totalProfitLabel);

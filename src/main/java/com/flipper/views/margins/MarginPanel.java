@@ -1,5 +1,6 @@
 package com.flipper.views.margins;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -21,7 +22,7 @@ public class MarginPanel extends JPanel {
     private Flip margin;
     private Transaction buy;
     private Transaction sell;
-    
+
     private JPanel itemInfo = new JPanel(new BorderLayout());
     private JPanel leftInfoTextPanel = new JPanel(new GridLayout(3, 1));
     private JPanel rightValuesPanel = new JPanel(new GridLayout(3, 1));
@@ -32,11 +33,11 @@ public class MarginPanel extends JPanel {
         this.buy = margin.getBuy();
         setLayout(new BorderLayout());
         setBackground(ColorScheme.DARK_GRAY_COLOR);
-        this.add(new ItemHeader(this.buy, itemManager, false), BorderLayout.NORTH);
+        this.add(new ItemHeader(this.buy, itemManager, false, new JButton()), BorderLayout.NORTH);
         constructItemInfo();
         this.setBorder(new EmptyBorder(0, 0, 5, 0));
     }
-    
+
     private void constructItemInfo() {
         constructLeftLabels();
         constructRightLabels();
@@ -70,7 +71,7 @@ public class MarginPanel extends JPanel {
 
         leftInfoTextPanel.setBorder(new EmptyBorder(2, 5, 2, 10));
     }
-    
+
     private JLabel newRightLabel(String value) {
         JLabel newRightLabel = new JLabel(value);
         newRightLabel.setHorizontalAlignment(JLabel.RIGHT);
@@ -94,7 +95,7 @@ public class MarginPanel extends JPanel {
         JLabel buyAtLabel = newRightLabel(buyAtText);
         JLabel sellAtLabel = newRightLabel(sellAtText);
         JLabel potentialProfitEachLabel = newRightLabel(potentialProfitEachText);
-        
+
         addRightLabel(buyAtLabel);
         addRightLabel(sellAtLabel);
         addRightLabel(potentialProfitEachLabel);
