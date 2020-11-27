@@ -59,12 +59,16 @@ public class ItemHeader extends JPanel {
             @Override
             public void mouseEntered(MouseEvent me) {
                 hoverButton.setVisible(true);
-                costPerLabel.setVisible(false);
+                if (isAddCostPer) {
+                    costPerLabel.setVisible(false);
+                }
             }
 
             @Override
             public void mouseExited(MouseEvent me) {
-                costPerLabel.setVisible(true);
+                if (isAddCostPer) {
+                    costPerLabel.setVisible(true);
+                }
                 hoverButton.setVisible(false);
             }
         });
@@ -73,12 +77,16 @@ public class ItemHeader extends JPanel {
             @Override
             public void mouseEntered(MouseEvent me) {
                 hoverButton.setVisible(true);
-                costPerLabel.setVisible(false);
+                if (isAddCostPer) {
+                    costPerLabel.setVisible(false);
+                }
             }
 
             @Override
             public void mouseExited(MouseEvent me) {
-                costPerLabel.setVisible(true);
+                if (isAddCostPer) {
+                    costPerLabel.setVisible(true);
+                }
                 hoverButton.setVisible(false);
             }
         });

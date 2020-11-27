@@ -2,16 +2,21 @@ package com.flipper.views.flips;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.util.UUID;
+import java.util.function.Consumer;
 import java.awt.Color;
+import java.awt.event.*;
 
 import com.flipper.helpers.UiUtilities;
 import com.flipper.models.Flip;
 import com.flipper.models.Transaction;
+import com.flipper.views.components.DeleteButton;
 import com.flipper.views.components.ItemHeader;
 
 import net.runelite.client.ui.ColorScheme;
@@ -28,13 +33,23 @@ public class FlipPanel extends JPanel {
     private JPanel leftInfoTextPanel = new JPanel(new GridLayout(3, 1));
     private JPanel rightValuesPanel = new JPanel(new GridLayout(3, 1));
 
-    public FlipPanel(Flip flip, ItemManager itemManager) {
+    public FlipPanel(Flip flip, ItemManager itemManager, Consumer<UUID> removeFlipConsumer) {
         this.flip = flip;
         this.sell = flip.getSell();
         this.buy = flip.getBuy();
+
+        DeleteButton deleteFlipButton = new DeleteButton((ActionEvent action) -> {
+            String describedBuy = flip.describeFlip();
+            int input = JOptionPane.showConfirmDialog(null, "Delete flip of " + describedBuy + "?");
+            if (input == 0) {
+                removeFlipConsumer.accept(flip.getId());
+                setVisible(false);
+            }
+        });
+
         setLayout(new BorderLayout());
         setBackground(ColorScheme.DARK_GRAY_COLOR);
-        this.add(new ItemHeader(this.buy, itemManager, false, new JButton()), BorderLayout.NORTH);
+        this.add(new ItemHeader(this.buy, itemManager, false, deleteFlipButton), BorderLayout.NORTH);
         constructItemInfo();
         this.setBorder(new EmptyBorder(0, 0, 5, 0));
     }
