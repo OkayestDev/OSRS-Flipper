@@ -60,6 +60,8 @@ public class FlipperPlugin extends Plugin {
     private FlipsController flipsController;
     private MarginsController marginsController;
 
+    private Boolean hasSaved;
+
     @Override
     protected void startUp() throws Exception {
         TradePersister.setUp();
@@ -67,13 +69,9 @@ public class FlipperPlugin extends Plugin {
         sellsController = new SellsController(itemManager);
         flipsController = new FlipsController(itemManager);
         marginsController = new MarginsController(itemManager);
-        new TabManagerController(
-            clientToolbar,
-            buysController.getPanel(),
-            sellsController.getPanel(),
-            flipsController.getPanel(),
-            marginsController.getPanel()
-        );
+        new TabManagerController(clientToolbar, buysController.getPanel(), sellsController.getPanel(),
+                flipsController.getPanel(), marginsController.getPanel());
+        this.hasSaved = false;
     }
 
     private void saveAll() {
@@ -92,11 +90,10 @@ public class FlipperPlugin extends Plugin {
      * Ensure we save transactions when the client is being shutdown. Prevents main
      * thread from continue until transactions have been saved
      *
-     * @param clientShutdownEvent even that we receive when the client is shutting
+     * @param clientShutdownEvent event that we receive when the client is shutting
      *                            down
-     * @todo implement
      */
-    @Subscribe(priority = 101)
+    @Subscribe
     public void onClientShutdown(ClientShutdown clientShutdownEvent) {
         this.saveAll();
     }
@@ -113,7 +110,8 @@ public class FlipperPlugin extends Plugin {
                 Transaction sell = sellsController.createSell(offer);
                 Flip flip = flipsController.createFlip(sell, buysController.getBuys());
                 if (flip != null && flip.isMarginCheck()) {
-                    // Remove buy and sell from buy and sell lists since they're part of a margin check
+                    // Remove buy and sell from buy and sell lists since they're part of a margin
+                    // check
                     buysController.removeBuy(flip.getBuy().id);
                     sellsController.removeSell(sell.id);
                     marginsController.addMargin(flip);

@@ -2,6 +2,8 @@ package com.flipper.controllers;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.UUID;
 
 import com.flipper.helpers.TradePersister;
 import com.flipper.models.Flip;
@@ -25,6 +27,23 @@ public class MarginsController {
     public void addMargin(Flip margin) {
         this.margins.add(margin);
         this.marginPage.rebuildPanel(margins);
+    }
+
+    public boolean deleteMargin(Flip margin) {
+        UUID marginId = margin.getId();
+        ListIterator<Flip> marginsIterator = this.margins.listIterator();
+
+        while (marginsIterator.hasNext()) {
+            Flip iterMargin = marginsIterator.next();
+
+            if (iterMargin.getId().equals(marginId)) {
+                marginsIterator.remove();
+                this.marginPage.rebuildPanel(margins);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public MarginPage getPanel() {

@@ -17,10 +17,10 @@ public class BuyPageTest {
     }
 
     public static void main(String[] args) throws Exception {
-        setUp();
-        ViewTestSetup.setUp();
-        BuyPage buyPage = new BuyPage(ViewTestSetup.itemManager);
-        buyPage.rebuildPanel(buys);
-        ViewTestSetup.launch(buyPage);
+        // setUp();
+        // ViewTestSetup.setUp();
+        // BuyPage buyPage = new BuyPage(ViewTestSetup.itemManager);
+        // buyPage.rebuildPanel(buys);
+        // ViewTestSetup.launch(buyPage);
     }
 }

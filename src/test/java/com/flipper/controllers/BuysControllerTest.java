@@ -34,17 +34,11 @@ public class BuysControllerTest {
 
     @Before
     public void setUp() throws IOException {
-        offerToCreateNewTransaction = new MockGrandExchangeOffer(100, mockItemId, 100, 10, 1000, GrandExchangeOfferState.BOUGHT);
-        offerToUpdateTransaction = new MockGrandExchangeOffer(10, mockItemId, 10, 100, 1000, GrandExchangeOfferState.BOUGHT);
-        transactionToUpdate = new Transaction(
-            5,
-            10,
-            mockItemId,
-            100,
-            "Test Item",
-            true,
-            false
-        );
+        offerToCreateNewTransaction = new MockGrandExchangeOffer(100, mockItemId, 100, 10, 1000,
+                GrandExchangeOfferState.BOUGHT);
+        offerToUpdateTransaction = new MockGrandExchangeOffer(10, mockItemId, 10, 100, 1000,
+                GrandExchangeOfferState.BOUGHT);
+        transactionToUpdate = new Transaction(5, 10, mockItemId, 100, "Test Item", true, false);
         itemManager = mock(ItemManager.class);
         itemComposition = mock(ItemComposition.class);
         Path currentRelativePath = Paths.get("");
@@ -61,7 +55,7 @@ public class BuysControllerTest {
     }
 
     @Test
-    public void testCreateBuyCreatesANewBuy() throws IOException {
+    public void testCreateBuyCreatesANewBuy() throws Exception {
         BuysController buysController = new BuysController(itemManager);
         buysController.setBuys(new ArrayList<Transaction>());
         buysController.createBuy(offerToCreateNewTransaction);
@@ -72,7 +66,7 @@ public class BuysControllerTest {
     }
 
     @Test
-    public void testCreateBuyUpdatesAnExistingBuy() throws IOException {
+    public void testCreateBuyUpdatesAnExistingBuy() throws Exception {
         BuysController buysController = new BuysController(itemManager);
         // Add partially complete buy to see if we're updating transactions correctly
         List<Transaction> buys = new ArrayList<Transaction>();

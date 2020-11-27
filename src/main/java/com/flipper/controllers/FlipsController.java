@@ -3,6 +3,7 @@ package com.flipper.controllers;
 import java.io.IOException;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.UUID;
 
 import com.flipper.helpers.GrandExchange;
 import com.flipper.helpers.TradePersister;
@@ -30,6 +31,22 @@ public class FlipsController {
         this.flipPage.rebuildPanel(flips);
     }
 
+    public boolean removeFlip(UUID flipId) {
+        ListIterator<Flip> flipsIterator = this.flips.listIterator();
+
+        while (flipsIterator.hasNext()) {
+            Flip iterFlip = flipsIterator.next();
+
+            if (iterFlip.getId().equals(flipId)) {
+                flipsIterator.remove();
+                this.flipPage.rebuildPanel(flips);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public FlipPage getPanel() {
         return this.flipPage;
     }
@@ -53,9 +70,6 @@ public class FlipsController {
      * Potentially creates a flip if the sell is complete and has a corresponding
      * buy
      * 
-     * @todo Bugfix: debug "Granite Gloves glitch": Bought 8, Started Sell, Sold 1
-     *       (created flip), Sold 7 more but didn't update flip Seems to be bug with
-     *       logging on and receiving updated sell
      * @param sell
      * @param buys
      */
