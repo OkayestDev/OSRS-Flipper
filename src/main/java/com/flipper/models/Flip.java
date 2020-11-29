@@ -49,7 +49,7 @@ public class Flip {
     }
 
     public String describeFlip() {
-        return String.valueOf(buy.getQuantity()) + " " + buy.getItemName() + "(s)";
+        return String.valueOf(sell.getQuantity()) + " " + buy.getItemName() + "(s)";
     }
 
     /**
