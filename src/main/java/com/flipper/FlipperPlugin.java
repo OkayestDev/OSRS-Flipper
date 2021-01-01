@@ -47,6 +47,7 @@ import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.ClientToolbar;
 
+
 @PluginDescriptor(name = "Flipper")
 public class FlipperPlugin extends Plugin {
     // Injects
