@@ -6,37 +6,73 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import org.json.simple.*;
+import com.google.gson.Gson;
 
 public class Api {
-    public static String baseUrl = "http://localhost:8071"
+    public static String baseUrl = "http://localhost:8071";
+    
     // public static String baseUrl = "https://api.osrs-flipper.com";
 
     public static OkHttpClient client = new OkHttpClient();
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     public static String jwt = "";
+    public static Gson gson = new Gson();
 
     public static void setJwt(String jwt) {
         Api.jwt = jwt;
     }
 
-    public static String get(String route, Object params) {
-        String url = baseUrl + route;
+    public static String createUrl(String route) {
+        return baseUrl + route;
+    }
 
+    public static String get(String route, Object params) {
+        String url = createUrl(route);
         Request request = new Request.Builder().url(url).header("Authorization", jwt).build();
 
         try (Response response = client.newCall(request).execute()) {
             return response.body().string();
+        } catch (Exception error) {
+            return null;
         }
     }
 
-    public static void post(String route, Object params) {
-        String paramsJson = "";
+    public static String post(String route, Object params) {
+        String url = createUrl(route);
+        String paramsJson = gson.toJson(params);
         RequestBody body = RequestBody.create(JSON, paramsJson);
+        Request request = new Request.Builder().url(url).post(body).build();
 
+        try (Response response = client.newCall(request).execute()) {
+            return response.body().string();
+        } catch (Exception error) {
+            return null;
+        }
     }
 
-    public static void put(String route, Object params) {
+    public static String put(String route, Object params) {
+        String url = createUrl(route);
+        String paramsJson = gson.toJson(params);
+        RequestBody body = RequestBody.create(JSON, paramsJson);
+        Request request = new Request.Builder().url(url).put(body).build();
 
+        try (Response response = client.newCall(request).execute()) {
+            return response.body().string();
+        } catch (Exception error) {
+            return null;
+        }
+    }
+
+    public static String delete(String route, Object params) {
+        String url = createUrl(route);
+        String paramsJson = gson.toJson(params);
+        RequestBody body = RequestBody.create(JSON, paramsJson);
+        Request request = new Request.Builder().url(url).delete(body).build();
+
+        try (Response response = client.newCall(request).execute()) {
+            return response.body().string();
+        } catch (Exception error) {
+            return null;
+        }
     }
 }
