@@ -6,7 +6,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import com.flipper.TestUtilities;
-import com.flipper.helpers.TradePersister;
+import com.flipper.helpers.Persistor;
 import com.flipper.models.Flip;
 import com.flipper.models.Transaction;
 
@@ -32,7 +32,7 @@ public class MarginsControllerTest {
         Path currentRelativePath = Paths.get("");
         String testFilePath = currentRelativePath.toAbsolutePath().toString()
                 + "\\src\\test\\java\\com\\flipper\\test-result-files";
-        TradePersister.setUp(testFilePath);
+        Persistor.setUp(testFilePath);
         when(itemManager.getItemComposition(mockItemId)).thenReturn(itemComposition);
         when(itemComposition.getName()).thenReturn("Test Name");
     }
@@ -59,7 +59,7 @@ public class MarginsControllerTest {
         List<Flip> margins = marginsController.getMargins();
         assertEquals(1, margins.size());
         marginsController.saveMargins();
-        List<Flip> loadedMargins = TradePersister.loadMargins();
+        List<Flip> loadedMargins = Persistor.loadMargins();
         assertEquals(1, loadedMargins.size());
     }
 

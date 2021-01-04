@@ -2,12 +2,15 @@ package com.flipper.api;
 
 import static org.junit.Assert.assertNotNull;
 
+import com.flipper.responses.LoginResponse;
+
 import org.junit.Test;
 
 public class ApiTest {
     @Test
     public void testGet() {
-        String loginResponse = UserApi.login("test@gmail.com", "test");
+        LoginResponse loginResponse = UserApi.login("test@gmail.com", "test");
         assertNotNull(loginResponse);
+        assertNotNull(loginResponse.user);
     }
 }

@@ -31,7 +31,7 @@ import com.flipper.controllers.MarginsController;
 import com.flipper.controllers.SellsController;
 import com.flipper.controllers.TabManagerController;
 import com.flipper.helpers.GrandExchange;
-import com.flipper.helpers.TradePersister;
+import com.flipper.helpers.Persistor;
 import com.flipper.models.Flip;
 import com.flipper.models.Transaction;
 import com.google.inject.Provides;
@@ -63,7 +63,7 @@ public class FlipperPlugin extends Plugin {
 
     @Override
     protected void startUp() throws Exception {
-        TradePersister.setUp();
+        Persistor.setUp();
         buysController = new BuysController(itemManager);
         sellsController = new SellsController(itemManager);
         flipsController = new FlipsController(itemManager);
@@ -75,7 +75,6 @@ public class FlipperPlugin extends Plugin {
     private void saveAll() {
         buysController.saveBuys();
         sellsController.saveSells();
-        flipsController.saveFlips();
         marginsController.saveMargins();
     }
 
@@ -105,15 +104,15 @@ public class FlipperPlugin extends Plugin {
             if (isBuy) {
                 buysController.createBuy(offer);
             } else {
-                Transaction sell = sellsController.createSell(offer);
-                Flip flip = flipsController.createFlip(sell, buysController.getBuys());
-                if (flip != null && flip.isMarginCheck()) {
-                    // Remove buy and sell from buy and sell lists since they're part of a margin
-                    // check
-                    buysController.removeBuy(flip.getBuy().id);
-                    sellsController.removeSell(sell.id);
-                    marginsController.addMargin(flip);
-                }
+                // Transaction sell = sellsController.createSell(offer);
+                // Flip flip = flipsController.createFlip(sell, buysController.getBuys());
+                // if (flip != null && flip.isMarginCheck()) {
+                //     // Remove buy and sell from buy and sell lists since they're part of a margin
+                //     // check
+                //     buysController.removeBuy(flip.getBuy().id);
+                //     sellsController.removeSell(sell.id);
+                //     marginsController.addMargin(flip);
+                // }
             }
         }
     }

@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 import javax.swing.SwingUtilities;
 
 import com.flipper.helpers.GrandExchange;
-import com.flipper.helpers.TradePersister;
+import com.flipper.helpers.Persistor;
 import com.flipper.models.Flip;
 import com.flipper.models.Transaction;
 import com.flipper.views.flips.FlipPage;
@@ -61,18 +61,14 @@ public class FlipsController {
     }
 
     private void loadFlips() throws IOException {
-        this.flips = TradePersister.loadFlips();
+        this.flips = Persistor.loadFlips();
         this.buildView();
-    }
-
-    public void saveFlips() {
-        TradePersister.saveFlips(flips);
     }
 
     private Flip updateFlip(Transaction sell, Transaction buy, Flip flip) {
-        Flip updatedFlip = flip.updateFlip(sell, buy);
-        this.buildView();
-        return updatedFlip;
+        // Flip updatedFlip = flip.updateFlip(sell, buy);
+        // this.buildView();
+        // return updatedFlip;
     }
 
     /**
@@ -83,47 +79,47 @@ public class FlipsController {
      * @param buys
      */
     public Flip createFlip(Transaction sell, List<Transaction> buys) {
-        ListIterator<Transaction> buysIterator = buys.listIterator(buys.size());
-        // If sell has already been flipped, look for it's corresponding buy and update
-        // the flip
-        if (sell.isFlipped()) {
-            ListIterator<Flip> flipsIterator = flips.listIterator(flips.size());
-            while (flipsIterator.hasPrevious()) {
-                Flip flip = flipsIterator.previous();
-                if (flip.getSell().id.equals(sell.id)) {
-                    // Now find the corresponding buy
-                    while (buysIterator.hasPrevious()) {
-                        Transaction buy = buysIterator.previous();
-                        if (buy.id.equals(flip.getBuy().id)) {
-                            Flip updatedFlip = updateFlip(sell, buy, flip);
-                            flipsIterator.set(updatedFlip);
-                            if (updatedFlip.isMarginCheck()) {
-                                flipsIterator.remove();
-                            } else {
-                                flipsIterator.set(updatedFlip);
-                            }
-                            return updatedFlip;
-                        }
-                    }
-                }
-            }
-        } else {
-            // Attempt to match sell to a buy
-            while (buysIterator.hasPrevious()) {
-                Transaction buy = buysIterator.previous();
-                if (GrandExchange.checkIsSellAFlipOfBuy(sell, buy)) {
-                    Flip flip = new Flip(buy, sell);
-                    buy.setIsFlipped(true);
-                    sell.setIsFlipped(true);
-                    if (!flip.isMarginCheck()) {
-                        this.addFlip(flip);
-                    }
-                    return flip;
-                }
-            }
-        }
+        // ListIterator<Transaction> buysIterator = buys.listIterator(buys.size());
+        // // If sell has already been flipped, look for it's corresponding buy and update
+        // // the flip
+        // if (sell.isFlipped()) {
+        //     ListIterator<Flip> flipsIterator = flips.listIterator(flips.size());
+        //     while (flipsIterator.hasPrevious()) {
+        //         Flip flip = flipsIterator.previous();
+        //         if (flip.getSell().id.equals(sell.id)) {
+        //             // Now find the corresponding buy
+        //             while (buysIterator.hasPrevious()) {
+        //                 Transaction buy = buysIterator.previous();
+        //                 if (buy.id.equals(flip.getBuy().id)) {
+        //                     Flip updatedFlip = updateFlip(sell, buy, flip);
+        //                     flipsIterator.set(updatedFlip);
+        //                     if (updatedFlip.isMarginCheck()) {
+        //                         flipsIterator.remove();
+        //                     } else {
+        //                         flipsIterator.set(updatedFlip);
+        //                     }
+        //                     return updatedFlip;
+        //                 }
+        //             }
+        //         }
+        //     }
+        // } else {
+        //     // Attempt to match sell to a buy
+        //     while (buysIterator.hasPrevious()) {
+        //         Transaction buy = buysIterator.previous();
+        //         if (GrandExchange.checkIsSellAFlipOfBuy(sell, buy)) {
+        //             Flip flip = new Flip(buy, sell);
+        //             buy.setIsFlipped(true);
+        //             sell.setIsFlipped(true);
+        //             if (!flip.isMarginCheck()) {
+        //                 this.addFlip(flip);
+        //             }
+        //             return flip;
+        //         }
+        //     }
+        // }
 
-        return null;
+        // return null;
     }
 
     public void buildView() {

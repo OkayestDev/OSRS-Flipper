@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 import javax.swing.SwingUtilities;
 
 import com.flipper.helpers.GrandExchange;
-import com.flipper.helpers.TradePersister;
+import com.flipper.helpers.Persistor;
 import com.flipper.models.Transaction;
 import com.flipper.views.sells.SellPage;
 import com.flipper.views.sells.SellPanel;
@@ -45,12 +45,12 @@ public class SellsController {
     }
 
     public void loadSells() throws IOException {
-        this.sells = TradePersister.loadSells();
+        this.sells = Persistor.loadSells();
         this.buildView();
     }
 
     public void saveSells() {
-        TradePersister.saveSells(sells);
+        Persistor.saveSells(sells);
     }
 
     public Transaction createSell(GrandExchangeOffer offer) {

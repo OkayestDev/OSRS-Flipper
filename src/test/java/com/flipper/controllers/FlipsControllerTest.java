@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.flipper.TestUtilities;
-import com.flipper.helpers.TradePersister;
+import com.flipper.helpers.Persistor;
 import com.flipper.models.Flip;
 import com.flipper.models.Transaction;
 
@@ -34,7 +34,7 @@ public class FlipsControllerTest {
         Path currentRelativePath = Paths.get("");
         String testFilePath = currentRelativePath.toAbsolutePath().toString()
                 + "\\src\\test\\java\\com\\flipper\\test-result-files";
-        TradePersister.setUp(testFilePath);
+        Persistor.setUp(testFilePath);
         when(itemManager.getItemComposition(mockItemId)).thenReturn(itemComposition);
         when(itemComposition.getName()).thenReturn("Test Name");
     }

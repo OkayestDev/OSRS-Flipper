@@ -2,6 +2,7 @@ package com.flipper.helpers;
 
 import com.flipper.models.Flip;
 import com.flipper.models.Transaction;
+import com.flipper.responses.LoginResponse;
 
 import net.runelite.client.RuneLite;
 import com.google.gson.Gson;
@@ -18,13 +19,14 @@ import java.util.List;
 /**
  * Read/Writes information to json file for storage
  */
-public class TradePersister {
+public class Persistor {
+    public static Gson gson = new Gson();
     public static final File PARENT_DIRECTORY = new File(RuneLite.RUNELITE_DIR, "flipper");
     public static File directory;
     public static final String SELLS_JSON_FILE = "flipper-sells.json";
     public static final String BUYS_JSON_FILE = "flipper-buys.json";
-    public static final String FLIPS_JSON_FILE = "flipper-flips.json";
     public static final String MARGINS_JSON_FILE = "flipper-margins.json";
+    public static final String LOGIN_RESPONSE_JSON_FILE = "flipper-login-response.json";
 
     public static void setUp(String directoryPath) throws IOException {
         directory = new File(directoryPath);
@@ -44,8 +46,8 @@ public class TradePersister {
     private static void createRequiredFiles() throws IOException {
         generateFileIfDoesNotExist(SELLS_JSON_FILE);
         generateFileIfDoesNotExist(BUYS_JSON_FILE);
-        generateFileIfDoesNotExist(FLIPS_JSON_FILE);
         generateFileIfDoesNotExist(MARGINS_JSON_FILE);
+        generateFileIfDoesNotExist(LOGIN_RESPONSE_JSON_FILE);
     }
 
     private static void generateFileIfDoesNotExist(String filename) throws IOException {
@@ -66,8 +68,23 @@ public class TradePersister {
         }
     }
 
+    public static LoginResponse loadLoginResponse() throws IOException {
+        String jsonString = getFileContent(LOGIN_RESPONSE_JSON_FILE);
+        LoginResponse loadedLoginResponse = gson.fromJson(jsonString, LoginResponse.class);
+        return loadedLoginResponse;
+    }
+
+    public static void saveLoginResponse(LoginResponse loginResponse) throws IOException {
+        File file = new File(directory, LOGIN_RESPONSE_JSON_FILE);
+        String json = gson.toJson(loginResponse);
+        Files.write(file.toPath(), json.getBytes());
+    }
+
+    public static void deleteLoginResponse() throws IOException {
+        Files.delete(Path.of(directory.getAbsolutePath(), LOGIN_RESPONSE_JSON_FILE));
+    }
+
     public static void saveJson(List<?> list, String filename) throws IOException {
-        final Gson gson = new Gson();
         File file = new File(directory, filename);
         final String json = gson.toJson(list);
         Files.write(file.toPath(), json.getBytes());
@@ -99,16 +116,6 @@ public class TradePersister {
         }
     }
 
-    public static boolean saveFlips(List<Flip> flips) {
-        try {
-            saveJson(flips, FLIPS_JSON_FILE);
-            return true;
-        } catch (Exception error) {
-            Log.info("Failed to save flips " + error.toString());
-            return false;
-        }
-    }
-
     public static boolean saveMargins(List<Flip> margins) {
         try {
             saveJson(margins, MARGINS_JSON_FILE);
@@ -119,20 +126,7 @@ public class TradePersister {
         }
     }
 
-    public static List<Flip> loadFlips() throws IOException {
-        Gson gson = new Gson();
-        String jsonString = getFileContent(FLIPS_JSON_FILE);
-        Type type = new TypeToken<List<Flip>>() {
-        }.getType();
-        List<Flip> flips = gson.fromJson(jsonString, type);
-        if (flips == null) {
-            return new ArrayList<Flip>();
-        }
-        return flips;
-    }
-
     public static List<Flip> loadMargins() throws IOException {
-        Gson gson = new Gson();
         String jsonString = getFileContent(MARGINS_JSON_FILE);
         Type type = new TypeToken<List<Flip>>() {
         }.getType();
@@ -144,7 +138,6 @@ public class TradePersister {
     }
 
     public static List<Transaction> loadBuys() throws IOException {
-        Gson gson = new Gson();
         String jsonString = getFileContent(BUYS_JSON_FILE);
         Type type = new TypeToken<List<Transaction>>() {
         }.getType();
@@ -156,7 +149,6 @@ public class TradePersister {
     }
 
     public static List<Transaction> loadSells() throws IOException {
-        Gson gson = new Gson();
         String jsonString = getFileContent(SELLS_JSON_FILE);
         Type type = new TypeToken<List<Transaction>>() {
         }.getType();

@@ -1,12 +1,18 @@
 package com.flipper.api;
 
 import com.flipper.models.User;
+import com.flipper.responses.LoginResponse;
+import com.google.gson.Gson;
 
 public class UserApi {
-    public static String login(String email, String password) {
+    public static Gson gson = new Gson();
+
+    public static LoginResponse login(String email, String password) {
         User user = new User();
         user.setEmailAndPassword(email, password);
-        String loginResponse = Api.post("/login", user);
+        String json = Api.post("/login", user);
+        LoginResponse loginResponse = gson.fromJson(json, LoginResponse.class);
+        Api.setJwt(loginResponse.jwt);
         return loginResponse;
     }
 }

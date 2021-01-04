@@ -12,7 +12,7 @@ import com.flipper.models.Transaction;
 import com.flipper.views.buys.BuyPage;
 import com.flipper.views.buys.BuyPanel;
 import com.flipper.helpers.GrandExchange;
-import com.flipper.helpers.TradePersister;
+import com.flipper.helpers.Persistor;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -49,12 +49,12 @@ public class BuysController {
     }
 
     public void loadBuys() throws IOException {
-        this.buys = TradePersister.loadBuys();
+        this.buys = Persistor.loadBuys();
         this.buildView();
     }
 
     public void saveBuys() {
-        TradePersister.saveBuys(buys);
+        Persistor.saveBuys(buys);
     }
 
     public void createBuy(GrandExchangeOffer offer) {

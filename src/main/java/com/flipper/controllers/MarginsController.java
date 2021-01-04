@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 
 import javax.swing.SwingUtilities;
 
-import com.flipper.helpers.TradePersister;
+import com.flipper.helpers.Persistor;
 import com.flipper.models.Flip;
 import com.flipper.views.margins.MarginPage;
 import com.flipper.views.margins.MarginPanel;
@@ -58,12 +58,12 @@ public class MarginsController {
     }
 
     private void loadMargins() throws IOException {
-        this.margins = TradePersister.loadMargins();
+        this.margins = Persistor.loadMargins();
         this.buildView();
     }
 
     public void saveMargins() {
-        TradePersister.saveMargins(margins);
+        Persistor.saveMargins(margins);
     }
 
     public void buildView() {
