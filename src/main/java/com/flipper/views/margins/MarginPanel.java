@@ -32,22 +32,22 @@ public class MarginPanel extends JPanel {
     private JPanel rightValuesPanel = new JPanel(new GridLayout(3, 1));
 
     public MarginPanel(Flip margin, ItemManager itemManager, Consumer<UUID> removeMarginConsumer) {
-        this.sell = margin.getSell();
-        this.buy = margin.getBuy();
+        // this.sell = margin.getSell();
+        // this.buy = margin.getBuy();
 
-        DeleteButton deleteMarginButton = new DeleteButton((ActionEvent action) -> {
-            int input = JOptionPane.showConfirmDialog(null, "Delete margin check?");
-            if (input == 0) {
-                removeMarginConsumer.accept(margin.getId());
-                setVisible(false);
-            }
-        });
+        // DeleteButton deleteMarginButton = new DeleteButton((ActionEvent action) -> {
+        //     int input = JOptionPane.showConfirmDialog(null, "Delete margin check?");
+        //     if (input == 0) {
+        //         removeMarginConsumer.accept(margin.getId());
+        //         setVisible(false);
+        //     }
+        // });
 
-        setLayout(new BorderLayout());
-        setBackground(ColorScheme.DARK_GRAY_COLOR);
-        this.add(new ItemHeader(this.buy, itemManager, false, deleteMarginButton), BorderLayout.NORTH);
-        constructItemInfo();
-        this.setBorder(new EmptyBorder(0, 0, 5, 0));
+        // setLayout(new BorderLayout());
+        // setBackground(ColorScheme.DARK_GRAY_COLOR);
+        // this.add(new ItemHeader(this.buy, itemManager, false, deleteMarginButton), BorderLayout.NORTH);
+        // constructItemInfo();
+        // this.setBorder(new EmptyBorder(0, 0, 5, 0));
     }
 
     private void constructItemInfo() {

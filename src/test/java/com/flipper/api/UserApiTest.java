@@ -6,9 +6,9 @@ import com.flipper.responses.LoginResponse;
 
 import org.junit.Test;
 
-public class ApiTest {
+public class UserApiTest {
     @Test
-    public void testGet() {
+    public void testLogin() {
         LoginResponse loginResponse = UserApi.login("test@gmail.com", "test");
         assertNotNull(loginResponse);
         assertNotNull(loginResponse.user);

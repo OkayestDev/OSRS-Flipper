@@ -8,9 +8,10 @@ import lombok.Data;
 
 @Data
 public class FlipResponse {
+    public String message;
     public List<Flip> flips;
     public Flip flip;
-    public int totalProfit;
-    public int averageProfit;
-    public int maxProfit;
+    public double totalProfit;
+    public double averageProfit;
+    public double maxProfit;
 }

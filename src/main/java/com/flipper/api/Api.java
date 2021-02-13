@@ -11,7 +11,7 @@ import com.google.gson.Gson;
 
 public class Api {
     public static String baseUrl = "http://localhost:8071";
-    
+    // @todo
     // public static String baseUrl = "https://api.osrs-flipper.com";
 
     public static OkHttpClient client = new OkHttpClient();
@@ -49,7 +49,7 @@ public class Api {
 
     public static String post(String route, Object params) {
         String url = createUrl(route);
-        String paramsJson = gson.toJson(params);
+        String paramsJson = params == null ? "" : gson.toJson(params);
         RequestBody body = RequestBody.create(JSON, paramsJson);
         Request request = new Request
             .Builder()
@@ -67,7 +67,7 @@ public class Api {
 
     public static String put(String route, Object params) {
         String url = createUrl(route);
-        String paramsJson = gson.toJson(params);
+        String paramsJson = params == null ? "" : gson.toJson(params);
         RequestBody body = RequestBody.create(JSON, paramsJson);
         Request request = new Request
             .Builder()
@@ -85,7 +85,7 @@ public class Api {
 
     public static String delete(String route, Object params) {
         String url = createUrl(route);
-        String paramsJson = gson.toJson(params);
+        String paramsJson = params == null ? "" : gson.toJson(params);
         RequestBody body = RequestBody.create(JSON, paramsJson);
         Request request = new Request
             .Builder()

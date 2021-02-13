@@ -15,11 +15,9 @@ public class TestUtilities {
         File deleteBuys = new File(testFilePath + "\\" + Persistor.BUYS_JSON_FILE);
         File deleteSells = new File(testFilePath + "\\" + Persistor.SELLS_JSON_FILE);
         File deleteMargins = new File(testFilePath + "\\" + Persistor.MARGINS_JSON_FILE);
-        File deleteFlips = new File(testFilePath + "\\" + Persistor.FLIPS_JSON_FILE);
         deleteBuys.delete();
         deleteSells.delete();
         deleteMargins.delete();
-        deleteFlips.delete();
     }
 
 }

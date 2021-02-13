@@ -24,4 +24,11 @@ public class FlipApi {
         FlipResponse flipResponse = gson.fromJson(json, FlipResponse.class);
         return flipResponse;
     }
+
+    public static FlipResponse updateFlip(Flip flip) {
+        String route = "/flips/" + flip.getId().toString();
+        String json = Api.put(route, flip);
+        FlipResponse flipResponse = gson.fromJson(json, FlipResponse.class);
+        return flipResponse;
+    }
 }

@@ -27,6 +27,8 @@ public class FlipsController {
     private ItemManager itemManager;
     private Consumer<UUID> removeFlipConsumer;
     private int totalProfit = 0;
+    private int averageProfit = 0;
+    private int maxProfit = 0;
 
     public FlipsController(ItemManager itemManager) throws IOException {
         this.itemManager = itemManager;
@@ -61,7 +63,7 @@ public class FlipsController {
     }
 
     private void loadFlips() throws IOException {
-        this.flips = Persistor.loadFlips();
+        // this.flips = Persistor.loadFlips();
         this.buildView();
     }
 
@@ -69,6 +71,7 @@ public class FlipsController {
         // Flip updatedFlip = flip.updateFlip(sell, buy);
         // this.buildView();
         // return updatedFlip;
+        return null;
     }
 
     /**
@@ -119,7 +122,7 @@ public class FlipsController {
         //     }
         // }
 
-        // return null;
+        return null;
     }
 
     public void buildView() {
