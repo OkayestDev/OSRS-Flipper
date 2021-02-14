@@ -37,7 +37,7 @@ public class FlipPage extends JPanel {
         container.add(flipPanel);
     }
 
-    private void constructTotalProfit(int totalProfit) {
+    private void constructTotalProfit(double totalProfit) {
         JPanel container = new JPanel();
         container.setLayout(new BorderLayout());
         JPanel totalProfitContainer = new JPanel(new GridLayout(2, 1));
@@ -64,7 +64,7 @@ public class FlipPage extends JPanel {
         this.add(container, BorderLayout.WEST);
     }
 
-    public void setTotalProfit(int totalProfit) {
+    public void setTotalProfit(double totalProfit) {
         totalProfitValueLabel.setText(String.valueOf(totalProfit));
     }
 

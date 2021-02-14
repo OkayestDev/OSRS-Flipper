@@ -9,14 +9,16 @@ import java.util.function.Consumer;
 import javax.swing.SwingUtilities;
 
 import com.flipper.helpers.GrandExchange;
-import com.flipper.helpers.Persistor;
 import com.flipper.models.Flip;
 import com.flipper.models.Transaction;
+import com.flipper.responses.FlipResponse;
 import com.flipper.views.flips.FlipPage;
 import com.flipper.views.flips.FlipPanel;
+import com.flipper.api.FlipApi;
 
 import lombok.Getter;
 import lombok.Setter;
+
 import net.runelite.client.game.ItemManager;
 
 public class FlipsController {
@@ -26,9 +28,10 @@ public class FlipsController {
     private FlipPage flipPage;
     private ItemManager itemManager;
     private Consumer<UUID> removeFlipConsumer;
-    private int totalProfit = 0;
-    private int averageProfit = 0;
-    private int maxProfit = 0;
+    private double totalProfit = 0;
+    private double averageProfit = 0;
+    private double maxProfit = 0;
+    private int page = 0;
 
     public FlipsController(ItemManager itemManager) throws IOException {
         this.itemManager = itemManager;
@@ -62,16 +65,28 @@ public class FlipsController {
         return this.flipPage;
     }
 
+    private void updateFromFlipResponse(FlipResponse flipResponse) {
+        this.totalProfit = flipResponse.totalProfit;
+        this.averageProfit = flipResponse.averageProfit;
+        this.maxProfit = flipResponse.maxProfit;
+        this.flips = flipResponse.flips;
+    }
+
     private void loadFlips() throws IOException {
-        // this.flips = Persistor.loadFlips();
+        FlipResponse flipResponse = FlipApi.getFlips();
+        this.updateFromFlipResponse(flipResponse);
         this.buildView();
     }
 
     private Flip updateFlip(Transaction sell, Transaction buy, Flip flip) {
-        // Flip updatedFlip = flip.updateFlip(sell, buy);
-        // this.buildView();
-        // return updatedFlip;
-        return null;
+        flip.sellPrice = sell.getPricePer();
+        flip.buyPrice = buy.getPricePer();
+        flip.quantity = sell.getQuantity();
+        flip.itemId = sell.getItemId();
+        FlipResponse flipResponse = FlipApi.updateFlip(flip);
+        this.updateFromFlipResponse(flipResponse);
+        this.buildView();
+        return flip;
     }
 
     /**
@@ -82,45 +97,45 @@ public class FlipsController {
      * @param buys
      */
     public Flip createFlip(Transaction sell, List<Transaction> buys) {
-        // ListIterator<Transaction> buysIterator = buys.listIterator(buys.size());
-        // // If sell has already been flipped, look for it's corresponding buy and update
-        // // the flip
-        // if (sell.isFlipped()) {
-        //     ListIterator<Flip> flipsIterator = flips.listIterator(flips.size());
-        //     while (flipsIterator.hasPrevious()) {
-        //         Flip flip = flipsIterator.previous();
-        //         if (flip.getSell().id.equals(sell.id)) {
-        //             // Now find the corresponding buy
-        //             while (buysIterator.hasPrevious()) {
-        //                 Transaction buy = buysIterator.previous();
-        //                 if (buy.id.equals(flip.getBuy().id)) {
-        //                     Flip updatedFlip = updateFlip(sell, buy, flip);
-        //                     flipsIterator.set(updatedFlip);
-        //                     if (updatedFlip.isMarginCheck()) {
-        //                         flipsIterator.remove();
-        //                     } else {
-        //                         flipsIterator.set(updatedFlip);
-        //                     }
-        //                     return updatedFlip;
-        //                 }
-        //             }
-        //         }
-        //     }
-        // } else {
-        //     // Attempt to match sell to a buy
-        //     while (buysIterator.hasPrevious()) {
-        //         Transaction buy = buysIterator.previous();
-        //         if (GrandExchange.checkIsSellAFlipOfBuy(sell, buy)) {
-        //             Flip flip = new Flip(buy, sell);
-        //             buy.setIsFlipped(true);
-        //             sell.setIsFlipped(true);
-        //             if (!flip.isMarginCheck()) {
-        //                 this.addFlip(flip);
-        //             }
-        //             return flip;
-        //         }
-        //     }
-        // }
+        ListIterator<Transaction> buysIterator = buys.listIterator(buys.size());
+        // If sell has already been flipped, look for it's corresponding buy and update
+        // the flip
+        if (sell.isFlipped()) {
+            ListIterator<Flip> flipsIterator = flips.listIterator(flips.size());
+            while (flipsIterator.hasPrevious()) {
+                Flip flip = flipsIterator.previous();
+                if (flip.getSellId().equals(sell.id)) {
+                    // Now find the corresponding buy
+                    while (buysIterator.hasPrevious()) {
+                        Transaction buy = buysIterator.previous();
+                        if (buy.id.equals(flip.getBuyId())) {
+                            Flip updatedFlip = updateFlip(sell, buy, flip);
+                            flipsIterator.set(updatedFlip);
+                            if (updatedFlip.isMarginCheck()) {
+                                flipsIterator.remove();
+                            } else {
+                                flipsIterator.set(updatedFlip);
+                            }
+                            return updatedFlip;
+                        }
+                    }
+                }
+            }
+        } else {
+            // Attempt to match sell to a buy
+            while (buysIterator.hasPrevious()) {
+                Transaction buy = buysIterator.previous();
+                if (GrandExchange.checkIsSellAFlipOfBuy(sell, buy)) {
+                    Flip flip = new Flip(buy, sell);
+                    buy.setIsFlipped(true);
+                    sell.setIsFlipped(true);
+                    if (!flip.isMarginCheck()) {
+                        this.addFlip(flip);
+                    }
+                    return flip;
+                }
+            }
+        }
 
         return null;
     }
@@ -131,7 +146,6 @@ public class FlipsController {
             this.flipPage.build();
 
             ListIterator<Flip> flipsIterator = flips.listIterator(flips.size());
-            this.totalProfit = 0;
 
             while (flipsIterator.hasPrevious()) {
                 Flip flip = flipsIterator.previous();

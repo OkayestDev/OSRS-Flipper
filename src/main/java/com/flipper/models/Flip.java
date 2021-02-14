@@ -12,12 +12,25 @@ import lombok.Data;
 public class Flip {
     public UUID id;
     public UUID userId;
+    public UUID buyId;
+    public UUID sellId;
     public int itemId;
     public int quantity;
     public int buyPrice;
     public int sellPrice;
     private Timestamp updatedAt;
     private Timestamp createdAt;
+
+    public Flip() {}
+
+    public Flip(Transaction buy, Transaction sell) {
+        this.buyId = buy.id;
+        this.sellId = sell.id;
+        this.itemId = sell.getItemId();
+        this.quantity = sell.getQuantity(); 
+        this.buyPrice = buy.getPricePer();
+        this.sellPrice = sell.getPricePer();
+    }
 
     /**
      * We know a flip is a margin check when only 1 is bought and it's bought for a

@@ -60,10 +60,12 @@ public class FlipperPlugin extends Plugin {
     private SellsController sellsController;
     private FlipsController flipsController;
     private MarginsController marginsController;
+    private LoginController loginController;
 
     @Override
     protected void startUp() throws Exception {
         Persistor.setUp();
+        loginController = new LoginController();
         buysController = new BuysController(itemManager);
         sellsController = new SellsController(itemManager);
         flipsController = new FlipsController(itemManager);
@@ -104,15 +106,14 @@ public class FlipperPlugin extends Plugin {
             if (isBuy) {
                 buysController.createBuy(offer);
             } else {
-                // Transaction sell = sellsController.createSell(offer);
-                // Flip flip = flipsController.createFlip(sell, buysController.getBuys());
-                // if (flip != null && flip.isMarginCheck()) {
-                //     // Remove buy and sell from buy and sell lists since they're part of a margin
-                //     // check
-                //     buysController.removeBuy(flip.getBuy().id);
-                //     sellsController.removeSell(sell.id);
-                //     marginsController.addMargin(flip);
-                // }
+                Transaction sell = sellsController.createSell(offer);
+                Flip flip = flipsController.createFlip(sell, buysController.getBuys());
+                if (flip != null && flip.isMarginCheck()) {
+                    // Remove buy and sell from buy and sell lists since they're part of a margin
+                    buysController.removeBuy(flip.getBuyId());
+                    sellsController.removeSell(sell.id);
+                    marginsController.addMargin(flip);
+                }
             }
         }
     }
