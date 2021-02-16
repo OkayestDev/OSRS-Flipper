@@ -5,7 +5,9 @@ import java.util.function.Consumer;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+import com.flipper.api.Api;
 import com.flipper.api.UserApi;
+import com.flipper.responses.LoginResponse;
 import com.flipper.views.login.LoginPage;
 
 public class LoginController {
@@ -14,7 +16,10 @@ public class LoginController {
     private String email;
     private String password;
 
-    public LoginController() {
+    Runnable changeToLoggedInViewRunnable;
+
+    public LoginController(Runnable changeToLoggedInViewRunnable) {
+        this.changeToLoggedInViewRunnable = changeToLoggedInViewRunnable;
         Consumer<String> onEmailTextChangedListener = text -> onEmailTextChanged(text);
         Consumer<String> onPasswordTextChangedListener = text -> onPasswordTextChanged(text);
         ActionListener onLoginPressedListener = (ActionEvent event) -> onLoginPressed(event);
@@ -26,16 +31,21 @@ public class LoginController {
     }
 
     public void onLoginPressed(ActionEvent event) {
-        System.out.println("Logged in pressed");
+        LoginResponse loginResponse = UserApi.login(this.email, this.password);
+
+        if (loginResponse != null && !loginResponse.error) {
+            Api.setLoginResponse(loginResponse);
+            changeToLoggedInViewRunnable.run();
+        } else {
+            // @todo add alert for incorrect creds
+        }
     }
 
     public void onEmailTextChanged(String newEmail) {
-        System.out.println(newEmail);
         this.email = newEmail;
     }
 
     public void onPasswordTextChanged(String newPassword) {
-        System.out.println(newPassword);
         this.password = newPassword;
     }
 

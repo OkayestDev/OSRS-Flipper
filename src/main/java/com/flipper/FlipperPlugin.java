@@ -32,7 +32,6 @@ import com.flipper.controllers.MarginsController;
 import com.flipper.controllers.SellsController;
 import com.flipper.controllers.TabManagerController;
 import com.flipper.helpers.GrandExchange;
-import com.flipper.helpers.Log;
 import com.flipper.helpers.Persistor;
 import com.flipper.models.Flip;
 import com.flipper.models.Transaction;
@@ -64,19 +63,21 @@ public class FlipperPlugin extends Plugin {
     private FlipsController flipsController;
     private MarginsController marginsController;
     private LoginController loginController;
+    private TabManagerController tabManagerController;
 
     @Override
     protected void startUp() throws Exception {
         Persistor.setUp();
         LoginResponse loginResponse = Persistor.loadLoginResponse();
         Boolean isLoggedIn = loginResponse != null;
-        loginController = new LoginController();
+        Runnable changeToLoggedInViewRunnable = () -> changeToLoggedInView();
+        loginController = new LoginController(changeToLoggedInViewRunnable);
         buysController = new BuysController(itemManager);
         sellsController = new SellsController(itemManager);
         flipsController = new FlipsController(itemManager);
         marginsController = new MarginsController(itemManager);
 
-        new TabManagerController(
+        this.tabManagerController = new TabManagerController(
             clientToolbar, 
             buysController.getPanel(), 
             sellsController.getPanel(),
@@ -85,6 +86,15 @@ public class FlipperPlugin extends Plugin {
             loginController.getPanel(),
             isLoggedIn
         );
+    }
+
+    private void changeToLoggedInView() {
+        this.tabManagerController.changeToLoggedInView();
+    }
+
+    /** @todo implement */
+    private void changeToLoggedOutView() {
+        this.tabManagerController.changeToLoggedOutView();
     }
 
     private void saveAll() {

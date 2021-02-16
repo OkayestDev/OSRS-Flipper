@@ -6,6 +6,8 @@ import lombok.Data;
 
 @Data
 public class LoginResponse {
+    public boolean error;
+    public String message;
     public String jwt;
     public User user;
 }

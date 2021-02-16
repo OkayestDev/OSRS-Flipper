@@ -41,7 +41,7 @@ public class TabManager extends PluginPanel {
         if (isLoggedIn) {
             this.renderLoggedInView();
         } else {
-            renderLoginView();
+            renderLoggedOutView();
         }
     }
 
@@ -68,7 +68,8 @@ public class TabManager extends PluginPanel {
         add(display, BorderLayout.CENTER);
     }
 
-    public void renderLoginView() {
+    public void renderLoggedOutView() {
+        this.removeAll();
         add(this.loginPage);
     }
 };

@@ -51,4 +51,12 @@ public class TabManagerController {
             .panel(tabManager).build();
         clientToolbar.addNavigation(navButton);
     }
+
+    public void changeToLoggedInView() {
+        tabManager.renderLoggedInView();
+    }
+
+    public void changeToLoggedOutView() {
+        tabManager.renderLoggedOutView();
+    }
 }

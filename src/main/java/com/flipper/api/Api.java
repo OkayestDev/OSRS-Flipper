@@ -62,6 +62,7 @@ public class Api {
             case GET:
             default:
                 request = requestBuilder.build();
+                break;
         }
             
         try (Response response = client.newCall(request).execute()) {
