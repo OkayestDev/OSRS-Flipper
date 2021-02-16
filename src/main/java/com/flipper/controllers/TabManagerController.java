@@ -7,6 +7,7 @@ import com.flipper.helpers.UiUtilities;
 import com.flipper.views.TabManager;
 import com.flipper.views.buys.BuyPage;
 import com.flipper.views.flips.FlipPage;
+import com.flipper.views.login.LoginPage;
 import com.flipper.views.margins.MarginPage;
 import com.flipper.views.sells.SellPage;
 
@@ -17,17 +18,37 @@ public class TabManagerController {
     private NavigationButton navButton;
     private ClientToolbar clientToolbar;
 
-    public TabManagerController(ClientToolbar clientToolbar, BuyPage buyPage, SellPage sellPage, FlipPage flipPage,
-            MarginPage marginPage) {
+    public TabManagerController(
+        ClientToolbar clientToolbar, 
+        BuyPage buyPage, 
+        SellPage sellPage, 
+        FlipPage flipPage,
+        MarginPage marginPage, 
+        LoginPage loginPage,
+        Boolean isLoggedIn
+    ) {
         this.clientToolbar = clientToolbar;
-        tabManager = new TabManager(buyPage, sellPage, flipPage, marginPage);
+        tabManager = new TabManager(
+            buyPage, 
+            sellPage, 
+            flipPage, 
+            marginPage, 
+            loginPage, 
+            isLoggedIn
+        );
         setUpNavigationButton();
     }
 
     private void setUpNavigationButton() {
-        navButton = NavigationButton.builder().tooltip("Flipper")
-                .icon(ImageUtil.getResourceStreamFromClass(getClass(), UiUtilities.flipperNavIcon)).priority(4)
-                .panel(tabManager).build();
+        navButton = NavigationButton
+            .builder()
+            .tooltip("Flipper")
+            .icon(ImageUtil.getResourceStreamFromClass(
+                getClass(), 
+                UiUtilities.flipperNavIcon  
+            ))
+            .priority(4)
+            .panel(tabManager).build();
         clientToolbar.addNavigation(navButton);
     }
 }

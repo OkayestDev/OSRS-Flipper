@@ -29,6 +29,7 @@ public class BuysController {
     private List<Transaction> buys;
     private BuyPage buyPage;
     private ItemManager itemManager;
+    private int page = 0;
 
     private Consumer<UUID> removeBuyConsumer;
 

@@ -1,6 +1,7 @@
 package com.flipper.controllers;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.UUID;
@@ -34,6 +35,7 @@ public class FlipsController {
     private int page = 0;
 
     public FlipsController(ItemManager itemManager) throws IOException {
+        this.flips = new ArrayList<Flip>();
         this.itemManager = itemManager;
         this.removeFlipConsumer = id -> this.removeFlip(id);
         this.flipPage = new FlipPage();
@@ -65,16 +67,16 @@ public class FlipsController {
         return this.flipPage;
     }
 
-    private void updateFromFlipResponse(FlipResponse flipResponse) {
-        this.totalProfit = flipResponse.totalProfit;
-        this.averageProfit = flipResponse.averageProfit;
-        this.maxProfit = flipResponse.maxProfit;
-        this.flips = flipResponse.flips;
-    }
-
-    private void loadFlips() throws IOException {
+    public void loadFlips() throws IOException {
         FlipResponse flipResponse = FlipApi.getFlips();
-        this.updateFromFlipResponse(flipResponse);
+
+        if (flipResponse != null) {
+            this.totalProfit = flipResponse.totalProfit;
+            this.averageProfit = flipResponse.averageProfit;
+            this.maxProfit = flipResponse.maxProfit;
+            this.flips = flipResponse.flips;
+        }
+
         this.buildView();
     }
 
@@ -84,10 +86,17 @@ public class FlipsController {
         flip.quantity = sell.getQuantity();
         flip.itemId = sell.getItemId();
         FlipResponse flipResponse = FlipApi.updateFlip(flip);
-        this.updateFromFlipResponse(flipResponse);
-        this.buildView();
+
+        if (flipResponse != null) {
+            this.totalProfit = flipResponse.totalProfit;
+            this.averageProfit = flipResponse.averageProfit;
+            this.maxProfit = flipResponse.maxProfit;
+            this.buildView();
+        }
+
         return flip;
     }
+
 
     /**
      * Potentially creates a flip if the sell is complete and has a corresponding
@@ -151,7 +160,6 @@ public class FlipsController {
                 Flip flip = flipsIterator.previous();
                 FlipPanel flipPanel = new FlipPanel(flip, itemManager, this.removeFlipConsumer);
                 this.flipPage.addFlipPanel(flipPanel);
-                this.totalProfit += flip.getTotalProfit();
             }
 
             this.flipPage.setTotalProfit(totalProfit);

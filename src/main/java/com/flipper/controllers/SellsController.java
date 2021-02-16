@@ -25,6 +25,7 @@ public class SellsController {
     private List<Transaction> sells;
     private SellPage sellPage;
     private ItemManager itemManager;
+    private int page = 0;
 
     private Consumer<UUID> removeSellConsumer;
 

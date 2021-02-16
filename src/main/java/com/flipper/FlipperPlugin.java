@@ -27,13 +27,16 @@ package com.flipper;
 
 import com.flipper.controllers.BuysController;
 import com.flipper.controllers.FlipsController;
+import com.flipper.controllers.LoginController;
 import com.flipper.controllers.MarginsController;
 import com.flipper.controllers.SellsController;
 import com.flipper.controllers.TabManagerController;
 import com.flipper.helpers.GrandExchange;
+import com.flipper.helpers.Log;
 import com.flipper.helpers.Persistor;
 import com.flipper.models.Flip;
 import com.flipper.models.Transaction;
+import com.flipper.responses.LoginResponse;
 import com.google.inject.Provides;
 import javax.inject.Inject;
 import net.runelite.api.GrandExchangeOffer;
@@ -65,13 +68,23 @@ public class FlipperPlugin extends Plugin {
     @Override
     protected void startUp() throws Exception {
         Persistor.setUp();
+        LoginResponse loginResponse = Persistor.loadLoginResponse();
+        Boolean isLoggedIn = loginResponse != null;
         loginController = new LoginController();
         buysController = new BuysController(itemManager);
         sellsController = new SellsController(itemManager);
         flipsController = new FlipsController(itemManager);
         marginsController = new MarginsController(itemManager);
-        new TabManagerController(clientToolbar, buysController.getPanel(), sellsController.getPanel(),
-                flipsController.getPanel(), marginsController.getPanel());
+
+        new TabManagerController(
+            clientToolbar, 
+            buysController.getPanel(), 
+            sellsController.getPanel(),
+            flipsController.getPanel(), 
+            marginsController.getPanel(), 
+            loginController.getPanel(),
+            isLoggedIn
+        );
     }
 
     private void saveAll() {
