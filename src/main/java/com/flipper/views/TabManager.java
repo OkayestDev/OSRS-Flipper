@@ -69,6 +69,6 @@ public class TabManager extends PluginPanel {
     }
 
     public void renderLoginView() {
-        add(new JLabel("login!"));
+        add(this.loginPage);
     }
 };

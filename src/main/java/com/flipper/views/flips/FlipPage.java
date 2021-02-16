@@ -1,13 +1,9 @@
 package com.flipper.views.flips;
 
-import java.util.List;
-import java.util.ListIterator;
-
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import java.awt.BorderLayout;
@@ -16,9 +12,7 @@ import java.awt.GridLayout;
 import java.awt.Font;
 
 import com.flipper.helpers.UiUtilities;
-import com.flipper.models.Flip;
 
-import net.runelite.client.game.ItemManager;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
 
