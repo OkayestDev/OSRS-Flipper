@@ -25,6 +25,7 @@
  */
 package com.flipper;
 
+import com.flipper.api.Api;
 import com.flipper.controllers.BuysController;
 import com.flipper.controllers.FlipsController;
 import com.flipper.controllers.LoginController;
@@ -37,6 +38,9 @@ import com.flipper.models.Flip;
 import com.flipper.models.Transaction;
 import com.flipper.responses.LoginResponse;
 import com.google.inject.Provides;
+
+import java.io.IOException;
+
 import javax.inject.Inject;
 import net.runelite.api.GrandExchangeOffer;
 import net.runelite.api.GrandExchangeOfferState;
@@ -97,10 +101,11 @@ public class FlipperPlugin extends Plugin {
         this.tabManagerController.changeToLoggedOutView();
     }
 
-    private void saveAll() {
+    private void saveAll() throws IOException {
         buysController.saveBuys();
         sellsController.saveSells();
         marginsController.saveMargins();
+        Persistor.saveLoginResponse(Api.loginResponse);
     }
 
     @Override
@@ -116,7 +121,7 @@ public class FlipperPlugin extends Plugin {
      *                            down
      */
     @Subscribe
-    public void onClientShutdown(ClientShutdown clientShutdownEvent) {
+    public void onClientShutdown(ClientShutdown clientShutdownEvent) throws IOException {
         this.saveAll();
     }
 

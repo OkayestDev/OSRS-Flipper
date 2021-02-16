@@ -20,10 +20,10 @@ public class TabManagerController {
 
     public TabManagerController(
         ClientToolbar clientToolbar, 
-        BuyPage buyPage, 
+        BuyPage buyPage,
         SellPage sellPage, 
         FlipPage flipPage,
-        MarginPage marginPage, 
+        MarginPage marginPage,
         LoginPage loginPage,
         Boolean isLoggedIn
     ) {

@@ -26,6 +26,7 @@ public class SellsController {
     private SellPage sellPage;
     private ItemManager itemManager;
     private int page = 0;
+    private final static int ITEMS_PER_PAGE;
 
     private Consumer<UUID> removeSellConsumer;
 

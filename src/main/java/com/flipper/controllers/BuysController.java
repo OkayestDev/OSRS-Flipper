@@ -30,6 +30,7 @@ public class BuysController {
     private BuyPage buyPage;
     private ItemManager itemManager;
     private int page = 0;
+    private final static int ITEMS_PER_PAGE = 15;
 
     private Consumer<UUID> removeBuyConsumer;
 
@@ -92,13 +93,14 @@ public class BuysController {
         SwingUtilities.invokeLater(() -> {
             this.buyPage.removeAll();
             this.buyPage.build();
-
             ListIterator<Transaction> buysIterator = buys.listIterator(buys.size());
+            int currentRenderCount = 0;
 
-            while (buysIterator.hasPrevious()) {
+            while (buysIterator.hasPrevious() && currentRenderCount < ITEMS_PER_PAGE) {
                 Transaction buy = buysIterator.previous();
                 BuyPanel buyPanel = new BuyPanel(buy, itemManager, this.removeBuyConsumer);
                 this.buyPage.addBuyPanel(buyPanel);
+                currentRenderCount++;
             }
         });
     }
