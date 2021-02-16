@@ -12,7 +12,11 @@ public class UserApi {
         user.setEmailAndPassword(email, password);
         String json = Api.post("/login", user);
         LoginResponse loginResponse = gson.fromJson(json, LoginResponse.class);
-        Api.setJwt(loginResponse.jwt);
+
+        if (loginResponse != null) {
+            Api.setLoginResponse(loginResponse);
+        }
+        
         return loginResponse;
     }
 }

@@ -31,8 +31,11 @@ public class LoginController {
     }
 
     public void onLoginPressed(ActionEvent event) {
-        LoginResponse loginResponse = UserApi.login(this.email, this.password);
+        if (this.email == null || this.password == null) {
+            return;
+        }
 
+        LoginResponse loginResponse = UserApi.login(this.email, this.password);
         if (loginResponse != null && !loginResponse.error) {
             Api.setLoginResponse(loginResponse);
             changeToLoggedInViewRunnable.run();

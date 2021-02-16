@@ -1,7 +1,6 @@
 package com.flipper.controllers;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.UUID;
@@ -35,7 +34,6 @@ public class FlipsController {
     private int page = 0;
 
     public FlipsController(ItemManager itemManager) throws IOException {
-        this.flips = new ArrayList<Flip>();
         this.itemManager = itemManager;
         this.removeFlipConsumer = id -> this.removeFlip(id);
         this.flipPage = new FlipPage();
@@ -154,12 +152,13 @@ public class FlipsController {
             this.flipPage.removeAll();
             this.flipPage.build();
 
-            ListIterator<Flip> flipsIterator = flips.listIterator(flips.size());
-
-            while (flipsIterator.hasPrevious()) {
-                Flip flip = flipsIterator.previous();
-                FlipPanel flipPanel = new FlipPanel(flip, itemManager, this.removeFlipConsumer);
-                this.flipPage.addFlipPanel(flipPanel);
+            if (this.flips != null) {
+                ListIterator<Flip> flipsIterator = flips.listIterator(flips.size());
+                while (flipsIterator.hasPrevious()) {
+                    Flip flip = flipsIterator.previous();
+                    FlipPanel flipPanel = new FlipPanel(flip, itemManager, this.removeFlipConsumer);
+                    this.flipPage.addFlipPanel(flipPanel);
+                }
             }
 
             this.flipPage.setTotalProfit(totalProfit);
