@@ -1,5 +1,6 @@
 package com.flipper.helpers;
 
+import com.flipper.api.Api;
 import com.flipper.models.Flip;
 import com.flipper.models.Transaction;
 import com.flipper.responses.LoginResponse;
@@ -71,6 +72,11 @@ public class Persistor {
     public static LoginResponse loadLoginResponse() throws IOException {
         String jsonString = getFileContent(LOGIN_RESPONSE_JSON_FILE);
         LoginResponse loadedLoginResponse = gson.fromJson(jsonString, LoginResponse.class);
+
+        if (loadedLoginResponse != null) {
+            Api.setLoginResponse(loadedLoginResponse);
+        }
+
         return loadedLoginResponse;
     }
 

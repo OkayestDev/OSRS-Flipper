@@ -11,6 +11,9 @@ import com.flipper.views.login.LoginPage;
 public class LoginController {
     LoginPage loginPage;
 
+    private String email;
+    private String password;
+
     public LoginController() {
         Consumer<String> onEmailTextChangedListener = text -> onEmailTextChanged(text);
         Consumer<String> onPasswordTextChangedListener = text -> onPasswordTextChanged(text);
@@ -28,10 +31,12 @@ public class LoginController {
 
     public void onEmailTextChanged(String newEmail) {
         System.out.println(newEmail);
+        this.email = newEmail;
     }
 
     public void onPasswordTextChanged(String newPassword) {
         System.out.println(newPassword);
+        this.password = newPassword;
     }
 
     public LoginPage getPanel() {
