@@ -15,4 +15,5 @@ public class UiUtilities {
             BorderFactory.createLineBorder(ColorScheme.DARKER_GRAY_COLOR.darker(), 4));
     public static final String flipperNavIcon = "/flipper_nav_button.png";
     public static final String deleteX = "/delete_x.png";
+    public static final int ITEMS_PER_PAGE = 15;
 }

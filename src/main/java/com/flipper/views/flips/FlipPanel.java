@@ -22,8 +22,6 @@ import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.game.ItemManager;
 
 public class FlipPanel extends JPanel {
-    private static final long serialVersionUID = 3879605322279273963L;
-
     private Flip flip;
     private Transaction buy;
     private Transaction sell;

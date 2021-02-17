@@ -9,8 +9,6 @@ import java.awt.BorderLayout;
 import net.runelite.client.ui.ColorScheme;
 
 public class SellPage extends JPanel {
-    private static final long serialVersionUID = 4764109045121749116L;
-
     private JPanel container;
 
     public SellPage() {

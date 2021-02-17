@@ -25,8 +25,6 @@ import java.awt.event.*;
  * Item header: Item Icon / Item Name / Number bought/soul out of total
  */
 public class ItemHeader extends JPanel {
-    private static final long serialVersionUID = 6953863323192783140L;
-
     private ItemManager itemManager;
     private Transaction transaction;
     private JPanel topRightContainer;

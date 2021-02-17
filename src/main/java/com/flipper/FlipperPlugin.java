@@ -42,6 +42,7 @@ import com.google.inject.Provides;
 import java.io.IOException;
 
 import javax.inject.Inject;
+
 import net.runelite.api.GrandExchangeOffer;
 import net.runelite.api.GrandExchangeOfferState;
 import net.runelite.api.events.GrandExchangeOfferChanged;
@@ -89,7 +90,7 @@ public class FlipperPlugin extends Plugin {
             marginsController.getPanel(), 
             loginController.getPanel(),
             isLoggedIn
-        );
+        ); 
     }
 
     private void changeToLoggedInView() {

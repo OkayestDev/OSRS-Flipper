@@ -2,7 +2,6 @@ package com.flipper.views;
 
 import java.awt.BorderLayout;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -18,8 +17,6 @@ import net.runelite.client.ui.PluginPanel;
 import net.runelite.client.ui.components.materialtabs.MaterialTabGroup;
 
 public class TabManager extends PluginPanel {
-    private static final long serialVersionUID = -947343100446545237L;
-
     BuyPage buyPage;
     SellPage sellPage;
     FlipPage flipPage;

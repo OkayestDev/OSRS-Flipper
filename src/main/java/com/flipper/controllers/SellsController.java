@@ -10,9 +10,11 @@ import javax.swing.SwingUtilities;
 
 import com.flipper.helpers.GrandExchange;
 import com.flipper.helpers.Persistor;
+import com.flipper.helpers.UiUtilities;
 import com.flipper.models.Transaction;
 import com.flipper.views.sells.SellPage;
 import com.flipper.views.sells.SellPanel;
+import com.flipper.views.components.Pagination;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -25,15 +27,18 @@ public class SellsController {
     private List<Transaction> sells;
     private SellPage sellPage;
     private ItemManager itemManager;
-    private int page = 0;
-    private final static int ITEMS_PER_PAGE;
-
+    private Pagination pagination;
     private Consumer<UUID> removeSellConsumer;
 
     public SellsController(ItemManager itemManager) throws IOException {
         this.itemManager = itemManager;
         this.removeSellConsumer = id -> this.removeSell(id);
         this.sellPage = new SellPage();
+        Consumer<Object> renderItemCallback = (Object sell) -> {
+            SellPanel sellPanel = new SellPanel((Transaction) sell, itemManager, this.removeSellConsumer);
+            this.sellPage.addSellPanel(sellPanel);
+        };
+        this.pagination = new Pagination(renderItemCallback, UiUtilities.ITEMS_PER_PAGE);
         this.loadSells();
     }
 
@@ -91,14 +96,8 @@ public class SellsController {
         SwingUtilities.invokeLater(() -> {
             this.sellPage.removeAll();
             this.sellPage.build();
-
-            ListIterator<Transaction> sellsIterator = sells.listIterator(sells.size());
-
-            while (sellsIterator.hasPrevious()) {
-                Transaction sell = sellsIterator.previous();
-                SellPanel sellPanel = new SellPanel(sell, itemManager, this.removeSellConsumer);
-                this.sellPage.addSellPanel(sellPanel);
-            }
+            this.pagination.renderList(this.sells);
+            this.sellPage.add(this.pagination.getComponent());
         });
     }
 }

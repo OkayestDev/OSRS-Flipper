@@ -27,8 +27,6 @@ import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.util.ImageUtil;
 
 public class LoginPage extends JPanel {
-    private static final long serialVersionUID = 2898009846682375972L;
-    
     private JButton loginButton;
     private JTextField emailTextField;
     private JTextField passwordTextField;

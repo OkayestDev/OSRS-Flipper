@@ -134,8 +134,7 @@ public class Persistor {
 
     public static List<Flip> loadMargins() throws IOException {
         String jsonString = getFileContent(MARGINS_JSON_FILE);
-        Type type = new TypeToken<List<Flip>>() {
-        }.getType();
+        Type type = new TypeToken<List<Flip>>() {}.getType();
         List<Flip> margins = gson.fromJson(jsonString, type);
         if (margins == null) {
             return new ArrayList<Flip>();
@@ -145,8 +144,7 @@ public class Persistor {
 
     public static List<Transaction> loadBuys() throws IOException {
         String jsonString = getFileContent(BUYS_JSON_FILE);
-        Type type = new TypeToken<List<Transaction>>() {
-        }.getType();
+        Type type = new TypeToken<List<Transaction>>() {}.getType();
         List<Transaction> buys = gson.fromJson(jsonString, type);
         if (buys == null) {
             return new ArrayList<Transaction>();
@@ -156,8 +154,7 @@ public class Persistor {
 
     public static List<Transaction> loadSells() throws IOException {
         String jsonString = getFileContent(SELLS_JSON_FILE);
-        Type type = new TypeToken<List<Transaction>>() {
-        }.getType();
+        Type type = new TypeToken<List<Transaction>>() {}.getType();
         List<Transaction> sells = gson.fromJson(jsonString, type);
         if (sells == null) {
             return new ArrayList<Transaction>();

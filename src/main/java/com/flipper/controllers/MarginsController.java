@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 import javax.swing.SwingUtilities;
 
 import com.flipper.helpers.Persistor;
+import com.flipper.helpers.UiUtilities;
 import com.flipper.models.Flip;
 import com.flipper.views.margins.MarginPage;
 import com.flipper.views.margins.MarginPanel;
@@ -70,13 +71,14 @@ public class MarginsController {
         SwingUtilities.invokeLater(() -> {
             this.marginPage.removeAll();
             this.marginPage.build();
-
+            int currentRenderCount = 0;
             ListIterator<Flip> marginsIterator = margins.listIterator(margins.size());
 
-            while (marginsIterator.hasPrevious()) {
+            while (marginsIterator.hasPrevious() && currentRenderCount < UiUtilities.ITEMS_PER_PAGE) {
                 Flip margin = marginsIterator.previous();
                 MarginPanel marginPanel = new MarginPanel(margin, itemManager, this.removeMarginConsumer);
                 this.marginPage.addMarginPanel(marginPanel);
+                currentRenderCount++;
             }
         });
     }

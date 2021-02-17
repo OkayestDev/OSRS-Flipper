@@ -17,8 +17,6 @@ import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
 
 public class FlipPage extends JPanel {
-    private static final long serialVersionUID = -2680984300396244041L;
-
     private JPanel container;
     private JLabel totalProfitValueLabel;
 

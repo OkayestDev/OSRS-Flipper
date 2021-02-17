@@ -18,8 +18,6 @@ import net.runelite.client.ui.components.materialtabs.MaterialTab;
 import net.runelite.client.ui.components.materialtabs.MaterialTabGroup;
 
 public class Tab extends MaterialTab {
-    private static final long serialVersionUID = 6667200114345884953L;
-
     private static final Border SELECTED_BORDER = new CompoundBorder(
         BorderFactory.createMatteBorder(0, 0, 1, 0, ColorScheme.BRAND_ORANGE),
         BorderFactory.createEmptyBorder(5, 5, 4, 5));
@@ -34,7 +32,7 @@ public class Tab extends MaterialTab {
     @Getter
     private final JComponent content;
 
-    /* To be execuded when the tab is selected */
+    /* To be executed when the tab is selected */
     @Setter
     private BooleanSupplier onSelectEvent;
 

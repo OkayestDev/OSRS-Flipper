@@ -9,8 +9,6 @@ import java.awt.BorderLayout;
 import net.runelite.client.ui.ColorScheme;
 
 public class MarginPage extends JPanel {
-    private static final long serialVersionUID = -2680984300396244041L;
-
     private JPanel container;
 
     public MarginPage() {

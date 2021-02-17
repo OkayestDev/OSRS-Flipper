@@ -13,9 +13,11 @@ import com.flipper.views.buys.BuyPage;
 import com.flipper.views.buys.BuyPanel;
 import com.flipper.helpers.GrandExchange;
 import com.flipper.helpers.Persistor;
+import com.flipper.helpers.UiUtilities;
 
 import lombok.Getter;
 import lombok.Setter;
+
 import net.runelite.api.GrandExchangeOffer;
 import net.runelite.client.game.ItemManager;
 
@@ -29,8 +31,6 @@ public class BuysController {
     private List<Transaction> buys;
     private BuyPage buyPage;
     private ItemManager itemManager;
-    private int page = 0;
-    private final static int ITEMS_PER_PAGE = 15;
 
     private Consumer<UUID> removeBuyConsumer;
 
@@ -96,7 +96,7 @@ public class BuysController {
             ListIterator<Transaction> buysIterator = buys.listIterator(buys.size());
             int currentRenderCount = 0;
 
-            while (buysIterator.hasPrevious() && currentRenderCount < ITEMS_PER_PAGE) {
+            while (buysIterator.hasPrevious() && currentRenderCount < UiUtilities.ITEMS_PER_PAGE) {
                 Transaction buy = buysIterator.previous();
                 BuyPanel buyPanel = new BuyPanel(buy, itemManager, this.removeBuyConsumer);
                 this.buyPage.addBuyPanel(buyPanel);

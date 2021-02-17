@@ -22,8 +22,6 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 public class MarginPanel extends JPanel {
-    private static final long serialVersionUID = 3879605322279273963L;
-
     private Transaction buy;
     private Transaction sell;
 
