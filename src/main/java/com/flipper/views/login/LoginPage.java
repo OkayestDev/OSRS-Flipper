@@ -122,6 +122,7 @@ public class LoginPage extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 try {
                     Desktop desktop = Desktop.getDesktop();
+                    // @todo change me!
                     URI flipperFrontendURI = new URI("http://localhost:3000");
                     desktop.browse(flipperFrontendURI);
                 } catch (Exception error) {

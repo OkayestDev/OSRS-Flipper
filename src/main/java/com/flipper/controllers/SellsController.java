@@ -38,7 +38,12 @@ public class SellsController {
             SellPanel sellPanel = new SellPanel((Transaction) sell, itemManager, this.removeSellConsumer);
             this.sellPage.addSellPanel(sellPanel);
         };
-        this.pagination = new Pagination(renderItemCallback, UiUtilities.ITEMS_PER_PAGE);
+        Runnable buildViewCallback = () -> this.buildView();
+        this.pagination = new Pagination(
+            renderItemCallback,
+            UiUtilities.ITEMS_PER_PAGE,
+            buildViewCallback
+        );
         this.loadSells();
     }
 
@@ -96,8 +101,8 @@ public class SellsController {
         SwingUtilities.invokeLater(() -> {
             this.sellPage.removeAll();
             this.sellPage.build();
+            this.sellPage.add(this.pagination.getComponent(this.sells));
             this.pagination.renderList(this.sells);
-            this.sellPage.add(this.pagination.getComponent());
         });
     }
 }
