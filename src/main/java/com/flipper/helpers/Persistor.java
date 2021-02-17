@@ -26,7 +26,7 @@ public class Persistor {
     public static File directory;
     public static final String SELLS_JSON_FILE = "flipper-sells.json";
     public static final String BUYS_JSON_FILE = "flipper-buys.json";
-    public static final String MARGINS_JSON_FILE = "flipper-margins.json";
+    public static final String MARGINS_JSON_FILE = "flipper-margins-2.json";
     public static final String LOGIN_RESPONSE_JSON_FILE = "flipper-login-response.json";
 
     public static void setUp(String directoryPath) throws IOException {
