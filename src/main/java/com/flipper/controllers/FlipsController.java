@@ -126,11 +126,6 @@ public class FlipsController {
                         if (buy.id.equals(flip.getBuyId())) {
                             Flip updatedFlip = updateFlip(sell, buy, flip);
                             flipsIterator.set(updatedFlip);
-                            if (updatedFlip.isMarginCheck()) {
-                                flipsIterator.remove();
-                            } else {
-                                flipsIterator.set(updatedFlip);
-                            }
                             return updatedFlip;
                         }
                     }
@@ -159,10 +154,8 @@ public class FlipsController {
         SwingUtilities.invokeLater(() -> {
             this.flipPage.removeAll();
             this.flipPage.build();
-
-            this.flipPage.add(this.pagination.getComponent(this.flips));
             this.pagination.renderList(this.flips);
-
+            this.flipPage.add(this.pagination.getComponent(this.flips));
             this.flipPage.setTotalProfit(totalProfit);
         });
     }

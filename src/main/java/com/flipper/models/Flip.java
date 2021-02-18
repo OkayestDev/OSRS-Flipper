@@ -51,6 +51,6 @@ public class Flip {
      * @return profit of flip
      */
     public int getTotalProfit() {
-        return sellPrice - (quantity * buyPrice);
+        return (sellPrice - buyPrice) * quantity;
     }
 }
