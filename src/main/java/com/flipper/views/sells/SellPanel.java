@@ -16,6 +16,7 @@ import com.flipper.views.components.DeleteButton;
 import com.flipper.views.components.ItemHeader;
 
 import net.runelite.client.ui.ColorScheme;
+import net.runelite.api.ItemComposition;
 import net.runelite.client.game.ItemManager;
 
 import java.awt.event.*;
@@ -40,11 +41,12 @@ public class SellPanel extends JPanel {
                     setVisible(false);
                 }
             });
+            ItemComposition itemComp = itemManager.getItemComposition(sell.getItemId());
 
             JPanel container = new JPanel();
             container.setLayout(new BorderLayout());
             container.setBackground(ColorScheme.DARK_GRAY_COLOR);
-            container.add(new ItemHeader(sell, itemManager, true, deleteSellButton), BorderLayout.NORTH);
+            container.add(new ItemHeader(sell.getItemId(), sell.getPricePer(), itemComp.getName(), itemManager, true, deleteSellButton), BorderLayout.NORTH);
             container.add(new AmountProgressBar(sell), BorderLayout.SOUTH);
             container.setBorder(UiUtilities.ITEM_INFO_BORDER);
 

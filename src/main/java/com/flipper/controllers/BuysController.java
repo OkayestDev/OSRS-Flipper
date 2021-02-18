@@ -37,8 +37,8 @@ public class BuysController {
         this.removeBuyConsumer = id -> this.removeBuy(id);
         this.buyPage = new BuyPage();
         Consumer<Object> renderItemCallback = (Object buy) -> {
-            BuyPanel sellPanel = new BuyPanel((Transaction) buy, itemManager, this.removeBuyConsumer);
-            this.buyPage.addBuyPanel(sellPanel);
+            BuyPanel buyPanel = new BuyPanel((Transaction) buy, itemManager, this.removeBuyConsumer);
+            this.buyPage.addBuyPanel(buyPanel);
         };
         Runnable buildViewCallback = () -> this.buildView();
         this.pagination = new Pagination(

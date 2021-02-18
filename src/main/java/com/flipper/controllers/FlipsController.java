@@ -9,9 +9,11 @@ import java.util.function.Consumer;
 import javax.swing.SwingUtilities;
 
 import com.flipper.helpers.GrandExchange;
+import com.flipper.helpers.UiUtilities;
 import com.flipper.models.Flip;
 import com.flipper.models.Transaction;
 import com.flipper.responses.FlipResponse;
+import com.flipper.views.components.Pagination;
 import com.flipper.views.flips.FlipPage;
 import com.flipper.views.flips.FlipPanel;
 import com.flipper.api.FlipApi;
@@ -31,12 +33,18 @@ public class FlipsController {
     private double totalProfit = 0;
     private double averageProfit = 0;
     private double maxProfit = 0;
-    private int page = 0;
+    private Pagination pagination;
 
     public FlipsController(ItemManager itemManager) throws IOException {
         this.itemManager = itemManager;
         this.removeFlipConsumer = id -> this.removeFlip(id);
         this.flipPage = new FlipPage();
+        Consumer<Object> renderItemCallback = (Object flip) -> {
+            FlipPanel flipPanel = new FlipPanel((Flip) flip, itemManager, this.removeFlipConsumer);
+            this.flipPage.add(flipPanel);
+        };
+        Runnable buildViewCallback = () -> this.buildView();
+        this.pagination = new Pagination(renderItemCallback, UiUtilities.ITEMS_PER_PAGE, buildViewCallback);
         this.loadFlips();
     }
 
@@ -152,14 +160,8 @@ public class FlipsController {
             this.flipPage.removeAll();
             this.flipPage.build();
 
-            if (this.flips != null) {
-                ListIterator<Flip> flipsIterator = flips.listIterator(flips.size());
-                while (flipsIterator.hasPrevious()) {
-                    Flip flip = flipsIterator.previous();
-                    FlipPanel flipPanel = new FlipPanel(flip, itemManager, this.removeFlipConsumer);
-                    this.flipPage.addFlipPanel(flipPanel);
-                }
-            }
+            this.flipPage.add(this.pagination.getComponent(this.flips));
+            this.pagination.renderList(this.flips);
 
             this.flipPage.setTotalProfit(totalProfit);
         });

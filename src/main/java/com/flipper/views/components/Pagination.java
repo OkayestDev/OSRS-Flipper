@@ -30,11 +30,10 @@ public class Pagination {
 		this.buildViewCallback = buildViewCallback;
 	}
 
-	// @todo render list starting at the end
 	public <T> void renderList(List<T> items) {
 		int endIndex = items.size() - (page * itemsPerPage) - 1;
 		if (endIndex < 0) {
-			endIndex = 0;
+			endIndex = -1;
 		}
 		int startIndex = items.size() - ((page - 1) * itemsPerPage) - 1;
 		for (int i = startIndex; i > endIndex; i--) {

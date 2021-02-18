@@ -15,7 +15,7 @@ public class ItemHeaderTest {
     public static void main(String[] args) throws Exception {
         setUp();
         ViewTestSetup.setUp();
-        ItemHeader itemHeader = new ItemHeader(buy, ViewTestSetup.itemManager, true, new JButton());
+        ItemHeader itemHeader = new ItemHeader(buy.getItemId(), buy.getPricePer(), "hooblahh", ViewTestSetup.itemManager, true, new JButton());
         ViewTestSetup.launch(itemHeader);
     }
 }

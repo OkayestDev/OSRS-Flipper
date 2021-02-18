@@ -26,19 +26,30 @@ import java.awt.event.*;
  */
 public class ItemHeader extends JPanel {
     private ItemManager itemManager;
-    private Transaction transaction;
+    private int itemId;
+    private int pricePer;
+    private String itemName;
     private JPanel topRightContainer;
     private JLabel costPerLabel;
 
-    public ItemHeader(Transaction transaction, ItemManager itemManager, boolean isAddCostPer, JButton hoverButton) {
-        this.transaction = transaction;
+    public ItemHeader(
+        int itemId,
+        int pricePer,
+        String itemName, 
+        ItemManager itemManager, 
+        boolean isAddCostPer, 
+        JButton hoverButton
+    ) {
+        this.itemId = itemId;
+        this.pricePer = pricePer;
+        this.itemName = itemName;
         this.itemManager = itemManager;
         this.setLayout(new BorderLayout());
         topRightContainer = new JPanel();
         topRightContainer.setBackground(ColorScheme.DARKER_GRAY_COLOR.darker());
 
         JPanel itemIconPanel = constructItemIcon();
-        JLabel itemName = constructItemName();
+        JLabel itemNameLabel = constructItemName();
         if (isAddCostPer) {
             this.costPerLabel = constructCostPerLabel();
             topRightContainer.add(costPerLabel);
@@ -50,7 +61,7 @@ public class ItemHeader extends JPanel {
         add(topRightContainer, BorderLayout.EAST);
         setBackground(ColorScheme.DARKER_GRAY_COLOR.darker());
         add(itemIconPanel, BorderLayout.WEST);
-        add(itemName, BorderLayout.CENTER);
+        add(itemNameLabel, BorderLayout.CENTER);
         setBorder(new EmptyBorder(2, 1, 2, 5));
 
         this.addMouseListener(new MouseAdapter() {
@@ -91,8 +102,7 @@ public class ItemHeader extends JPanel {
     }
 
     private JPanel constructItemIcon() {
-        int itemId = transaction.getItemId();
-        AsyncBufferedImage itemImage = itemManager.getImage(itemId);
+        AsyncBufferedImage itemImage = itemManager.getImage(this.itemId);
         JLabel itemIcon = new JLabel();
         itemIcon.setAlignmentX(Component.LEFT_ALIGNMENT);
         itemIcon.setPreferredSize(UiUtilities.ICON_SIZE);
@@ -106,7 +116,7 @@ public class ItemHeader extends JPanel {
     }
 
     private JLabel constructItemName() {
-        JLabel itemName = new JLabel(transaction.getItemName(), SwingConstants.CENTER);
+        JLabel itemName = new JLabel(this.itemName, SwingConstants.CENTER);
         itemName.setForeground(Color.WHITE);
         itemName.setFont(FontManager.getRunescapeBoldFont());
         itemName.setPreferredSize(new Dimension(0, 0));
@@ -114,7 +124,7 @@ public class ItemHeader extends JPanel {
     }
 
     private JLabel constructCostPerLabel() {
-        String costPerString = Integer.toString(transaction.getPricePer());
+        String costPerString = Integer.toString(this.pricePer);
         JLabel costPerLabel = new JLabel(costPerString + " gp");
         costPerLabel.setForeground(ColorScheme.GRAND_EXCHANGE_ALCH);
         return costPerLabel;

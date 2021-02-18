@@ -14,41 +14,38 @@ import java.awt.event.*;
 
 import com.flipper.helpers.UiUtilities;
 import com.flipper.models.Flip;
-import com.flipper.models.Transaction;
 import com.flipper.views.components.DeleteButton;
 import com.flipper.views.components.ItemHeader;
 
 import net.runelite.client.ui.ColorScheme;
+import net.runelite.api.ItemComposition;
 import net.runelite.client.game.ItemManager;
 
 public class FlipPanel extends JPanel {
     private Flip flip;
-    private Transaction buy;
-    private Transaction sell;
 
     private JPanel itemInfo = new JPanel(new BorderLayout());
     private JPanel leftInfoTextPanel = new JPanel(new GridLayout(3, 1));
     private JPanel rightValuesPanel = new JPanel(new GridLayout(3, 1));
 
     public FlipPanel(Flip flip, ItemManager itemManager, Consumer<UUID> removeFlipConsumer) {
-        // this.flip = flip;
-        // this.sell = flip.getSell();
-        // this.buy = flip.getBuy();
+        this.flip = flip;
 
-        // DeleteButton deleteFlipButton = new DeleteButton((ActionEvent action) -> {
-        //     String describedBuy = flip.describeFlip();
-        //     int input = JOptionPane.showConfirmDialog(null, "Delete flip of " + describedBuy + "?");
-        //     if (input == 0) {
-        //         removeFlipConsumer.accept(flip.getId());
-        //         setVisible(false);
-        //     }
-        // });
+        DeleteButton deleteFlipButton = new DeleteButton((ActionEvent action) -> {
+            String describedBuy = flip.describeFlip();
+            int input = JOptionPane.showConfirmDialog(null, "Delete flip of " + describedBuy + "?");
+            if (input == 0) {
+                removeFlipConsumer.accept(flip.getId());
+                setVisible(false);
+            }
+        });
+        ItemComposition itemComp = itemManager.getItemComposition(flip.getItemId());
 
-        // setLayout(new BorderLayout());
-        // setBackground(ColorScheme.DARK_GRAY_COLOR);
-        // this.add(new ItemHeader(this.buy, itemManager, false, deleteFlipButton), BorderLayout.NORTH);
-        // constructItemInfo();
-        // this.setBorder(new EmptyBorder(0, 0, 5, 0));
+        setLayout(new BorderLayout());
+        setBackground(ColorScheme.DARK_GRAY_COLOR);
+        this.add(new ItemHeader(flip.getItemId(), 0, itemComp.getName(), itemManager, false, deleteFlipButton), BorderLayout.NORTH);
+        constructItemInfo();
+        this.setBorder(new EmptyBorder(0, 0, 5, 0));
     }
 
     private void constructItemInfo() {
@@ -100,9 +97,9 @@ public class FlipPanel extends JPanel {
         rightValuesPanel.setBackground(ColorScheme.DARK_GRAY_COLOR);
 
         int totalProfit = flip.getTotalProfit();
-        int profitEach = totalProfit / sell.getQuantity();
+        int profitEach = totalProfit / this.flip.getQuantity();
 
-        String amountFlippedText = Integer.toString(sell.getQuantity());
+        String amountFlippedText = Integer.toString(this.flip.getQuantity());
         String totalProfitText = Integer.toString(totalProfit);
         String profitEachText = Integer.toString(profitEach);
 
