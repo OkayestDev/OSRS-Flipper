@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.KeyEvent;
 import java.net.URI;
+import java.awt.GridLayout;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -27,6 +28,8 @@ import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.util.ImageUtil;
 
 public class LoginPage extends JPanel {
+    private final static int PAGE_WIDTH = 225;
+
     private JButton loginButton;
     private JTextField emailTextField;
     private JTextField passwordTextField;
@@ -40,24 +43,23 @@ public class LoginPage extends JPanel {
         Consumer<String> onPasswordTextChangedListener,
         ActionListener onLoginPressedListener
     ) {
-        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBackground(ColorScheme.DARK_GRAY_COLOR);
+        this.setSize(PAGE_WIDTH, 500);
 
         this.onEmailTextChangedListener = onEmailTextChangedListener;
         this.onPasswordTextChangedListener = onPasswordTextChangedListener;
-
-        loginButton = new JButton("Login");
-        loginButton.addActionListener(onLoginPressedListener);
+        this.onLoginPressedListener = onLoginPressedListener;
 
         this.createLogo();
         this.createEmailInput();
         this.createPasswordInput();
-        add(loginButton, BorderLayout.CENTER);
+        this.createLoginButton();
         this.createCreateAccountLink();
     }
 
     public void createLogo() {
-        JPanel container = new JPanel(new BorderLayout());
+        JPanel container = new JPanel();
         ImageIcon flipperIcon = new ImageIcon(
             ImageUtil.getResourceStreamFromClass(
                 getClass(), 
@@ -73,7 +75,10 @@ public class LoginPage extends JPanel {
     }
 
     public void createEmailInput() {
+        JPanel container = new JPanel(new GridLayout(2, 1));
+        container.setBorder(new EmptyBorder(0, 0, 10, 0));
         emailTextField = new JTextField();
+        emailTextField.setSize(PAGE_WIDTH, 40);
         emailTextField.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent event) {}
@@ -89,12 +94,16 @@ public class LoginPage extends JPanel {
             public void keyPressed(KeyEvent event) {}
         });
         JLabel emailLabel = new JLabel("Email");
-        add(emailLabel);
-        add(emailTextField);
+        container.add(emailLabel, BorderLayout.WEST);
+        container.add(emailTextField);
+        add(container);
     }
 
     public void createPasswordInput() {
+        JPanel container = new JPanel(new GridLayout(2, 1));
+        container.setBorder(new EmptyBorder(0, 0, 10, 0));
         passwordTextField = new JPasswordField();
+        passwordTextField.setSize(PAGE_WIDTH, 40);
         passwordTextField.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent event) {}
@@ -110,11 +119,13 @@ public class LoginPage extends JPanel {
             public void keyPressed(KeyEvent event) {}
         });
         JLabel passwordLabel = new JLabel("Password");
-        add(passwordLabel);
-        add(passwordTextField);
+        container.add(passwordLabel);
+        container.add(passwordTextField);
+        add(container);
     }
 
     public void createCreateAccountLink() {
+        JPanel container = new JPanel();
         JLabel createAccountLabel = new JLabel("Don't have an account? Create one.");
         createAccountLabel.setForeground(ColorScheme.LIGHT_GRAY_COLOR);
         createAccountLabel.addMouseListener(new MouseAdapter() {
@@ -140,6 +151,15 @@ public class LoginPage extends JPanel {
                 createAccountLabel.setForeground(ColorScheme.LIGHT_GRAY_COLOR);
             }
         }); 
-        add(createAccountLabel);
+        container.add(createAccountLabel);
+        add(container);
+    }
+
+    public void createLoginButton() {
+        JPanel container = new JPanel();
+        loginButton = new JButton("Login");
+        loginButton.addActionListener(this.onLoginPressedListener);
+        container.add(loginButton);
+        add(container);
     }
 }

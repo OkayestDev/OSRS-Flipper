@@ -94,22 +94,22 @@ public class MarginPanel extends JPanel {
     }
 
     private void constructRightLabels() {
-        // rightValuesPanel.setBackground(ColorScheme.DARK_GRAY_COLOR);
+        rightValuesPanel.setBackground(ColorScheme.DARK_GRAY_COLOR);
 
-        // int potentialProfitPer = buy.getPricePer() - sell.getPricePer();
+        int potentialProfitPer = this.margin.buyPrice - this.margin.sellPrice;
 
-        // String buyAtText = Integer.toString(sell.getPricePer());
-        // String sellAtText = Integer.toString(buy.getPricePer());
-        // String potentialProfitEachText = Integer.toString(potentialProfitPer);
+        String buyAtText = Integer.toString(this.margin.buyPrice);
+        String sellAtText = Integer.toString(this.margin.sellPrice);
+        String potentialProfitEachText = Integer.toString(potentialProfitPer);
 
-        // JLabel buyAtLabel = newRightLabel(buyAtText);
-        // JLabel sellAtLabel = newRightLabel(sellAtText);
-        // JLabel potentialProfitEachLabel = newRightLabel(potentialProfitEachText);
+        JLabel buyAtLabel = newRightLabel(buyAtText);
+        JLabel sellAtLabel = newRightLabel(sellAtText);
+        JLabel potentialProfitEachLabel = newRightLabel(potentialProfitEachText);
 
-        // addRightLabel(buyAtLabel);
-        // addRightLabel(sellAtLabel);
-        // addRightLabel(potentialProfitEachLabel);
+        addRightLabel(buyAtLabel);
+        addRightLabel(sellAtLabel);
+        addRightLabel(potentialProfitEachLabel);
 
-        // rightValuesPanel.setBorder(new EmptyBorder(2, 5, 2, 10));
+        rightValuesPanel.setBorder(new EmptyBorder(2, 5, 2, 10));
     }
 }

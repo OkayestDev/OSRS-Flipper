@@ -75,31 +75,41 @@ public class FlipperPlugin extends Plugin {
         Persistor.setUp();
         LoginResponse loginResponse = Persistor.loadLoginResponse();
         Boolean isLoggedIn = loginResponse != null;
-        Runnable changeToLoggedInViewRunnable = () -> changeToLoggedInView();
-        loginController = new LoginController(changeToLoggedInViewRunnable);
+        this.tabManagerController = new TabManagerController(clientToolbar);
+
+        if (isLoggedIn) {
+            this.changeToLoggedInView();
+        } else {
+            this.changeToLoggedOutView();
+        }
+    }
+
+    private void changeToLoggedInView() throws IOException {
+        Runnable changeToLoggedOutViewRunnable = () -> this.changeToLoggedOutView();
         buysController = new BuysController(itemManager);
         sellsController = new SellsController(itemManager);
         flipsController = new FlipsController(itemManager);
         marginsController = new MarginsController(itemManager);
-
-        this.tabManagerController = new TabManagerController(
-            clientToolbar, 
-            buysController.getPanel(), 
+        this.tabManagerController.changeToLoggedInView(
+            buysController.getPanel(),
             sellsController.getPanel(),
-            flipsController.getPanel(), 
-            marginsController.getPanel(), 
-            loginController.getPanel(),
-            isLoggedIn
-        ); 
-    }
-
-    private void changeToLoggedInView() {
-        this.tabManagerController.changeToLoggedInView();
+            flipsController.getPanel(),
+            marginsController.getPanel(),
+            changeToLoggedOutViewRunnable
+        );
     }
 
     /** @todo implement */
     private void changeToLoggedOutView() {
-        this.tabManagerController.changeToLoggedOutView();
+        Runnable changeToLoggedInViewRunnable = () -> {
+			try {
+				changeToLoggedInView();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		};
+        loginController = new LoginController(changeToLoggedInViewRunnable);
+        this.tabManagerController.changeToLoggedOutView(loginController.getPanel());
     }
 
     private void saveAll() throws IOException {

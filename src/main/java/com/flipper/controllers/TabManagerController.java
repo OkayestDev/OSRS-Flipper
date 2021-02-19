@@ -18,24 +18,9 @@ public class TabManagerController {
     private NavigationButton navButton;
     private ClientToolbar clientToolbar;
 
-    public TabManagerController(
-        ClientToolbar clientToolbar, 
-        BuyPage buyPage,
-        SellPage sellPage, 
-        FlipPage flipPage,
-        MarginPage marginPage,
-        LoginPage loginPage,
-        Boolean isLoggedIn
-    ) {
+    public TabManagerController(ClientToolbar clientToolbar) {
         this.clientToolbar = clientToolbar;
-        tabManager = new TabManager(
-            buyPage, 
-            sellPage, 
-            flipPage, 
-            marginPage, 
-            loginPage, 
-            isLoggedIn
-        );
+        tabManager = new TabManager();
         setUpNavigationButton();
     }
 
@@ -52,11 +37,23 @@ public class TabManagerController {
         clientToolbar.addNavigation(navButton);
     }
 
-    public void changeToLoggedInView() {
-        tabManager.renderLoggedInView();
+    public void changeToLoggedInView(
+        BuyPage buyPage, 
+        SellPage sellPage, 
+        FlipPage flipPage, 
+        MarginPage marginPage,
+        Runnable changeToLoggedOutView
+    ) {
+        tabManager.renderLoggedInView(
+            buyPage, 
+            sellPage, 
+            flipPage, 
+            marginPage,
+            changeToLoggedOutView
+        );
     }
 
-    public void changeToLoggedOutView() {
-        tabManager.renderLoggedOutView();
+    public void changeToLoggedOutView(LoginPage loginPage) {
+        tabManager.renderLoggedOutView(loginPage);
     }
 }

@@ -17,32 +17,13 @@ import net.runelite.client.ui.PluginPanel;
 import net.runelite.client.ui.components.materialtabs.MaterialTabGroup;
 
 public class TabManager extends PluginPanel {
-    BuyPage buyPage;
-    SellPage sellPage;
-    FlipPage flipPage;
-    MarginPage marginPage;
-    LoginPage loginPage;
-
-    /**
-     * This manages the tab navigation bar at the top of the panel. Once a tab is
-     * selected, the corresponding panel will be displayed below along with
-     * indication of what tab is selected.
-     */
-    public TabManager(BuyPage buyPage, SellPage sellPage, FlipPage flipPage, MarginPage marginPage, LoginPage loginPage, Boolean isLoggedIn) {
-        this.buyPage = buyPage;
-        this.sellPage = sellPage;
-        this.flipPage = flipPage;
-        this.marginPage = marginPage;
-        this.loginPage = loginPage;
-
-        if (isLoggedIn) {
-            this.renderLoggedInView();
-        } else {
-            renderLoggedOutView();
-        }
-    }
-
-    public void renderLoggedInView() {
+    public void renderLoggedInView(
+        BuyPage buyPage, 
+        SellPage sellPage, 
+        FlipPage flipPage, 
+        MarginPage marginPage, 
+        Runnable changeToLoggedOutView
+    ) {
         this.removeAll();
         JPanel display = new JPanel();
         JPanel header = new JPanel(new BorderLayout());
@@ -63,10 +44,12 @@ public class TabManager extends PluginPanel {
         header.add(tabGroup, BorderLayout.CENTER);
         add(header, BorderLayout.WEST);
         add(display, BorderLayout.CENTER);
+        this.repaint();
     }
 
-    public void renderLoggedOutView() {
+    public void renderLoggedOutView(LoginPage loginPage) {
         this.removeAll();
-        add(this.loginPage);
+        add(loginPage);
+        this.repaint();
     }
 };

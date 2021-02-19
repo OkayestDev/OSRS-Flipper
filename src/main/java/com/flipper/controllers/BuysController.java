@@ -29,7 +29,6 @@ public class BuysController {
     private BuyPage buyPage;
     private ItemManager itemManager;
     private Pagination pagination;
-
     private Consumer<UUID> removeBuyConsumer;
 
     public BuysController(ItemManager itemManager) throws IOException {
