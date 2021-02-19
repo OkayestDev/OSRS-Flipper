@@ -31,12 +31,13 @@ import com.flipper.controllers.FlipsController;
 import com.flipper.controllers.LoginController;
 import com.flipper.controllers.MarginsController;
 import com.flipper.controllers.SellsController;
-import com.flipper.controllers.TabManagerController;
 import com.flipper.helpers.GrandExchange;
 import com.flipper.helpers.Persistor;
+import com.flipper.helpers.UiUtilities;
 import com.flipper.models.Flip;
 import com.flipper.models.Transaction;
 import com.flipper.responses.LoginResponse;
+import com.flipper.views.TabManager;
 import com.google.inject.Provides;
 
 import java.io.IOException;
@@ -53,6 +54,8 @@ import net.runelite.client.game.ItemManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.ClientToolbar;
+import net.runelite.client.ui.NavigationButton;
+import net.runelite.client.util.ImageUtil;
 
 
 @PluginDescriptor(name = "Flipper")
@@ -68,14 +71,17 @@ public class FlipperPlugin extends Plugin {
     private FlipsController flipsController;
     private MarginsController marginsController;
     private LoginController loginController;
-    private TabManagerController tabManagerController;
+
+    private NavigationButton navButton;
+    private TabManager tabManager;
 
     @Override
     protected void startUp() throws Exception {
         Persistor.setUp();
         LoginResponse loginResponse = Persistor.loadLoginResponse();
         Boolean isLoggedIn = loginResponse != null;
-        this.tabManagerController = new TabManagerController(clientToolbar);
+        this.tabManager = new TabManager();
+        this.setUpNavigationButton();
 
         if (isLoggedIn) {
             this.changeToLoggedInView();
@@ -84,13 +90,28 @@ public class FlipperPlugin extends Plugin {
         }
     }
 
+    private void setUpNavigationButton() {
+        navButton = NavigationButton
+            .builder()
+            .tooltip("Flipper")
+            .icon(
+                ImageUtil.getResourceStreamFromClass(
+                    getClass(), 
+                    UiUtilities.flipperNavIcon  
+                )
+            )
+            .priority(4)
+            .panel(tabManager).build();
+        clientToolbar.addNavigation(navButton);
+    }
+
     private void changeToLoggedInView() throws IOException {
         Runnable changeToLoggedOutViewRunnable = () -> this.changeToLoggedOutView();
         buysController = new BuysController(itemManager);
         sellsController = new SellsController(itemManager);
         flipsController = new FlipsController(itemManager);
         marginsController = new MarginsController(itemManager);
-        this.tabManagerController.changeToLoggedInView(
+        this.tabManager.renderLoggedInView(
             buysController.getPanel(),
             sellsController.getPanel(),
             flipsController.getPanel(),
@@ -109,7 +130,7 @@ public class FlipperPlugin extends Plugin {
 			}
 		};
         loginController = new LoginController(changeToLoggedInViewRunnable);
-        this.tabManagerController.changeToLoggedOutView(loginController.getPanel());
+        this.tabManager.renderLoggedOutView(loginController.getPanel());
     }
 
     private void saveAll() throws IOException {
