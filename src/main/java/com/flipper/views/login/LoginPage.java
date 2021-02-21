@@ -43,9 +43,9 @@ public class LoginPage extends JPanel {
         Consumer<String> onPasswordTextChangedListener,
         ActionListener onLoginPressedListener
     ) {
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.setBackground(ColorScheme.DARK_GRAY_COLOR);
-        this.setSize(PAGE_WIDTH, 500);
+        this.setSize(PAGE_WIDTH, 250);
 
         this.onEmailTextChangedListener = onEmailTextChangedListener;
         this.onPasswordTextChangedListener = onPasswordTextChangedListener;

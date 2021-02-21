@@ -87,7 +87,11 @@ public class Persistor {
     }
 
     public static void deleteLoginResponse() throws IOException {
-        Files.delete(Path.of(directory.getAbsolutePath(), LOGIN_RESPONSE_JSON_FILE));
+        Path loginResponsePath = Path.of(directory.getAbsolutePath(), LOGIN_RESPONSE_JSON_FILE);
+        if (Files.exists(loginResponsePath)) {
+            Files.delete(loginResponsePath);
+        }
+        Api.loginResponse = null;
     }
 
     public static void saveJson(List<?> list, String filename) throws IOException {

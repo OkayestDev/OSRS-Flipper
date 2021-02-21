@@ -8,6 +8,7 @@ import lombok.Data;
 
 @Data
 public class FlipResponse {
+    public Boolean error;
     public String message;
     public List<Flip> flips;
     public Flip flip;

@@ -24,12 +24,10 @@ public class MarginsController {
     @Setter
     private List<Flip> margins;
     private MarginPage marginPage;
-    private ItemManager itemManager;
     private Consumer<UUID> removeMarginConsumer;
     private Pagination pagination;
 
     public MarginsController(ItemManager itemManager) throws IOException {
-        this.itemManager = itemManager;
         this.removeMarginConsumer = id -> this.removeMargin(id);
         this.marginPage = new MarginPage();
         Consumer<Object> renderItemCallback = (Object margin) -> {

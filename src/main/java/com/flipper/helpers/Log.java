@@ -11,7 +11,7 @@ public class Log {
 
     public static void info(String message) {
         if (DEV_MODE) {
-            log.info(message);
+            System.out.println(message);
         }
     }
 }

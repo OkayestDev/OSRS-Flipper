@@ -32,6 +32,7 @@ import com.flipper.controllers.LoginController;
 import com.flipper.controllers.MarginsController;
 import com.flipper.controllers.SellsController;
 import com.flipper.helpers.GrandExchange;
+import com.flipper.helpers.Log;
 import com.flipper.helpers.Persistor;
 import com.flipper.helpers.UiUtilities;
 import com.flipper.models.Flip;
@@ -41,12 +42,14 @@ import com.flipper.views.TabManager;
 import com.google.inject.Provides;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import javax.inject.Inject;
 
 import net.runelite.api.GrandExchangeOffer;
 import net.runelite.api.GrandExchangeOfferState;
 import net.runelite.api.events.GrandExchangeOfferChanged;
+import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ClientShutdown;
@@ -71,22 +74,27 @@ public class FlipperPlugin extends Plugin {
     private FlipsController flipsController;
     private MarginsController marginsController;
     private LoginController loginController;
-
+    // Views
     private NavigationButton navButton;
     private TabManager tabManager;
 
     @Override
     protected void startUp() throws Exception {
-        Persistor.setUp();
-        LoginResponse loginResponse = Persistor.loadLoginResponse();
-        Boolean isLoggedIn = loginResponse != null;
-        this.tabManager = new TabManager();
-        this.setUpNavigationButton();
+        try {
+            Persistor.setUp();
+            LoginResponse loginResponse = Persistor.loadLoginResponse();
+            Boolean isLoggedIn = loginResponse != null;
+            this.tabManager = new TabManager();
+            this.setUpNavigationButton();
 
-        if (isLoggedIn) {
-            this.changeToLoggedInView();
-        } else {
-            this.changeToLoggedOutView();
+            if (isLoggedIn) {
+                this.changeToLoggedInView();
+            } else {
+                this.changeToLoggedOutView();
+            }
+        } catch (Exception error) {
+            Log.info("Failed to start Flipper");
+            Log.info(error.toString());
         }
     }
 
@@ -106,7 +114,13 @@ public class FlipperPlugin extends Plugin {
     }
 
     private void changeToLoggedInView() throws IOException {
-        Runnable changeToLoggedOutViewRunnable = () -> this.changeToLoggedOutView();
+        Runnable changeToLoggedOutViewRunnable = () -> {
+			try {
+				this.changeToLoggedOutView();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		};
         buysController = new BuysController(itemManager);
         sellsController = new SellsController(itemManager);
         flipsController = new FlipsController(itemManager);
@@ -121,14 +135,15 @@ public class FlipperPlugin extends Plugin {
     }
 
     /** @todo implement */
-    private void changeToLoggedOutView() {
+    private void changeToLoggedOutView() throws IOException {
         Runnable changeToLoggedInViewRunnable = () -> {
 			try {
 				changeToLoggedInView();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		};
+        };
+        Persistor.deleteLoginResponse();
         loginController = new LoginController(changeToLoggedInViewRunnable);
         this.tabManager.renderLoggedOutView(loginController.getPanel());
     }
@@ -160,8 +175,10 @@ public class FlipperPlugin extends Plugin {
     @Subscribe
     public void onGrandExchangeOfferChanged(GrandExchangeOfferChanged newOfferEvent) {
         GrandExchangeOffer offer = newOfferEvent.getOffer();
+        GrandExchangeOfferState offerState = offer.getState();
+        int quantitySold = offer.getQuantitySold();
         // Ignore empty state event offers or offers that haven't bought/sold any
-        if (offer.getState() != GrandExchangeOfferState.EMPTY && offer.getQuantitySold() != 0) {
+        if (offerState != GrandExchangeOfferState.EMPTY && quantitySold != 0) {
             boolean isBuy = GrandExchange.checkIsBuy(offer.getState());
             if (isBuy) {
                 buysController.createBuy(offer);
@@ -172,6 +189,7 @@ public class FlipperPlugin extends Plugin {
                     // Remove buy and sell from buy and sell lists since they're part of a margin
                     buysController.removeBuy(flip.getBuyId());
                     sellsController.removeSell(sell.id);
+                    flip.id = UUID.randomUUID();
                     marginsController.addMargin(flip);
                 }
             }

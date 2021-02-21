@@ -1,6 +1,7 @@
 package com.flipper.controllers;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.UUID;
@@ -28,7 +29,6 @@ public class FlipsController {
     @Setter
     private List<Flip> flips;
     private FlipPage flipPage;
-    private ItemManager itemManager;
     private Consumer<UUID> removeFlipConsumer;
     private double totalProfit = 0;
     private double averageProfit = 0;
@@ -36,7 +36,7 @@ public class FlipsController {
     private Pagination pagination;
 
     public FlipsController(ItemManager itemManager) throws IOException {
-        this.itemManager = itemManager;
+        this.flips = new ArrayList<Flip>();
         this.removeFlipConsumer = id -> this.removeFlip(id);
         this.flipPage = new FlipPage();
         Consumer<Object> renderItemCallback = (Object flip) -> {

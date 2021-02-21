@@ -32,8 +32,15 @@ public class Transaction {
      */
     private boolean hasCancelledOnce = false;
 
-    public Transaction(int quantity, int totalQuantity, int itemId, int pricePer, String itemName, boolean isBuy,
-            boolean isComplete) {
+    public Transaction(
+        int quantity, 
+        int totalQuantity, 
+        int itemId, 
+        int pricePer, 
+        String itemName, 
+        boolean isBuy,
+        boolean isComplete
+    ) {
         id = UUID.randomUUID();
         this.quantity = quantity;
         this.totalQuantity = totalQuantity;
