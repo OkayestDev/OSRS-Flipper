@@ -133,10 +133,10 @@ public class FlipsController {
                 Transaction buy = buysIterator.previous();
                 if (GrandExchange.checkIsSellAFlipOfBuy(sell, buy)) {
                     Flip flip = new Flip(buy, sell);
-                    buy.setIsFlipped(true);
-                    sell.setIsFlipped(true);
                     if (!flip.isMarginCheck()) {
                         this.addFlip(flip);
+                        buy.setIsFlipped(true);
+                        sell.setIsFlipped(true);
                     }
                     return flip;
                 }

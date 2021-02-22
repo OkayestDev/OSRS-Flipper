@@ -184,6 +184,7 @@ public class FlipperPlugin extends Plugin {
                     buysController.removeBuy(flip.getBuyId());
                     sellsController.removeSell(sell.id);
                     flip.id = UUID.randomUUID();
+                    flip.sellPrice = sell.getPricePer();
                     marginsController.addMargin(flip);
                 }
             }
