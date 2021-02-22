@@ -101,8 +101,8 @@ public class MarginPanel extends JPanel {
 
         int potentialProfitPer = this.margin.buyPrice - this.margin.sellPrice;
 
-        String buyAtText = Integer.toString(this.margin.buyPrice);
-        String sellAtText = Integer.toString(this.margin.sellPrice);
+        String buyAtText = Integer.toString(this.margin.sellPrice);
+        String sellAtText = Integer.toString(this.margin.buyPrice);
         String potentialProfitEachText = Integer.toString(potentialProfitPer);
 
         JLabel buyAtLabel = newRightLabel(buyAtText);
