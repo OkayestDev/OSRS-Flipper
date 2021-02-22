@@ -12,7 +12,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 
 import com.flipper.helpers.UiUtilities;
-import com.flipper.models.Transaction;
 
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.ui.ColorScheme;

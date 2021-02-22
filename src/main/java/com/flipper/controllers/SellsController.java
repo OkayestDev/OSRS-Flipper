@@ -21,7 +21,7 @@ import lombok.Setter;
 import net.runelite.api.GrandExchangeOffer;
 import net.runelite.client.game.ItemManager;
 
-public class SellsController {
+public class SellsController extends TransactionController {
     @Getter
     @Setter
     private List<Transaction> sells;
