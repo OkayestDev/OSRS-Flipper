@@ -66,13 +66,13 @@ public class BuysController {
         Persistor.saveBuys(buys);
     }
 
-    public void createBuy(GrandExchangeOffer offer) {
+    public void upsertBuy(GrandExchangeOffer offer, int slot) {
         // Check to see if there is an incomplete buy transaction we can full fill
         ListIterator<Transaction> buysIterator = buys.listIterator(buys.size());
         while (buysIterator.hasPrevious()) {
             Transaction buy = buysIterator.previous();
             // Incomplete buy transaction found, update it
-            if (GrandExchange.checkIsOfferPartOfTransaction(buy, offer)) {
+            if (GrandExchange.checkIsOfferPartOfTransaction(buy, offer, slot)) {
                 buysIterator.set(buy.updateTransaction(offer));
                 this.buildView();
                 return;
@@ -80,7 +80,7 @@ public class BuysController {
         }
 
         // It's a new buy, create one
-        Transaction newBuy = GrandExchange.createTransactionFromOffer(offer, itemManager);
+        Transaction newBuy = GrandExchange.createTransactionFromOffer(offer, itemManager, slot);
         this.addBuy(newBuy);
     }
 

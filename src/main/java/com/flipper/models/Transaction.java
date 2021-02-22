@@ -18,6 +18,7 @@ public class Transaction {
     private int totalQuantity;
     private int itemId;
     private int pricePer;
+    private int slot;
     private String itemName;
     private boolean isBuy;
     private boolean isComplete;
@@ -36,7 +37,8 @@ public class Transaction {
         int quantity, 
         int totalQuantity, 
         int itemId, 
-        int pricePer, 
+        int pricePer,
+        int slot,
         String itemName, 
         boolean isBuy,
         boolean isComplete
@@ -46,6 +48,7 @@ public class Transaction {
         this.totalQuantity = totalQuantity;
         this.itemId = itemId;
         this.pricePer = pricePer;
+        this.slot = slot;
         this.itemName = itemName;
         this.isBuy = isBuy;
         this.isComplete = isComplete;

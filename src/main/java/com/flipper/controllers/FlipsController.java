@@ -31,8 +31,6 @@ public class FlipsController {
     private FlipPage flipPage;
     private Consumer<UUID> removeFlipConsumer;
     private double totalProfit = 0;
-    private double averageProfit = 0;
-    private double maxProfit = 0;
     private Pagination pagination;
 
     public FlipsController(ItemManager itemManager) throws IOException {
@@ -49,7 +47,9 @@ public class FlipsController {
     }
 
     public void addFlip(Flip flip) {
-        this.flips.add(flip);
+        FlipResponse flipResponse = FlipApi.createFlip(flip);
+        this.totalProfit = flipResponse.totalProfit;
+        this.flips.add(flipResponse.flip);
         this.buildView();
     }
 
@@ -78,8 +78,6 @@ public class FlipsController {
 
         if (flipResponse != null) {
             this.totalProfit = flipResponse.totalProfit;
-            this.averageProfit = flipResponse.averageProfit;
-            this.maxProfit = flipResponse.maxProfit;
             this.flips = flipResponse.flips;
         }
 
@@ -95,8 +93,6 @@ public class FlipsController {
 
         if (flipResponse != null) {
             this.totalProfit = flipResponse.totalProfit;
-            this.averageProfit = flipResponse.averageProfit;
-            this.maxProfit = flipResponse.maxProfit;
             this.buildView();
         }
 
@@ -111,7 +107,7 @@ public class FlipsController {
      * @param sell
      * @param buys
      */
-    public Flip createFlip(Transaction sell, List<Transaction> buys) {
+    public Flip upsertFlip(Transaction sell, List<Transaction> buys) {
         ListIterator<Transaction> buysIterator = buys.listIterator(buys.size());
         // If sell has already been flipped, look for it's corresponding buy and update
         // the flip

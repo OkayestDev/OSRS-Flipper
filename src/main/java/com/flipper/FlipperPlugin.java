@@ -32,7 +32,6 @@ import com.flipper.controllers.LoginController;
 import com.flipper.controllers.MarginsController;
 import com.flipper.controllers.SellsController;
 import com.flipper.helpers.GrandExchange;
-import com.flipper.helpers.Log;
 import com.flipper.helpers.Persistor;
 import com.flipper.helpers.UiUtilities;
 import com.flipper.models.Flip;
@@ -167,6 +166,7 @@ public class FlipperPlugin extends Plugin {
 
     @Subscribe
     public void onGrandExchangeOfferChanged(GrandExchangeOfferChanged newOfferEvent) {
+        int slot = newOfferEvent.getSlot();
         GrandExchangeOffer offer = newOfferEvent.getOffer();
         GrandExchangeOfferState offerState = offer.getState();
         int quantitySold = offer.getQuantitySold();
@@ -174,11 +174,12 @@ public class FlipperPlugin extends Plugin {
         if (offerState != GrandExchangeOfferState.EMPTY && quantitySold != 0) {
             boolean isBuy = GrandExchange.checkIsBuy(offerState);
             if (isBuy) {
-                buysController.createBuy(offer);
+                buysController.upsertBuy(offer, slot);
             } else {
-                Transaction sell = sellsController.createSell(offer);
-                Flip flip = flipsController.createFlip(sell, buysController.getBuys());
-                if (flip != null && flip.isMarginCheck()) {
+                Transaction sell = sellsController.upsertSell(offer, slot);
+                Flip flip = flipsController.upsertFlip(sell, buysController.getBuys());
+                boolean isOfferComplete = GrandExchange.checkIsComplete(offerState);
+                if (flip != null && flip.isMarginCheck() && isOfferComplete) {
                     // Remove margin from buy and sell list
                     buysController.removeBuy(flip.getBuyId());
                     sellsController.removeSell(sell.id);
