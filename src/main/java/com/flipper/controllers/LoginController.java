@@ -10,6 +10,8 @@ import com.flipper.api.UserApi;
 import com.flipper.responses.LoginResponse;
 import com.flipper.views.login.LoginPage;
 
+import javax.swing.JOptionPane;
+
 public class LoginController {
     LoginPage loginPage;
 
@@ -40,7 +42,7 @@ public class LoginController {
             Api.setLoginResponse(loginResponse);
             changeToLoggedInViewRunnable.run();
         } else {
-            // @todo add alert for incorrect creds
+            JOptionPane.showMessageDialog(null, loginResponse.message);
         }
     }
 

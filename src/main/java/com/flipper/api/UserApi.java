@@ -13,7 +13,7 @@ public class UserApi {
         String json = Api.post("/login", user);
         LoginResponse loginResponse = gson.fromJson(json, LoginResponse.class);
 
-        if (loginResponse != null) {
+        if (loginResponse != null && !loginResponse.error) {
             Api.setLoginResponse(loginResponse);
         }
         

@@ -73,7 +73,7 @@ public class Persistor {
         String jsonString = getFileContent(LOGIN_RESPONSE_JSON_FILE);
         LoginResponse loadedLoginResponse = gson.fromJson(jsonString, LoginResponse.class);
 
-        if (loadedLoginResponse != null) {
+        if (loadedLoginResponse != null && !loadedLoginResponse.error) {
             Api.setLoginResponse(loadedLoginResponse);
         }
 

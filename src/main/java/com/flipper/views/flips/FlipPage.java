@@ -4,6 +4,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import java.awt.BorderLayout;
@@ -21,8 +22,10 @@ public class FlipPage extends JPanel {
     private JLabel totalProfitValueLabel;
 
     public FlipPage() {
-        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        this.setBackground(ColorScheme.DARK_GRAY_COLOR);
+        SwingUtilities.invokeLater(() -> {
+            this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+            this.setBackground(ColorScheme.DARK_GRAY_COLOR);
+        });
     }
 
     public void addFlipPanel(FlipPanel flipPanel) {

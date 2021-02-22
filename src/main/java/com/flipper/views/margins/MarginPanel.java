@@ -4,6 +4,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import java.awt.BorderLayout;
@@ -30,22 +31,24 @@ public class MarginPanel extends JPanel {
     private JPanel rightValuesPanel = new JPanel(new GridLayout(3, 1));
 
     public MarginPanel(Flip margin, ItemManager itemManager, Consumer<UUID> removeMarginConsumer) {
-        this.margin = margin;
+        SwingUtilities.invokeLater(() -> {
+            this.margin = margin;
 
-        DeleteButton deleteMarginButton = new DeleteButton((ActionEvent action) -> {
-            int input = JOptionPane.showConfirmDialog(null, "Delete margin check?");
-            if (input == 0) {
-                removeMarginConsumer.accept(margin.getId());
-                setVisible(false);
-            }
+            DeleteButton deleteMarginButton = new DeleteButton((ActionEvent action) -> {
+                int input = JOptionPane.showConfirmDialog(null, "Delete margin check?");
+                if (input == 0) {
+                    removeMarginConsumer.accept(margin.getId());
+                    setVisible(false);
+                }
+            });
+            ItemComposition itemComp = itemManager.getItemComposition(margin.getItemId());
+
+            setLayout(new BorderLayout());
+            setBackground(ColorScheme.DARK_GRAY_COLOR);
+            this.add(new ItemHeader(margin.getItemId(), 0, itemComp.getName(), itemManager, false, deleteMarginButton), BorderLayout.NORTH);
+            constructItemInfo();
+            this.setBorder(new EmptyBorder(0, 0, 5, 0));
         });
-        ItemComposition itemComp = itemManager.getItemComposition(margin.getItemId());
-
-        setLayout(new BorderLayout());
-        setBackground(ColorScheme.DARK_GRAY_COLOR);
-        this.add(new ItemHeader(margin.getItemId(), 0, itemComp.getName(), itemManager, false, deleteMarginButton), BorderLayout.NORTH);
-        constructItemInfo();
-        this.setBorder(new EmptyBorder(0, 0, 5, 0));
     }
 
     private void constructItemInfo() {
