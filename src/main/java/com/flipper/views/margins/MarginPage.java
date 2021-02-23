@@ -3,6 +3,7 @@ package com.flipper.views.margins;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.border.EmptyBorder;
 
 import java.awt.BorderLayout;
 
@@ -14,6 +15,7 @@ public class MarginPage extends JPanel {
     public MarginPage() {
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.setBackground(ColorScheme.DARK_GRAY_COLOR);
+        this.setBorder(new EmptyBorder(5, 0, 0, 0));
     }
 
     public void addMarginPanel(MarginPanel marginPanel) {

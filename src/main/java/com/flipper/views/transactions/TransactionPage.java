@@ -3,6 +3,7 @@ package com.flipper.views.transactions;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.border.EmptyBorder;
 
 import java.awt.BorderLayout;
 
@@ -18,6 +19,7 @@ public class TransactionPage extends JPanel {
 
     public void build() {
         container = new JPanel();
+        container.setBorder(new EmptyBorder(5, 0, 0, 0));
         container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
         container.setBackground(ColorScheme.DARK_GRAY_COLOR);
 
