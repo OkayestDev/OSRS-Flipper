@@ -64,7 +64,7 @@ public class MarginsController {
         return false;
     }
 
-    public MarginPage getPanel() {
+    public MarginPage getPage() {
         return this.marginPage;
     }
 

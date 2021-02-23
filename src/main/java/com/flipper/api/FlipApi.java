@@ -1,5 +1,7 @@
 package com.flipper.api;
 
+import java.util.UUID;
+
 import com.flipper.models.Flip;
 import com.flipper.responses.FlipResponse;
 import com.google.gson.Gson;
@@ -13,8 +15,8 @@ public class FlipApi {
         return flipResponse;
     }
 
-    public static FlipResponse deleteFlip(Flip flip) {
-        String json = Api.delete("/flips/" + flip.id.toString(), null);
+    public static FlipResponse deleteFlip(UUID flipId) {
+        String json = Api.delete("/flips/" + flipId.toString(), null);
         FlipResponse flipResponse = gson.fromJson(json, FlipResponse.class);
         return flipResponse;
     }

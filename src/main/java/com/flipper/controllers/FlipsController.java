@@ -54,22 +54,11 @@ public class FlipsController {
     }
 
     public boolean removeFlip(UUID flipId) {
-        ListIterator<Flip> flipsIterator = this.flips.listIterator();
-
-        while (flipsIterator.hasNext()) {
-            Flip iterFlip = flipsIterator.next();
-
-            if (iterFlip.getId().equals(flipId)) {
-                flipsIterator.remove();
-                this.buildView();
-                return true;
-            }
-        }
-
-        return false;
+        FlipResponse flipResponse = FlipApi.deleteFlip(flipId);
+        return !flipResponse.error;
     }
 
-    public FlipPage getPanel() {
+    public FlipPage getPage() {
         return this.flipPage;
     }
 

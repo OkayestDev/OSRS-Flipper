@@ -72,7 +72,7 @@ public class FlipApiTest {
 
         Flip createdFlip = flipResponse.flip;
 
-        FlipResponse deletedFlipResponse = FlipApi.deleteFlip(createdFlip);
+        FlipResponse deletedFlipResponse = FlipApi.deleteFlip(createdFlip.id);
 
         assertEquals("Successfully deleted flip.", deletedFlipResponse.message);
     }

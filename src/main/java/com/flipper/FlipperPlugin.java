@@ -118,10 +118,10 @@ public class FlipperPlugin extends Plugin {
             sellsController = new SellsController(itemManager);
             marginsController = new MarginsController(itemManager);
             this.tabManager.renderLoggedInView(
-                buysController.getPanel(),
-                sellsController.getPanel(),
-                flipsController.getPanel(),
-                marginsController.getPanel(),
+                buysController.getPage(),
+                sellsController.getPage(),
+                flipsController.getPage(),
+                marginsController.getPage(),
                 changeToLoggedOutViewRunnable
             );
         } catch (IOException e) {
@@ -141,8 +141,8 @@ public class FlipperPlugin extends Plugin {
     }
 
     private void saveAll() throws IOException {
-        buysController.saveBuys();
-        sellsController.saveSells();
+        buysController.saveTransactions();
+        sellsController.saveTransactions();
         marginsController.saveMargins();
         Persistor.saveLoginResponse(Api.loginResponse);
     }
@@ -174,15 +174,15 @@ public class FlipperPlugin extends Plugin {
         if (offerState != GrandExchangeOfferState.EMPTY && quantitySold != 0) {
             boolean isBuy = GrandExchange.checkIsBuy(offerState);
             if (isBuy) {
-                buysController.upsertBuy(offer, slot);
+                buysController.upsertTransaction(offer, slot);
             } else {
-                Transaction sell = sellsController.upsertSell(offer, slot);
-                Flip flip = flipsController.upsertFlip(sell, buysController.getBuys());
+                Transaction sell = sellsController.upsertTransaction(offer, slot);
+                Flip flip = flipsController.upsertFlip(sell, buysController.getTransactions());
                 boolean isOfferComplete = GrandExchange.checkIsComplete(offerState);
                 if (flip != null && flip.isMarginCheck() && isOfferComplete) {
                     // Remove margin from buy and sell list
-                    buysController.removeBuy(flip.getBuyId());
-                    sellsController.removeSell(sell.id);
+                    buysController.removeTransaction(flip.getBuyId());
+                    sellsController.removeTransaction(sell.id);
                     flip.id = UUID.randomUUID();
                     flip.sellPrice = sell.getPricePer();
                     marginsController.addMargin(flip);

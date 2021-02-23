@@ -7,13 +7,12 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
-import com.flipper.views.buys.BuyPage;
 import com.flipper.views.components.LoggedInUser;
 import com.flipper.views.components.Tab;
 import com.flipper.views.flips.FlipPage;
 import com.flipper.views.login.LoginPage;
 import com.flipper.views.margins.MarginPage;
-import com.flipper.views.sells.SellPage;
+import com.flipper.views.transactions.TransactionPage;
 
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.PluginPanel;
@@ -25,8 +24,8 @@ public class TabManager extends PluginPanel {
     }
 
     public void renderLoggedInView(
-        BuyPage buyPage, 
-        SellPage sellPage, 
+        TransactionPage buyPage, 
+        TransactionPage sellPage, 
         FlipPage flipPage, 
         MarginPage marginPage, 
         Runnable changeToLoggedOutView
