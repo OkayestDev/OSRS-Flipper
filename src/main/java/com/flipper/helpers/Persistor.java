@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +26,8 @@ public class Persistor {
     public static final String SELLS_JSON_FILE = "flipper-sells.json";
     public static final String BUYS_JSON_FILE = "flipper-buys.json";
     public static final String MARGINS_JSON_FILE = "flipper-margins-2.json";
+    // Only used to check to see if file exists to upload to api
+    public static final String FLIPS_JSON_FILE = "flipper-flips.json";
     public static final String LOGIN_RESPONSE_JSON_FILE = "flipper-login-response.json";
 
     public static void setUp(String directoryPath) throws IOException {
@@ -94,6 +95,15 @@ public class Persistor {
         Api.loginResponse = null;
     }
 
+    public static boolean checkDoesFlipsFileExist() throws IOException {
+        Path flipsJsonPath = getFlipsJsonPath();
+        return Files.exists(flipsJsonPath);
+    }
+
+    public static Path getFlipsJsonPath() {
+        return Path.of(directory.getAbsolutePath(), FLIPS_JSON_FILE);
+    }
+
     public static void saveJson(List<?> list, String filename) throws IOException {
         File file = new File(directory, filename);
         final String json = gson.toJson(list);
@@ -101,7 +111,7 @@ public class Persistor {
     }
 
     private static String getFileContent(String filename) throws IOException {
-        Path filePath = Paths.get(directory + "/" + filename);
+        Path filePath = Path.of(directory.getAbsolutePath(), filename);
         byte[] fileBytes = Files.readAllBytes(filePath);
         return new String(fileBytes);
     }

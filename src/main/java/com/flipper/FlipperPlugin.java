@@ -32,6 +32,7 @@ import com.flipper.controllers.LoginController;
 import com.flipper.controllers.MarginsController;
 import com.flipper.controllers.SellsController;
 import com.flipper.helpers.GrandExchange;
+import com.flipper.helpers.Log;
 import com.flipper.helpers.Persistor;
 import com.flipper.helpers.UiUtilities;
 import com.flipper.models.Flip;
@@ -91,7 +92,7 @@ public class FlipperPlugin extends Plugin {
                 this.changeToLoggedOutView();
             }
         } catch (Exception e) {
-            System.out.println("Flipper failed to start");
+            Log.info("Flipper failed to start");
         }
     }
 
@@ -125,7 +126,7 @@ public class FlipperPlugin extends Plugin {
                 changeToLoggedOutViewRunnable
             );
         } catch (IOException e) {
-            System.out.println("Flipper: Failed to load required files");
+            Log.info("Flipper: Failed to load required files");
         }
     }
 
@@ -136,7 +137,7 @@ public class FlipperPlugin extends Plugin {
             loginController = new LoginController(changeToLoggedInViewRunnable);
             this.tabManager.renderLoggedOutView(loginController.getPanel());
         } catch (IOException e) {
-            System.out.println("Flipper: Failed to load required files");
+            Log.info("Flipper: Failed to load required files");
         }
     }
 

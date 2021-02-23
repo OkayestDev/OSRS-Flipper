@@ -1,5 +1,7 @@
 package com.flipper.api;
 
+import com.flipper.helpers.Log;
+import com.flipper.helpers.Persistor;
 import com.flipper.models.User;
 import com.flipper.responses.LoginResponse;
 import com.google.gson.Gson;
@@ -15,6 +17,14 @@ public class UserApi {
 
         if (loginResponse != null && !loginResponse.error) {
             Api.setLoginResponse(loginResponse);
+
+            try {
+                if (Persistor.checkDoesFlipsFileExist()) {
+                    UploadApi.uploadFlips();
+                }
+            } catch (Exception error) {
+                Log.info("Failed to upload flips");
+            }
         }
         
         return loginResponse;
