@@ -2,8 +2,6 @@ package com.flipper.controllers;
 
 import java.io.IOException;
 
-import java.util.UUID;
-
 import com.flipper.helpers.Persistor;
 import net.runelite.client.game.ItemManager;
 

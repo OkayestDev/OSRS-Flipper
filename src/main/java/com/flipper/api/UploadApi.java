@@ -18,13 +18,13 @@ public class UploadApi {
             File flipsJson = new File(Persistor.directory, Persistor.FLIPS_JSON_FILE);
             RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
                 .addFormDataPart(
-                    "file",
-                    "flips",
-                    RequestBody.create(MediaType.parse("text/json"), flipsJson))
-                .addFormDataPart("some-field", "some-value")
+                    "json",
+                    "json",
+                    RequestBody.create(MediaType.parse("text/plain"), flipsJson))
                 .build();
             Request request = new Request.Builder()
                 .url(Api.createUrl("/uploads/flipper"))
+                .header("Authorization", Api.jwt)
                 .post(requestBody)
                 .build();
             Response response = Api.client.newCall(request).execute();
