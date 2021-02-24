@@ -2,6 +2,7 @@ package com.flipper.controllers;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.UUID;
@@ -55,7 +56,24 @@ public class FlipsController {
 
     public boolean removeFlip(UUID flipId) {
         FlipResponse flipResponse = FlipApi.deleteFlip(flipId);
-        return !flipResponse.error;
+
+        if (flipResponse != null) {
+            this.totalProfit = flipResponse.totalProfit;
+            
+            Iterator<Flip> flipsIter = this.flips.iterator();
+            while (flipsIter.hasNext()) {
+                Flip flip = flipsIter.next();
+                if (flip.getId().equals(flipId)) {
+                    flipsIter.remove();
+                    this.buildView();
+                    return true;
+                }
+            }
+
+            return true;
+        }
+        
+        return false;
     }
 
     public FlipPage getPage() {

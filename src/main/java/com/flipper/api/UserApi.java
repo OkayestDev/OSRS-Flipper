@@ -20,7 +20,7 @@ public class UserApi {
             try {
                 if (Persistor.checkDoesFlipsFileExist()) {
                     UploadApi.uploadFlips();
-                    // @todo delete flips json file
+                    Persistor.deleteFlipsJsonFile();
                 }
             } catch (Exception error) {
                 Log.info("Failed to upload flips");

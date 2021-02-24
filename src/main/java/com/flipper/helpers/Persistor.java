@@ -93,6 +93,14 @@ public class Persistor {
             Files.delete(loginResponsePath);
         }
         Api.loginResponse = null;
+        Api.jwt = null;
+    }
+
+    public static void deleteFlipsJsonFile() throws IOException {
+        Path flipsJsonPath = getFlipsJsonPath();
+        if (Files.exists(flipsJsonPath)) {
+            Files.delete(flipsJsonPath);
+        }
     }
 
     public static boolean checkDoesFlipsFileExist() throws IOException {
