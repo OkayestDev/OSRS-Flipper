@@ -4,7 +4,9 @@ Plugin for RuneLite to track buys, sells, flips, and margin checks
 
 ## Support
 
-If you notice any bugs or have any suggestions, let us know by making an [issue](https://github.com/Sir-Kyle-Richardson/OSRS-flipper/issues) or contact me on Discord, Encounter#0899
+If you notice any bugs or have any suggestions, let us know by making an [issue](https://github.com/Sir-Kyle-Richardson/OSRS-flipper/issues), contact me on Discord Encounter#0899, or submit a enquiry through [flipper website](https://www.osrs-flipper.com/info/contact-us)
+
+Join the [discord](https://discord.gg/uBsWGSJ9Q7)
 
 ## Features
 
@@ -34,8 +36,13 @@ Track Margins:
 
 ## Changelog
 
-v1.0 <br /> 
-    - Plugin added!
+v1.0 <br /> - Plugin added!
 
-v1.1.0 <br />
-    - Added ability to delete flips, margin checks, buys, and sells
+v1.1.0 <br /> - Added ability to delete flips, margin checks, buys, and sells
+
+v1.2.0 <br />
+
+- Fixed issue causing stutters when switching between tabs
+- Introduced Users
+- Introduced Flipper API when saving flips to allow cross-platform access of flips
+- Note: buys, sells, & margins are still stored locally
