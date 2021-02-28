@@ -41,7 +41,6 @@ public class AmountProgressBar extends DimmableJPanel {
 
         setPreferredSize(new Dimension(100, 16));
 
-        // Adds components to be automatically redrawn when paintComponents is called
         add(leftLabel, BorderLayout.WEST);
         add(rightLabel, BorderLayout.EAST);
     }

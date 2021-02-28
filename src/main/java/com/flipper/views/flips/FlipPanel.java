@@ -97,7 +97,9 @@ public class FlipPanel extends JPanel {
         rightValuesPanel.setBackground(ColorScheme.DARK_GRAY_COLOR);
 
         int totalProfit = flip.getTotalProfit();
-        int profitEach = totalProfit / this.flip.getQuantity();
+
+        int quantity = this.flip.getQuantity();
+        int profitEach = quantity != 0 ? totalProfit / quantity : 0;
 
         String amountFlippedText = Integer.toString(this.flip.getQuantity());
         String totalProfitText = Integer.toString(totalProfit);

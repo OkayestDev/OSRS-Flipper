@@ -10,6 +10,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.math.BigDecimal;
 import java.awt.Font;
 
 import com.flipper.helpers.UiUtilities;
@@ -60,7 +61,8 @@ public class FlipPage extends JPanel {
     }
 
     public void setTotalProfit(double totalProfit) {
-        totalProfitValueLabel.setText(String.valueOf(totalProfit));
+        BigDecimal totalProfitBG = new BigDecimal(totalProfit);
+        totalProfitValueLabel.setText(String.valueOf(totalProfitBG.longValue()));
     }
 
     public void build() {

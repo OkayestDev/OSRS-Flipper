@@ -43,8 +43,12 @@ public class Api {
     public static String request(String method, String route, Object params) {
         String url = createUrl(route);
         Builder requestBuilder = new Builder()
-            .url(url)
-            .header("Authorization", jwt);
+            .url(url);
+        
+        if (jwt != null) {
+            requestBuilder.header("Authorization", jwt);
+        }
+
         String paramsJson = params == null ? "" : gson.toJson(params);
         RequestBody body = RequestBody.create(JSON, paramsJson);
         Request request;

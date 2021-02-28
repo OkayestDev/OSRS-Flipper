@@ -82,6 +82,10 @@ public class Persistor {
     }
 
     public static void saveLoginResponse(LoginResponse loginResponse) throws IOException {
+        if (loginResponse == null) {
+            return;
+        }
+
         File file = new File(directory, LOGIN_RESPONSE_JSON_FILE);
         String json = gson.toJson(loginResponse);
         Files.write(file.toPath(), json.getBytes());
