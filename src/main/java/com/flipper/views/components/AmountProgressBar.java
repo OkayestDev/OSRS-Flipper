@@ -21,8 +21,6 @@ import net.runelite.client.ui.components.DimmableJPanel;
  * Shows a progress par of amount bought/sold out of total quantity
  */
 public class AmountProgressBar extends DimmableJPanel {
-    private static final long serialVersionUID = 1910372592064348629L;
-
     private int maximumValue;
     private int value;
     private List<Integer> positions = Collections.emptyList();
@@ -43,7 +41,6 @@ public class AmountProgressBar extends DimmableJPanel {
 
         setPreferredSize(new Dimension(100, 16));
 
-        // Adds components to be automatically redrawn when paintComponents is called
         add(leftLabel, BorderLayout.WEST);
         add(rightLabel, BorderLayout.EAST);
     }

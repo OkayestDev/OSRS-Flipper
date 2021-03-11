@@ -34,7 +34,7 @@ public class GrandExchange {
      * @param newOfferEvent
      * @return null or newly created transaction
      */
-    public static Transaction createTransactionFromOffer(GrandExchangeOffer offer, ItemManager itemManager) {
+    public static Transaction createTransactionFromOffer(GrandExchangeOffer offer, ItemManager itemManager, int slot) {
         GrandExchangeOfferState state = offer.getState();
         boolean isBuy = checkIsBuy(state);
         boolean isComplete = checkIsComplete(state);
@@ -45,15 +45,17 @@ public class GrandExchange {
             offer.getTotalQuantity(),
             offer.getItemId(),
             offer.getPrice(),
+            slot,
             itemComposition.getName(),
             isBuy,
             isComplete
         );
     }
 
-    public static boolean checkIsOfferPartOfTransaction(Transaction transaction, GrandExchangeOffer offer) {
+    public static boolean checkIsOfferPartOfTransaction(Transaction transaction, GrandExchangeOffer offer, int slot) {
         return 
-            !transaction.isComplete() && 
+            !transaction.isComplete() &&
+            transaction.getSlot() == slot &&
             transaction.getItemId() == offer.getItemId() &&
             transaction.getTotalQuantity() == offer.getTotalQuantity();
     }

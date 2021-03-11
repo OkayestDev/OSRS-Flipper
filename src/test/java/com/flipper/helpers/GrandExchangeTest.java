@@ -28,7 +28,7 @@ public class GrandExchangeTest {
     @Test
     public void testCreateTransactionFromOfferReturnsBuyTransaction() {
         MockGrandExchangeOffer mockGrandExchangeOffer = new MockGrandExchangeOffer(1, 1, 1, 1, 1, GrandExchangeOfferState.BOUGHT);
-        Transaction result = GrandExchange.createTransactionFromOffer(mockGrandExchangeOffer, itemManager);
+        Transaction result = GrandExchange.createTransactionFromOffer(mockGrandExchangeOffer, itemManager, 1);
         assertNotNull(result);
         assertTrue(result.isBuy());
         assertEquals(result.getItemName(), testItemName);
@@ -37,7 +37,7 @@ public class GrandExchangeTest {
     @Test
     public void testCreateTransactionFromOfferReturnsSellTransaction() {
         MockGrandExchangeOffer mockGrandExchangeOffer = new MockGrandExchangeOffer(1, 1, 1, 1, 1, GrandExchangeOfferState.SOLD);
-        Transaction result = GrandExchange.createTransactionFromOffer(mockGrandExchangeOffer, itemManager);
+        Transaction result = GrandExchange.createTransactionFromOffer(mockGrandExchangeOffer, itemManager, 1);
         assertNotNull(result);
         assertFalse(result.isBuy());
         assertEquals(result.getItemName(), testItemName);
@@ -50,12 +50,13 @@ public class GrandExchangeTest {
             1,
             453,
             1,
+            1,
             testItemName,
             true,
             false
         );
         MockGrandExchangeOffer offer = new MockGrandExchangeOffer(1, 453, 1, 1, 1, GrandExchangeOfferState.BOUGHT);
-        boolean result = GrandExchange.checkIsOfferPartOfTransaction(buy, offer);
+        boolean result = GrandExchange.checkIsOfferPartOfTransaction(buy, offer, 1);
         assertTrue(result);
     }
 }

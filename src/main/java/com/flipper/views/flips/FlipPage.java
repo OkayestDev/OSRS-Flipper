@@ -1,8 +1,5 @@
 package com.flipper.views.flips;
 
-import java.util.List;
-import java.util.ListIterator;
-
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -13,31 +10,30 @@ import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.math.BigDecimal;
 import java.awt.Font;
 
 import com.flipper.helpers.UiUtilities;
-import com.flipper.models.Flip;
 
-import net.runelite.client.game.ItemManager;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
 
 public class FlipPage extends JPanel {
-    private static final long serialVersionUID = -2680984300396244041L;
-
     private JPanel container;
     private JLabel totalProfitValueLabel;
 
     public FlipPage() {
-        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        this.setBackground(ColorScheme.DARK_GRAY_COLOR);
+        SwingUtilities.invokeLater(() -> {
+            this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+            this.setBackground(ColorScheme.DARK_GRAY_COLOR);
+        });
     }
 
     public void addFlipPanel(FlipPanel flipPanel) {
         container.add(flipPanel);
     }
 
-    private void constructTotalProfit(int totalProfit) {
+    private void constructTotalProfit(double totalProfit) {
         JPanel container = new JPanel();
         container.setLayout(new BorderLayout());
         JPanel totalProfitContainer = new JPanel(new GridLayout(2, 1));
@@ -64,8 +60,9 @@ public class FlipPage extends JPanel {
         this.add(container, BorderLayout.WEST);
     }
 
-    public void setTotalProfit(int totalProfit) {
-        totalProfitValueLabel.setText(String.valueOf(totalProfit));
+    public void setTotalProfit(double totalProfit) {
+        BigDecimal totalProfitBG = new BigDecimal(totalProfit);
+        totalProfitValueLabel.setText(String.valueOf(totalProfitBG.longValue()));
     }
 
     public void build() {

@@ -4,6 +4,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import java.awt.BorderLayout;
@@ -16,38 +17,38 @@ import com.flipper.views.components.DeleteButton;
 import com.flipper.views.components.ItemHeader;
 
 import net.runelite.client.ui.ColorScheme;
+import net.runelite.api.ItemComposition;
 import net.runelite.client.game.ItemManager;
 import java.awt.event.*;
 import java.util.UUID;
 import java.util.function.Consumer;
 
 public class MarginPanel extends JPanel {
-    private static final long serialVersionUID = 3879605322279273963L;
-
-    private Transaction buy;
-    private Transaction sell;
+    private Flip margin;
 
     private JPanel itemInfo = new JPanel(new BorderLayout());
     private JPanel leftInfoTextPanel = new JPanel(new GridLayout(3, 1));
     private JPanel rightValuesPanel = new JPanel(new GridLayout(3, 1));
 
     public MarginPanel(Flip margin, ItemManager itemManager, Consumer<UUID> removeMarginConsumer) {
-        this.sell = margin.getSell();
-        this.buy = margin.getBuy();
+        SwingUtilities.invokeLater(() -> {
+            this.margin = margin;
 
-        DeleteButton deleteMarginButton = new DeleteButton((ActionEvent action) -> {
-            int input = JOptionPane.showConfirmDialog(null, "Delete margin check?");
-            if (input == 0) {
-                removeMarginConsumer.accept(margin.getId());
-                setVisible(false);
-            }
+            DeleteButton deleteMarginButton = new DeleteButton((ActionEvent action) -> {
+                int input = JOptionPane.showConfirmDialog(null, "Delete margin check?");
+                if (input == 0) {
+                    removeMarginConsumer.accept(margin.getId());
+                    setVisible(false);
+                }
+            });
+            ItemComposition itemComp = itemManager.getItemComposition(margin.getItemId());
+
+            setLayout(new BorderLayout());
+            setBackground(ColorScheme.DARK_GRAY_COLOR);
+            this.add(new ItemHeader(margin.getItemId(), 0, itemComp.getName(), itemManager, false, deleteMarginButton), BorderLayout.NORTH);
+            constructItemInfo();
+            this.setBorder(new EmptyBorder(0, 0, 5, 0));
         });
-
-        setLayout(new BorderLayout());
-        setBackground(ColorScheme.DARK_GRAY_COLOR);
-        this.add(new ItemHeader(this.buy, itemManager, false, deleteMarginButton), BorderLayout.NORTH);
-        constructItemInfo();
-        this.setBorder(new EmptyBorder(0, 0, 5, 0));
     }
 
     private void constructItemInfo() {
@@ -98,10 +99,10 @@ public class MarginPanel extends JPanel {
     private void constructRightLabels() {
         rightValuesPanel.setBackground(ColorScheme.DARK_GRAY_COLOR);
 
-        int potentialProfitPer = buy.getPricePer() - sell.getPricePer();
+        int potentialProfitPer = this.margin.buyPrice - this.margin.sellPrice;
 
-        String buyAtText = Integer.toString(sell.getPricePer());
-        String sellAtText = Integer.toString(buy.getPricePer());
+        String buyAtText = Integer.toString(this.margin.sellPrice);
+        String sellAtText = Integer.toString(this.margin.buyPrice);
         String potentialProfitEachText = Integer.toString(potentialProfitPer);
 
         JLabel buyAtLabel = newRightLabel(buyAtText);

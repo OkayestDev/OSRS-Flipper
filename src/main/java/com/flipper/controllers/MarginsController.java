@@ -8,8 +8,10 @@ import java.util.function.Consumer;
 
 import javax.swing.SwingUtilities;
 
-import com.flipper.helpers.TradePersister;
+import com.flipper.helpers.Persistor;
+import com.flipper.helpers.UiUtilities;
 import com.flipper.models.Flip;
+import com.flipper.views.components.Pagination;
 import com.flipper.views.margins.MarginPage;
 import com.flipper.views.margins.MarginPanel;
 
@@ -22,13 +24,22 @@ public class MarginsController {
     @Setter
     private List<Flip> margins;
     private MarginPage marginPage;
-    private ItemManager itemManager;
     private Consumer<UUID> removeMarginConsumer;
+    private Pagination pagination;
 
     public MarginsController(ItemManager itemManager) throws IOException {
-        this.itemManager = itemManager;
         this.removeMarginConsumer = id -> this.removeMargin(id);
         this.marginPage = new MarginPage();
+        Consumer<Object> renderItemCallback = (Object margin) -> {
+            MarginPanel marginPanel = new MarginPanel((Flip) margin, itemManager, this.removeMarginConsumer);
+            this.marginPage.addMarginPanel(marginPanel);
+        };
+        Runnable buildViewCallback = () -> this.buildView();
+        this.pagination = new Pagination(
+            renderItemCallback,
+            UiUtilities.ITEMS_PER_PAGE,
+            buildViewCallback
+        );
         this.loadMargins();
     }
 
@@ -53,31 +64,25 @@ public class MarginsController {
         return false;
     }
 
-    public MarginPage getPanel() {
+    public MarginPage getPage() {
         return this.marginPage;
     }
 
     private void loadMargins() throws IOException {
-        this.margins = TradePersister.loadMargins();
+        this.margins = Persistor.loadMargins();
         this.buildView();
     }
 
     public void saveMargins() {
-        TradePersister.saveMargins(margins);
+        Persistor.saveMargins(margins);
     }
 
     public void buildView() {
         SwingUtilities.invokeLater(() -> {
             this.marginPage.removeAll();
             this.marginPage.build();
-
-            ListIterator<Flip> marginsIterator = margins.listIterator(margins.size());
-
-            while (marginsIterator.hasPrevious()) {
-                Flip margin = marginsIterator.previous();
-                MarginPanel marginPanel = new MarginPanel(margin, itemManager, this.removeMarginConsumer);
-                this.marginPage.addMarginPanel(marginPanel);
-            }
+            this.marginPage.add(this.pagination.getComponent(this.margins));
+            this.pagination.renderList(this.margins);
         });
     }
 }

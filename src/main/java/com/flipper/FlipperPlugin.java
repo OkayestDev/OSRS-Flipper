@@ -25,17 +25,27 @@
  */
 package com.flipper;
 
+import com.flipper.api.Api;
 import com.flipper.controllers.BuysController;
 import com.flipper.controllers.FlipsController;
+import com.flipper.controllers.LoginController;
 import com.flipper.controllers.MarginsController;
 import com.flipper.controllers.SellsController;
-import com.flipper.controllers.TabManagerController;
 import com.flipper.helpers.GrandExchange;
-import com.flipper.helpers.TradePersister;
+import com.flipper.helpers.Log;
+import com.flipper.helpers.Persistor;
+import com.flipper.helpers.UiUtilities;
 import com.flipper.models.Flip;
 import com.flipper.models.Transaction;
+import com.flipper.responses.LoginResponse;
+import com.flipper.views.TabManager;
 import com.google.inject.Provides;
+
+import java.io.IOException;
+import java.util.UUID;
+
 import javax.inject.Inject;
+
 import net.runelite.api.GrandExchangeOffer;
 import net.runelite.api.GrandExchangeOfferState;
 import net.runelite.api.events.GrandExchangeOfferChanged;
@@ -46,6 +56,9 @@ import net.runelite.client.game.ItemManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.ClientToolbar;
+import net.runelite.client.ui.NavigationButton;
+import net.runelite.client.util.ImageUtil;
+
 
 @PluginDescriptor(name = "Flipper")
 public class FlipperPlugin extends Plugin {
@@ -59,23 +72,80 @@ public class FlipperPlugin extends Plugin {
     private SellsController sellsController;
     private FlipsController flipsController;
     private MarginsController marginsController;
+    private LoginController loginController;
+    // Views
+    private NavigationButton navButton;
+    private TabManager tabManager;
 
     @Override
     protected void startUp() throws Exception {
-        TradePersister.setUp();
-        buysController = new BuysController(itemManager);
-        sellsController = new SellsController(itemManager);
-        flipsController = new FlipsController(itemManager);
-        marginsController = new MarginsController(itemManager);
-        new TabManagerController(clientToolbar, buysController.getPanel(), sellsController.getPanel(),
-                flipsController.getPanel(), marginsController.getPanel());
+        try {
+            Persistor.setUp();
+            LoginResponse loginResponse = Persistor.loadLoginResponse();
+            Boolean isLoggedIn = loginResponse != null;
+            this.tabManager = new TabManager();
+            this.setUpNavigationButton();
+
+            if (isLoggedIn) {
+                this.changeToLoggedInView();
+            } else {
+                this.changeToLoggedOutView();
+            }
+        } catch (Exception e) {
+            Log.info("Flipper failed to start");
+        }
     }
 
-    private void saveAll() {
-        buysController.saveBuys();
-        sellsController.saveSells();
-        flipsController.saveFlips();
+    private void setUpNavigationButton() {
+        navButton = NavigationButton
+            .builder()
+            .tooltip("Flipper")
+            .icon(
+                ImageUtil.getResourceStreamFromClass(
+                    getClass(), 
+                    UiUtilities.flipperNavIcon  
+                )
+            )
+            .priority(4)
+            .panel(tabManager).build();
+        clientToolbar.addNavigation(navButton);
+    }
+
+    private void changeToLoggedInView() {
+        try {
+            Runnable changeToLoggedOutViewRunnable = () -> this.changeToLoggedOutView();
+            flipsController = new FlipsController(itemManager);
+            buysController = new BuysController(itemManager);
+            sellsController = new SellsController(itemManager);
+            marginsController = new MarginsController(itemManager);
+            this.tabManager.renderLoggedInView(
+                buysController.getPage(),
+                sellsController.getPage(),
+                flipsController.getPage(),
+                marginsController.getPage(),
+                changeToLoggedOutViewRunnable
+            );
+        } catch (IOException e) {
+            Log.info("Flipper: Failed to load required files");
+        }
+    }
+
+    private void changeToLoggedOutView() {
+        try {
+            Runnable changeToLoggedInViewRunnable = () -> changeToLoggedInView();
+            Persistor.deleteLoginResponse();
+            loginController = new LoginController(changeToLoggedInViewRunnable);
+            this.tabManager.renderLoggedOutView(loginController.getPanel());
+        } catch (IOException e) {
+            Log.info("Flipper: Failed to load required files");
+        }
+    }
+
+    private void saveAll() throws IOException {
+        buysController.saveTransactions();
+        sellsController.saveTransactions();
         marginsController.saveMargins();
+        Persistor.saveLoginResponse(Api.loginResponse);
     }
 
     @Override
@@ -91,26 +161,31 @@ public class FlipperPlugin extends Plugin {
      *                            down
      */
     @Subscribe
-    public void onClientShutdown(ClientShutdown clientShutdownEvent) {
+    public void onClientShutdown(ClientShutdown clientShutdownEvent) throws IOException {
         this.saveAll();
     }
 
     @Subscribe
     public void onGrandExchangeOfferChanged(GrandExchangeOfferChanged newOfferEvent) {
+        int slot = newOfferEvent.getSlot();
         GrandExchangeOffer offer = newOfferEvent.getOffer();
+        GrandExchangeOfferState offerState = offer.getState();
+        int quantitySold = offer.getQuantitySold();
         // Ignore empty state event offers or offers that haven't bought/sold any
-        if (offer.getState() != GrandExchangeOfferState.EMPTY && offer.getQuantitySold() != 0) {
-            boolean isBuy = GrandExchange.checkIsBuy(offer.getState());
+        if (offerState != GrandExchangeOfferState.EMPTY && quantitySold != 0) {
+            boolean isBuy = GrandExchange.checkIsBuy(offerState);
             if (isBuy) {
-                buysController.createBuy(offer);
+                buysController.upsertTransaction(offer, slot);
             } else {
-                Transaction sell = sellsController.createSell(offer);
-                Flip flip = flipsController.createFlip(sell, buysController.getBuys());
-                if (flip != null && flip.isMarginCheck()) {
-                    // Remove buy and sell from buy and sell lists since they're part of a margin
-                    // check
-                    buysController.removeBuy(flip.getBuy().id);
-                    sellsController.removeSell(sell.id);
+                Transaction sell = sellsController.upsertTransaction(offer, slot);
+                Flip flip = flipsController.upsertFlip(sell, buysController.getTransactions());
+                boolean isOfferComplete = GrandExchange.checkIsComplete(offerState);
+                if (flip != null && flip.isMarginCheck() && isOfferComplete) {
+                    // Remove margin from buy and sell list
+                    buysController.removeTransaction(flip.getBuyId());
+                    sellsController.removeTransaction(sell.id);
+                    flip.id = UUID.randomUUID();
+                    flip.sellPrice = sell.getPricePer();
                     marginsController.addMargin(flip);
                 }
             }

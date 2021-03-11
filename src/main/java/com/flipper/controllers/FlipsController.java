@@ -1,6 +1,8 @@
 package com.flipper.controllers;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.UUID;
@@ -9,14 +11,18 @@ import java.util.function.Consumer;
 import javax.swing.SwingUtilities;
 
 import com.flipper.helpers.GrandExchange;
-import com.flipper.helpers.TradePersister;
+import com.flipper.helpers.UiUtilities;
 import com.flipper.models.Flip;
 import com.flipper.models.Transaction;
+import com.flipper.responses.FlipResponse;
+import com.flipper.views.components.Pagination;
 import com.flipper.views.flips.FlipPage;
 import com.flipper.views.flips.FlipPanel;
+import com.flipper.api.FlipApi;
 
 import lombok.Getter;
 import lombok.Setter;
+
 import net.runelite.client.game.ItemManager;
 
 public class FlipsController {
@@ -24,56 +30,82 @@ public class FlipsController {
     @Setter
     private List<Flip> flips;
     private FlipPage flipPage;
-    private ItemManager itemManager;
     private Consumer<UUID> removeFlipConsumer;
-    private int totalProfit = 0;
+    private double totalProfit = 0;
+    private Pagination pagination;
 
     public FlipsController(ItemManager itemManager) throws IOException {
-        this.itemManager = itemManager;
+        this.flips = new ArrayList<Flip>();
         this.removeFlipConsumer = id -> this.removeFlip(id);
         this.flipPage = new FlipPage();
+        Consumer<Object> renderItemCallback = (Object flip) -> {
+            FlipPanel flipPanel = new FlipPanel((Flip) flip, itemManager, this.removeFlipConsumer);
+            this.flipPage.add(flipPanel);
+        };
+        Runnable buildViewCallback = () -> this.buildView();
+        this.pagination = new Pagination(renderItemCallback, UiUtilities.ITEMS_PER_PAGE, buildViewCallback);
         this.loadFlips();
     }
 
     public void addFlip(Flip flip) {
-        this.flips.add(flip);
+        FlipResponse flipResponse = FlipApi.createFlip(flip);
+        this.totalProfit = flipResponse.totalProfit;
+        this.flips.add(flipResponse.flip);
         this.buildView();
     }
 
     public boolean removeFlip(UUID flipId) {
-        ListIterator<Flip> flipsIterator = this.flips.listIterator();
+        FlipResponse flipResponse = FlipApi.deleteFlip(flipId);
 
-        while (flipsIterator.hasNext()) {
-            Flip iterFlip = flipsIterator.next();
-
-            if (iterFlip.getId().equals(flipId)) {
-                flipsIterator.remove();
-                this.buildView();
-                return true;
+        if (flipResponse != null) {
+            this.totalProfit = flipResponse.totalProfit;
+            
+            Iterator<Flip> flipsIter = this.flips.iterator();
+            while (flipsIter.hasNext()) {
+                Flip flip = flipsIter.next();
+                if (flip.getId().equals(flipId)) {
+                    flipsIter.remove();
+                    this.buildView();
+                    return true;
+                }
             }
-        }
 
+            return true;
+        }
+        
         return false;
     }
 
-    public FlipPage getPanel() {
+    public FlipPage getPage() {
         return this.flipPage;
     }
 
-    private void loadFlips() throws IOException {
-        this.flips = TradePersister.loadFlips();
-        this.buildView();
-    }
+    public void loadFlips() throws IOException {
+        FlipResponse flipResponse = FlipApi.getFlips();
 
-    public void saveFlips() {
-        TradePersister.saveFlips(flips);
+        if (flipResponse != null) {
+            this.totalProfit = flipResponse.totalProfit;
+            this.flips = flipResponse.flips;
+        }
+
+        this.buildView();
     }
 
     private Flip updateFlip(Transaction sell, Transaction buy, Flip flip) {
-        Flip updatedFlip = flip.updateFlip(sell, buy);
-        this.buildView();
-        return updatedFlip;
+        flip.sellPrice = sell.getPricePer();
+        flip.buyPrice = buy.getPricePer();
+        flip.quantity = sell.getQuantity();
+        flip.itemId = sell.getItemId();
+        FlipResponse flipResponse = FlipApi.updateFlip(flip);
+
+        if (flipResponse != null) {
+            this.totalProfit = flipResponse.totalProfit;
+            this.buildView();
+        }
+
+        return flip;
     }
+
 
     /**
      * Potentially creates a flip if the sell is complete and has a corresponding
@@ -82,7 +114,7 @@ public class FlipsController {
      * @param sell
      * @param buys
      */
-    public Flip createFlip(Transaction sell, List<Transaction> buys) {
+    public Flip upsertFlip(Transaction sell, List<Transaction> buys) {
         ListIterator<Transaction> buysIterator = buys.listIterator(buys.size());
         // If sell has already been flipped, look for it's corresponding buy and update
         // the flip
@@ -90,18 +122,13 @@ public class FlipsController {
             ListIterator<Flip> flipsIterator = flips.listIterator(flips.size());
             while (flipsIterator.hasPrevious()) {
                 Flip flip = flipsIterator.previous();
-                if (flip.getSell().id.equals(sell.id)) {
+                if (flip.getSellId().equals(sell.id)) {
                     // Now find the corresponding buy
                     while (buysIterator.hasPrevious()) {
                         Transaction buy = buysIterator.previous();
-                        if (buy.id.equals(flip.getBuy().id)) {
+                        if (buy.id.equals(flip.getBuyId())) {
                             Flip updatedFlip = updateFlip(sell, buy, flip);
                             flipsIterator.set(updatedFlip);
-                            if (updatedFlip.isMarginCheck()) {
-                                flipsIterator.remove();
-                            } else {
-                                flipsIterator.set(updatedFlip);
-                            }
                             return updatedFlip;
                         }
                     }
@@ -113,10 +140,10 @@ public class FlipsController {
                 Transaction buy = buysIterator.previous();
                 if (GrandExchange.checkIsSellAFlipOfBuy(sell, buy)) {
                     Flip flip = new Flip(buy, sell);
-                    buy.setIsFlipped(true);
-                    sell.setIsFlipped(true);
                     if (!flip.isMarginCheck()) {
                         this.addFlip(flip);
+                        buy.setIsFlipped(true);
+                        sell.setIsFlipped(true);
                     }
                     return flip;
                 }
@@ -130,17 +157,8 @@ public class FlipsController {
         SwingUtilities.invokeLater(() -> {
             this.flipPage.removeAll();
             this.flipPage.build();
-
-            ListIterator<Flip> flipsIterator = flips.listIterator(flips.size());
-            this.totalProfit = 0;
-
-            while (flipsIterator.hasPrevious()) {
-                Flip flip = flipsIterator.previous();
-                FlipPanel flipPanel = new FlipPanel(flip, itemManager, this.removeFlipConsumer);
-                this.flipPage.addFlipPanel(flipPanel);
-                this.totalProfit += flip.getTotalProfit();
-            }
-
+            this.pagination.renderList(this.flips);
+            this.flipPage.add(this.pagination.getComponent(this.flips));
             this.flipPage.setTotalProfit(totalProfit);
         });
     }
