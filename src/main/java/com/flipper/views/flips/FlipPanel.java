@@ -30,16 +30,16 @@ public class FlipPanel extends JPanel {
 
     public FlipPanel(Flip flip, ItemManager itemManager, Consumer<UUID> removeFlipConsumer) {
         this.flip = flip;
+        ItemComposition itemComp = itemManager.getItemComposition(flip.getItemId());
 
         DeleteButton deleteFlipButton = new DeleteButton((ActionEvent action) -> {
-            String describedBuy = flip.describeFlip();
+            String describedBuy = flip.describeFlip(itemComp.getName());
             int input = JOptionPane.showConfirmDialog(null, "Delete flip of " + describedBuy + "?");
             if (input == 0) {
                 removeFlipConsumer.accept(flip.getId());
                 setVisible(false);
             }
         });
-        ItemComposition itemComp = itemManager.getItemComposition(flip.getItemId());
 
         setLayout(new BorderLayout());
         setBackground(ColorScheme.DARK_GRAY_COLOR);

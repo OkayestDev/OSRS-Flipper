@@ -40,9 +40,8 @@ public class Flip {
         return quantity == 1 && buyPrice >= sellPrice;
     }
 
-    public String describeFlip() {
-        // @todo
-        return String.valueOf(quantity) + " " + "ITEM NAME" + "(s)";
+    public String describeFlip(String itemName) {
+        return String.valueOf(quantity) + " " + itemName + "(s)";
     }
 
     /**

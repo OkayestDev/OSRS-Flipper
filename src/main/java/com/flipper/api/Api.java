@@ -12,9 +12,9 @@ import com.google.gson.Gson;
 
 
 public class Api {
-    public static String baseUrl = "http://localhost:8071";
+    // public static String baseUrl = "http://localhost:8071";
     // @todo
-    // public static String baseUrl = "https://api.osrs-flipper.com";
+    public static String baseUrl = "https://api.osrs-flipper.com";
 
     public static OkHttpClient client = new OkHttpClient();
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
