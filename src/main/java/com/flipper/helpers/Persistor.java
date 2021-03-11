@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,7 +93,7 @@ public class Persistor {
     }
 
     public static void deleteLoginResponse() throws IOException {
-        Path loginResponsePath = Path.of(directory.getAbsolutePath(), LOGIN_RESPONSE_JSON_FILE);
+        Path loginResponsePath = Paths.get(directory.getAbsolutePath(), LOGIN_RESPONSE_JSON_FILE);
         if (Files.exists(loginResponsePath)) {
             Files.delete(loginResponsePath);
         }
@@ -113,7 +114,7 @@ public class Persistor {
     }
 
     public static Path getFlipsJsonPath() {
-        return Path.of(directory.getAbsolutePath(), FLIPS_JSON_FILE);
+        return Paths.get(directory.getAbsolutePath(), FLIPS_JSON_FILE);
     }
 
     public static void saveJson(List<?> list, String filename) throws IOException {
@@ -123,7 +124,7 @@ public class Persistor {
     }
 
     private static String getFileContent(String filename) throws IOException {
-        Path filePath = Path.of(directory.getAbsolutePath(), filename);
+        Path filePath = Paths.get(directory.getAbsolutePath(), filename);
         byte[] fileBytes = Files.readAllBytes(filePath);
         return new String(fileBytes);
     }
