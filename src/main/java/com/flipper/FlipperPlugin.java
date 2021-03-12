@@ -101,7 +101,7 @@ public class FlipperPlugin extends Plugin {
             .builder()
             .tooltip("Flipper")
             .icon(
-                ImageUtil.getResourceStreamFromClass(
+                ImageUtil.loadImageResource(
                     getClass(), 
                     UiUtilities.flipperNavIcon  
                 )
@@ -150,12 +150,13 @@ public class FlipperPlugin extends Plugin {
 
     @Override
     protected void shutDown() throws Exception {
+        clientToolbar.removeNavigation(navButton);
         this.saveAll();
     }
 
     /**
      * Ensure we save transactions when the client is being shutdown. Prevents main
-     * thread from continue until transactions have been saved
+     * thread from continuing until transactions have been saved
      *
      * @param clientShutdownEvent event that we receive when the client is shutting
      *                            down

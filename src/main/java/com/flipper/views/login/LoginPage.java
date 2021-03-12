@@ -61,7 +61,7 @@ public class LoginPage extends JPanel {
     public void createLogo() {
         JPanel container = new JPanel();
         ImageIcon flipperIcon = new ImageIcon(
-            ImageUtil.getResourceStreamFromClass(
+            ImageUtil.loadImageResource(
                 getClass(), 
                 UiUtilities.flipperNavIcon
             )

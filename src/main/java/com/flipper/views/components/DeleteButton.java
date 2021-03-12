@@ -10,7 +10,7 @@ import java.awt.event.*;
 
 public class DeleteButton extends JButton {
     public DeleteButton(ActionListener onClick) {
-        ImageIcon deleteIcon = new ImageIcon(ImageUtil.getResourceStreamFromClass(getClass(), UiUtilities.deleteX));
+        ImageIcon deleteIcon = new ImageIcon(ImageUtil.loadImageResource(getClass(), UiUtilities.deleteX));
         setIcon(deleteIcon);
         setBorderPainted(false);
         setContentAreaFilled(false);
