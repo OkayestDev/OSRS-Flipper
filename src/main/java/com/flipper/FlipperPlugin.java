@@ -45,6 +45,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import javax.inject.Inject;
+import javax.swing.SwingUtilities;
 
 import net.runelite.api.GrandExchangeOffer;
 import net.runelite.api.GrandExchangeOfferState;
@@ -58,7 +59,6 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.NavigationButton;
 import net.runelite.client.util.ImageUtil;
-
 
 @PluginDescriptor(name = "Flipper")
 public class FlipperPlugin extends Plugin {
@@ -112,30 +112,34 @@ public class FlipperPlugin extends Plugin {
     }
 
     private void changeToLoggedInView() {
-        try {
-            Runnable changeToLoggedOutViewRunnable = () -> this.changeToLoggedOutView();
-            flipsController = new FlipsController(itemManager);
-            buysController = new BuysController(itemManager);
-            sellsController = new SellsController(itemManager);
-            marginsController = new MarginsController(itemManager);
-            this.tabManager.renderLoggedInView(
-                buysController.getPage(),
-                sellsController.getPage(),
-                flipsController.getPage(),
-                marginsController.getPage(),
-                changeToLoggedOutViewRunnable
-            );
-        } catch (IOException e) {
-            Log.info("Flipper: Failed to load required files");
-        }
+            SwingUtilities.invokeLater(() -> {
+            try {
+                Runnable changeToLoggedOutViewRunnable = () -> this.changeToLoggedOutView();
+                flipsController = new FlipsController(itemManager);
+                buysController = new BuysController(itemManager);
+                sellsController = new SellsController(itemManager);
+                marginsController = new MarginsController(itemManager);
+                this.tabManager.renderLoggedInView(
+                    buysController.getPage(),
+                    sellsController.getPage(),
+                    flipsController.getPage(),
+                    marginsController.getPage(),
+                    changeToLoggedOutViewRunnable
+                );
+            } catch (IOException e) {
+                Log.info("Flipper: Failed to load required files");
+            }
+        });
     }
 
     private void changeToLoggedOutView() {
         try {
             Runnable changeToLoggedInViewRunnable = () -> changeToLoggedInView();
             Persistor.deleteLoginResponse();
-            loginController = new LoginController(changeToLoggedInViewRunnable);
-            this.tabManager.renderLoggedOutView(loginController.getPanel());
+            SwingUtilities.invokeLater(() -> {
+                loginController = new LoginController(changeToLoggedInViewRunnable);
+                this.tabManager.renderLoggedOutView(loginController.getPanel());
+            });
         } catch (IOException e) {
             Log.info("Flipper: Failed to load required files");
         }

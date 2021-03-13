@@ -1,36 +1,27 @@
 package com.flipper.api;
 
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import com.flipper.models.Flip;
 import com.flipper.responses.FlipResponse;
-import com.google.gson.Gson;
 
 public class FlipApi {
-    public static Gson gson = new Gson();
-
-    public static FlipResponse createFlip(Flip flip) {
-        String json = Api.post("/flips", flip);
-        FlipResponse flipResponse = gson.fromJson(json, FlipResponse.class);
-        return flipResponse;
+    public static void createFlip(Flip flip, Consumer<FlipResponse> createFlipCallback) {
+        Api.post("/flips", createFlipCallback, FlipResponse.class, flip);
     }
 
-    public static FlipResponse deleteFlip(UUID flipId) {
-        String json = Api.delete("/flips/" + flipId.toString(), null);
-        FlipResponse flipResponse = gson.fromJson(json, FlipResponse.class);
-        return flipResponse;
+    public static void deleteFlip(UUID flipId, Consumer<FlipResponse> deleteFlipCallback) {
+        String route = "/flips/" + flipId.toString();
+        Api.delete(route, deleteFlipCallback, FlipResponse.class, null);
     }
 
-    public static FlipResponse getFlips() {
-        String json = Api.get("/flips", null);
-        FlipResponse flipResponse = gson.fromJson(json, FlipResponse.class);
-        return flipResponse;
+    public static void getFlips(Consumer<FlipResponse> getFlipsCallback) {
+        Api.get("/flips", getFlipsCallback, FlipResponse.class, null);
     }
 
-    public static FlipResponse updateFlip(Flip flip) {
+    public static void updateFlip(Flip flip, Consumer<FlipResponse> updateFlipCallback) {
         String route = "/flips/" + flip.getId().toString();
-        String json = Api.put(route, flip);
-        FlipResponse flipResponse = gson.fromJson(json, FlipResponse.class);
-        return flipResponse;
+        Api.put(route, updateFlipCallback, FlipResponse.class, flip);
     }
 }

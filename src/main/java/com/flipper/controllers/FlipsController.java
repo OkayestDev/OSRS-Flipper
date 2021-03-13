@@ -11,6 +11,8 @@ import java.util.function.Consumer;
 import javax.swing.SwingUtilities;
 
 import com.flipper.helpers.GrandExchange;
+import com.flipper.helpers.Log;
+import com.flipper.helpers.Persistor;
 import com.flipper.helpers.UiUtilities;
 import com.flipper.models.Flip;
 import com.flipper.models.Transaction;
@@ -19,6 +21,7 @@ import com.flipper.views.components.Pagination;
 import com.flipper.views.flips.FlipPage;
 import com.flipper.views.flips.FlipPanel;
 import com.flipper.api.FlipApi;
+import com.flipper.api.UploadApi;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -43,37 +46,60 @@ public class FlipsController {
             this.flipPage.add(flipPanel);
         };
         Runnable buildViewCallback = () -> this.buildView();
+
+        try {
+            if (Persistor.checkDoesFlipsFileExist()) {
+                Consumer<FlipResponse> flipUploadCallback = flipResponse -> {
+                    if (flipResponse != null) {
+                        this.totalProfit = flipResponse.totalProfit;
+                        this.flips = flipResponse.flips;
+                        try {
+                            Persistor.deleteFlipsJsonFile();
+                        } catch (IOException error) {
+                            Log.info("Failed to delete flips json file");
+                        }
+                    }
+            
+                    this.buildView();
+                };
+
+                UploadApi.uploadFlips(flipUploadCallback);
+            }
+        } catch (Exception error) {
+            Log.info("Failed to upload flips");
+        }
+
         this.pagination = new Pagination(renderItemCallback, UiUtilities.ITEMS_PER_PAGE, buildViewCallback);
         this.loadFlips();
     }
 
     public void addFlip(Flip flip) {
-        FlipResponse flipResponse = FlipApi.createFlip(flip);
-        this.totalProfit = flipResponse.totalProfit;
-        this.flips.add(flipResponse.flip);
-        this.buildView();
+        Consumer<FlipResponse> createFlipCallback = flipResponse -> {
+            this.totalProfit = flipResponse.totalProfit;
+            this.flips.add(flipResponse.flip);
+            this.buildView();
+        };
+
+        FlipApi.createFlip(flip, createFlipCallback);
     }
 
-    public boolean removeFlip(UUID flipId) {
-        FlipResponse flipResponse = FlipApi.deleteFlip(flipId);
-
-        if (flipResponse != null) {
-            this.totalProfit = flipResponse.totalProfit;
-            
-            Iterator<Flip> flipsIter = this.flips.iterator();
-            while (flipsIter.hasNext()) {
-                Flip flip = flipsIter.next();
-                if (flip.getId().equals(flipId)) {
-                    flipsIter.remove();
-                    this.buildView();
-                    return true;
+    public void removeFlip(UUID flipId) {
+        Consumer<FlipResponse> deleteFlipCallback = flipResponse -> {
+            if (flipResponse != null) {
+                this.totalProfit = flipResponse.totalProfit;
+                
+                Iterator<Flip> flipsIter = this.flips.iterator();
+                while (flipsIter.hasNext()) {
+                    Flip flip = flipsIter.next();
+                    if (flip.getId().equals(flipId)) {
+                        flipsIter.remove();
+                        this.buildView();
+                    }
                 }
             }
+        };
 
-            return true;
-        }
-        
-        return false;
+        FlipApi.deleteFlip(flipId, deleteFlipCallback);
     }
 
     public FlipPage getPage() {
@@ -81,29 +107,31 @@ public class FlipsController {
     }
 
     public void loadFlips() throws IOException {
-        FlipResponse flipResponse = FlipApi.getFlips();
+        Consumer<FlipResponse> getFlipsCallback = flipResponse -> {
+            if (flipResponse != null) {
+                this.totalProfit = flipResponse.totalProfit;
+                this.flips = flipResponse.flips;
+            }
+    
+            this.buildView();
+        };
 
-        if (flipResponse != null) {
-            this.totalProfit = flipResponse.totalProfit;
-            this.flips = flipResponse.flips;
-        }
-
-        this.buildView();
+        FlipApi.getFlips(getFlipsCallback);
     }
 
-    private Flip updateFlip(Transaction sell, Transaction buy, Flip flip) {
+    private void updateFlip(Transaction sell, Transaction buy, Flip flip) {
+        Consumer<FlipResponse> updateFlipCallback = flipResponse -> {
+            if (flipResponse != null) {
+                this.totalProfit = flipResponse.totalProfit;
+                this.buildView();
+            }
+        };
+
         flip.sellPrice = sell.getPricePer();
         flip.buyPrice = buy.getPricePer();
         flip.quantity = sell.getQuantity();
         flip.itemId = sell.getItemId();
-        FlipResponse flipResponse = FlipApi.updateFlip(flip);
-
-        if (flipResponse != null) {
-            this.totalProfit = flipResponse.totalProfit;
-            this.buildView();
-        }
-
-        return flip;
+        FlipApi.updateFlip(flip, updateFlipCallback);
     }
 
 
@@ -127,9 +155,9 @@ public class FlipsController {
                     while (buysIterator.hasPrevious()) {
                         Transaction buy = buysIterator.previous();
                         if (buy.id.equals(flip.getBuyId())) {
-                            Flip updatedFlip = updateFlip(sell, buy, flip);
-                            flipsIterator.set(updatedFlip);
-                            return updatedFlip;
+                            updateFlip(sell, buy, flip);
+                            flipsIterator.set(flip);
+                            return flip;
                         }
                     }
                 }

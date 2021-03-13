@@ -1,5 +1,7 @@
 package com.flipper.api;
 
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -7,6 +9,10 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.Request.Builder;
 
+import java.io.IOException;
+import java.util.function.Consumer;
+
+import com.flipper.helpers.Log;
 import com.flipper.responses.LoginResponse;
 import com.google.gson.Gson;
 
@@ -40,7 +46,13 @@ public class Api {
         return baseUrl + route;
     }
 
-    public static String request(String method, String route, Object params) {
+    public static <T> void request(
+        String method, 
+        String route, 
+        Consumer<T> callback, 
+        Class<T> jsonClass,
+        Object params
+    ) {
         String url = createUrl(route);
         Builder requestBuilder = new Builder()
             .url(url);
@@ -68,27 +80,78 @@ public class Api {
                 request = requestBuilder.build();
                 break;
         }
-            
-        try (Response response = client.newCall(request).execute()) {
-            return response.body().string();
-        } catch (Exception error) {
-            return null;
-        }
+
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            public void onResponse(Call call, Response response) throws IOException {
+                callback.accept(
+                    gson.fromJson(response.body().string(), jsonClass)
+                );
+            }
+
+            public void onFailure(Call call, IOException error) {
+                Log.info("Flipper Server Error");
+            }
+        });
     }
 
-    public static String get(String route, Object params) {
-        return Api.request(GET, route, params);
+    public static <T> void get(
+        String route, 
+        Consumer<T> callback, 
+        Class<T> jsonClass, 
+        Object params
+    ) {
+        Api.request(
+            GET, 
+            route,
+            callback, 
+            jsonClass,
+            params
+        );
     }
 
-    public static String post(String route, Object params) {
-        return Api.request(POST, route, params);
+    public static <T> void post(
+        String route, 
+        Consumer<T> callback,
+        Class<T> jsonClass,
+        Object params
+    ) {
+        Api.request(
+            POST, 
+            route, 
+            callback, 
+            jsonClass,
+            params
+        );
     }
 
-    public static String put(String route, Object params) {
-        return Api.request(PUT, route, params);
+    public static <T> void put(
+        String route, 
+        Consumer<T> callback,
+        Class<T> jsonClass,
+        Object params
+    ) {
+        Api.request(
+            PUT, 
+            route,
+            callback, 
+            jsonClass,
+            params
+        );
     }
 
-    public static String delete(String route, Object params) {
-        return Api.request(DELETE, route, params);
+    public static <T> void delete(
+        String route, 
+        Consumer<T> callback,
+        Class<T> jsonClass,
+        Object params
+    ) {
+        Api.request(
+            DELETE, 
+            route,
+            callback, 
+            jsonClass,
+            params
+        );
     }
 }

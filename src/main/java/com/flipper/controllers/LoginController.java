@@ -6,7 +6,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 import com.flipper.api.Api;
+import com.flipper.api.UploadApi;
 import com.flipper.api.UserApi;
+import com.flipper.helpers.Log;
+import com.flipper.helpers.Persistor;
 import com.flipper.responses.LoginResponse;
 import com.flipper.views.login.LoginPage;
 
@@ -33,17 +36,20 @@ public class LoginController {
     }
 
     public void onLoginPressed(ActionEvent event) {
+        Consumer<LoginResponse> loginCallback = loginResponse -> {
+            if (loginResponse != null && !loginResponse.error) {
+                Api.setLoginResponse(loginResponse);
+                changeToLoggedInViewRunnable.run();
+            } else {
+                JOptionPane.showMessageDialog(null, loginResponse.message);
+            }
+        };
+
         if (this.email == null || this.password == null) {
             return;
         }
 
-        LoginResponse loginResponse = UserApi.login(this.email, this.password);
-        if (loginResponse != null && !loginResponse.error) {
-            Api.setLoginResponse(loginResponse);
-            changeToLoggedInViewRunnable.run();
-        } else {
-            JOptionPane.showMessageDialog(null, loginResponse.message);
-        }
+        UserApi.login(this.email, this.password, loginCallback);
     }
 
     public void onEmailTextChanged(String newEmail) {
