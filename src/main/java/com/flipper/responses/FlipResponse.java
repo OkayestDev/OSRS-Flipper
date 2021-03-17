@@ -12,7 +12,7 @@ public class FlipResponse {
     public String message;
     public List<Flip> flips;
     public Flip flip;
-    public double totalProfit;
+    public String totalProfit;
     public double averageProfit;
     public double maxProfit;
 }

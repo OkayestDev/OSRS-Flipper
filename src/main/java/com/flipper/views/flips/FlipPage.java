@@ -1,6 +1,8 @@
 package com.flipper.views.flips;
 
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -10,19 +12,28 @@ import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
-import java.math.BigDecimal;
+import java.awt.event.ActionEvent;
 import java.awt.Font;
+
+import java.math.BigDecimal;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import com.flipper.helpers.UiUtilities;
 
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
+import net.runelite.client.util.ImageUtil;
 
 public class FlipPage extends JPanel {
     private JPanel container;
     private JLabel totalProfitValueLabel;
 
-    public FlipPage() {
+    private Runnable refreshFlipsRunnable;
+
+    public FlipPage(Runnable refreshFlipsRunnable) {
+        this.refreshFlipsRunnable = refreshFlipsRunnable;
         SwingUtilities.invokeLater(() -> {
             this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
             this.setBackground(ColorScheme.DARK_GRAY_COLOR);
@@ -33,16 +44,35 @@ public class FlipPage extends JPanel {
         container.add(flipPanel);
     }
 
-    private void constructTotalProfit(double totalProfit) {
+    private void constructTotalProfit(String totalProfit) {
         JPanel container = new JPanel();
         container.setLayout(new BorderLayout());
         JPanel totalProfitContainer = new JPanel(new GridLayout(2, 1));
 
+        JPanel totalProfitHeader = new JPanel();
+        
         JLabel totalProfitLabel = new JLabel("Total Profit");
         totalProfitLabel.setFont(new Font(FontManager.getRunescapeBoldFont().getName(),
                 FontManager.getRunescapeBoldFont().getStyle(), 16));
         totalProfitLabel.setHorizontalAlignment(JLabel.CENTER);
         totalProfitLabel.setForeground(Color.WHITE);
+        
+
+        ImageIcon refreshIcon = new ImageIcon(ImageUtil.loadImageResource(getClass(), UiUtilities.refreshIcon));
+        JLabel refreshFlips = new JLabel();
+        refreshFlips.setToolTipText("Refresh flips");
+        refreshFlips.setIcon(refreshIcon);
+        refreshFlips.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                try {
+                    refreshFlipsRunnable.run();
+                } catch (Exception error) {}
+            }
+        });
+
+        totalProfitHeader.add(totalProfitLabel);
+        totalProfitHeader.add(refreshFlips);
 
         totalProfitValueLabel = new JLabel("0");
         totalProfitValueLabel.setFont(
@@ -51,22 +81,21 @@ public class FlipPage extends JPanel {
         Color totalProfitColor = ColorScheme.GRAND_EXCHANGE_ALCH;
         totalProfitValueLabel.setForeground(totalProfitColor);
 
-        totalProfitContainer.add(totalProfitLabel);
+        totalProfitContainer.add(totalProfitHeader);
         totalProfitContainer.add(totalProfitValueLabel);
         totalProfitContainer.setBorder(UiUtilities.ITEM_INFO_BORDER);
-
         container.add(totalProfitContainer);
+
         container.setBorder(new EmptyBorder(0, 0, 3, 0));
         this.add(container, BorderLayout.WEST);
     }
 
-    public void setTotalProfit(double totalProfit) {
-        BigDecimal totalProfitBG = new BigDecimal(totalProfit);
-        totalProfitValueLabel.setText(String.valueOf(totalProfitBG.longValue()));
+    public void setTotalProfit(String totalProfit) {
+        totalProfitValueLabel.setText(totalProfit);
     }
 
     public void build() {
-        constructTotalProfit(0);
+        constructTotalProfit("0");
         container = new JPanel();
         container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
         container.setBackground(ColorScheme.DARK_GRAY_COLOR);

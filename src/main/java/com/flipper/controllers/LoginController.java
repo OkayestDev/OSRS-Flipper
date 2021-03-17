@@ -6,10 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 import com.flipper.api.Api;
-import com.flipper.api.UploadApi;
 import com.flipper.api.UserApi;
-import com.flipper.helpers.Log;
-import com.flipper.helpers.Persistor;
 import com.flipper.responses.LoginResponse;
 import com.flipper.views.login.LoginPage;
 

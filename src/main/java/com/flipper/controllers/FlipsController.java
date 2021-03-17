@@ -34,13 +34,16 @@ public class FlipsController {
     private List<Flip> flips;
     private FlipPage flipPage;
     private Consumer<UUID> removeFlipConsumer;
-    private double totalProfit = 0;
+    private Runnable refreshFlipsRunnable;
+    private String totalProfit = "0";
     private Pagination pagination;
 
     public FlipsController(ItemManager itemManager) throws IOException {
         this.flips = new ArrayList<Flip>();
         this.removeFlipConsumer = id -> this.removeFlip(id);
-        this.flipPage = new FlipPage();
+        this.refreshFlipsRunnable = () -> this.loadFlips();
+
+        this.flipPage = new FlipPage(refreshFlipsRunnable);
         Consumer<Object> renderItemCallback = (Object flip) -> {
             FlipPanel flipPanel = new FlipPanel((Flip) flip, itemManager, this.removeFlipConsumer);
             this.flipPage.add(flipPanel);
@@ -106,7 +109,7 @@ public class FlipsController {
         return this.flipPage;
     }
 
-    public void loadFlips() throws IOException {
+    public void loadFlips() {
         Consumer<FlipResponse> getFlipsCallback = flipResponse -> {
             if (flipResponse != null) {
                 this.totalProfit = flipResponse.totalProfit;

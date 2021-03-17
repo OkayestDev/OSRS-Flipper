@@ -14,6 +14,11 @@ public class UiUtilities {
             BorderFactory.createMatteBorder(0, 0, 0, 0, ColorScheme.DARK_GRAY_COLOR),
             BorderFactory.createLineBorder(ColorScheme.DARKER_GRAY_COLOR.darker(), 4));
     public static final String flipperNavIcon = "/flipper_nav_button.png";
+    public static final String flipperSmall = "/flipper_small.png";
     public static final String deleteX = "/delete_x.png";
+    public static final String refreshIcon = "/refresh.png";
+    public static final String discordIcon = "/discord.png";
+    public static final String githubIcon = "/github.png";
+    public static final String logoutIcon = "/logout.png";
     public static final int ITEMS_PER_PAGE = 15;
 }
