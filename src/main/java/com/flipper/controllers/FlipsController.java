@@ -188,7 +188,7 @@ public class FlipsController {
         SwingUtilities.invokeLater(() -> {
             this.flipPage.removeAll();
             this.flipPage.build();
-            this.pagination.renderList(this.flips);
+            this.pagination.renderFromBeginning(this.flips);
             this.flipPage.add(this.pagination.getComponent(this.flips));
             this.flipPage.setTotalProfit(totalProfit);
         });
