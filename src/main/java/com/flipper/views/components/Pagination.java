@@ -41,6 +41,19 @@ public class Pagination {
 		}
 	}
 
+	public <T> void renderFromBeginning(List<T> items) {
+		int startIndex = (page - 1) * itemsPerPage;
+		int endIndex = (page * itemsPerPage) - 1;
+
+		if (endIndex > items.size() - 1) {
+			endIndex = items.size() - 1;
+		}
+
+		for (int i = startIndex; i < endIndex; i++) {
+			this.renderItemCallback.accept(items.get(i));
+		}
+	}
+
 	public <T> JPanel getComponent(List<T> items) {
 		JPanel container = new JPanel(new BorderLayout());
 
