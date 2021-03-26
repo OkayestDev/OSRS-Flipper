@@ -13,13 +13,13 @@ public class MarginPage extends JPanel {
     private JPanel container;
 
     public MarginPage() {
-        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        this.setLayout(new BorderLayout());
         this.setBackground(ColorScheme.DARK_GRAY_COLOR);
         this.setBorder(new EmptyBorder(5, 0, 0, 0));
     }
 
     public void addMarginPanel(MarginPanel marginPanel) {
-        container.add(marginPanel);
+        container.add(marginPanel, BorderLayout.CENTER);
     }
 
     public void build() {
@@ -33,6 +33,6 @@ public class MarginPage extends JPanel {
         scrollPane.setBackground(ColorScheme.LIGHT_GRAY_COLOR);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-        this.add(container, BorderLayout.WEST);
+        this.add(scrollPane, BorderLayout.CENTER);
     }
 }

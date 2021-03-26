@@ -45,7 +45,7 @@ public class TransactionPanel extends JPanel {
             container.setBorder(UiUtilities.ITEM_INFO_BORDER);
 
             this.add(container);
-            this.setBorder(new EmptyBorder(0, 0, 3, 0));
+            this.setBorder(new EmptyBorder(0, 5, 3, 5));
         });
     }
 }
