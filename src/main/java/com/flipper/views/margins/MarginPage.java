@@ -20,11 +20,10 @@ public class MarginPage extends JPanel {
 
     public void addMarginPanel(MarginPanel marginPanel) {
         container.add(marginPanel, BorderLayout.CENTER);
+        this.revalidate();
     }
 
     public void build() {
-        this.removeAll();
-
         container = new JPanel();
         container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
         container.setBackground(ColorScheme.DARK_GRAY_COLOR);

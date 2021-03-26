@@ -32,5 +32,6 @@ public class TransactionPage extends JPanel {
 
     public void addTransactionPanel(TransactionPanel transactionPanel) {
         container.add(transactionPanel, BorderLayout.CENTER);
+        this.revalidate();
     }
 }
