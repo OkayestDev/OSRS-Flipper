@@ -2,7 +2,6 @@ package com.flipper.views.flips;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -12,14 +11,12 @@ import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
 import java.awt.Font;
-
-import java.math.BigDecimal;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import com.flipper.helpers.Numbers;
 import com.flipper.helpers.UiUtilities;
 
 import net.runelite.client.ui.ColorScheme;
@@ -34,14 +31,13 @@ public class FlipPage extends JPanel {
 
     public FlipPage(Runnable refreshFlipsRunnable) {
         this.refreshFlipsRunnable = refreshFlipsRunnable;
-        SwingUtilities.invokeLater(() -> {
-            this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-            this.setBackground(ColorScheme.DARK_GRAY_COLOR);
-        });
+        this.setLayout(new BorderLayout());
+        this.setBackground(ColorScheme.DARK_GRAY_COLOR);
     }
 
     public void addFlipPanel(FlipPanel flipPanel) {
-        container.add(flipPanel);
+        container.add(flipPanel, BorderLayout.CENTER);
+        this.revalidate();
     }
 
     private void constructTotalProfit(String totalProfit) {
@@ -87,11 +83,11 @@ public class FlipPage extends JPanel {
         container.add(totalProfitContainer);
 
         container.setBorder(new EmptyBorder(0, 0, 3, 0));
-        this.add(container, BorderLayout.WEST);
+        this.add(container, BorderLayout.NORTH);
     }
 
     public void setTotalProfit(String totalProfit) {
-        totalProfitValueLabel.setText(totalProfit);
+        totalProfitValueLabel.setText(Numbers.numberWithCommas(totalProfit));
     }
 
     public void build() {
@@ -104,6 +100,6 @@ public class FlipPage extends JPanel {
         scrollPane.setBackground(ColorScheme.LIGHT_GRAY_COLOR);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-        this.add(container, BorderLayout.WEST);
+        this.add(scrollPane, BorderLayout.CENTER);
     }
 }

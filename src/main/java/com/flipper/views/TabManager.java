@@ -8,7 +8,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URI;
 
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -32,10 +31,11 @@ public class TabManager extends PluginPanel {
     private Runnable changeToLoggedOutView;
 
     public TabManager() {
-        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        super(false);
+        this.setLayout(new BorderLayout());
     }
 
-    private void constructTopBar(boolean isLoggedIn) {
+    private JPanel constructTopBar(boolean isLoggedIn) {
         JPanel container = new JPanel();
         container.setBackground(ColorScheme.DARK_GRAY_COLOR);
         container.setLayout(new BorderLayout());
@@ -119,7 +119,8 @@ public class TabManager extends PluginPanel {
         }
 
         container.add(topBar);
-        this.add(container);
+        container.setBorder(new EmptyBorder(3, 0, 5, 0));
+        return container;
     }
 
     public void renderLoggedInView(
@@ -132,10 +133,9 @@ public class TabManager extends PluginPanel {
         this.changeToLoggedOutView = changeToLoggedOutView;
         SwingUtilities.invokeLater(() -> {
             this.removeAll();
-            this.constructTopBar(true);
+            JPanel topBar = this.constructTopBar(true);
             JPanel display = new JPanel();
             JPanel header = new JPanel(new BorderLayout());
-            header.setBackground(ColorScheme.DARKER_GRAY_COLOR.darker());
             header.setBorder(new EmptyBorder(5, 0, 0, 0));
             MaterialTabGroup tabGroup = new MaterialTabGroup(display);
             Tab buysTab = new Tab("Buys", tabGroup, buyPage);
@@ -149,8 +149,12 @@ public class TabManager extends PluginPanel {
             tabGroup.addTab(marginsTab);
             // Initialize with buys tab open.
             tabGroup.select(buysTab);
-            header.add(tabGroup, BorderLayout.CENTER);
-            add(header, BorderLayout.WEST);
+            JPanel tabGroupContainer = new JPanel();
+            tabGroupContainer.setBackground(ColorScheme.DARKER_GRAY_COLOR.darker());
+            tabGroupContainer.add(tabGroup);
+            header.add(topBar, BorderLayout.NORTH);
+            header.add(tabGroupContainer, BorderLayout.CENTER);
+            add(header, BorderLayout.NORTH);
             add(display, BorderLayout.CENTER);
             this.repaint();
         });
@@ -159,7 +163,8 @@ public class TabManager extends PluginPanel {
     public void renderLoggedOutView(LoginPage loginPage) {
         SwingUtilities.invokeLater(() -> {
             this.removeAll();
-            this.constructTopBar(false);
+            JPanel topBar = this.constructTopBar(false);
+            add(topBar, BorderLayout.NORTH);
             add(loginPage);
             this.revalidate();
         });

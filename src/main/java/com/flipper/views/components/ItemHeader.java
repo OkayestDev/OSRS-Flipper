@@ -11,6 +11,7 @@ import java.awt.Component;
 import java.awt.Color;
 import java.awt.Dimension;
 
+import com.flipper.helpers.Numbers;
 import com.flipper.helpers.UiUtilities;
 
 import net.runelite.client.game.ItemManager;
@@ -123,7 +124,7 @@ public class ItemHeader extends JPanel {
     }
 
     private JLabel constructCostPerLabel() {
-        String costPerString = Integer.toString(this.pricePer);
+        String costPerString = Numbers.numberWithCommas(this.pricePer);
         JLabel costPerLabel = new JLabel(costPerString + " gp");
         costPerLabel.setForeground(ColorScheme.GRAND_EXCHANGE_ALCH);
         return costPerLabel;

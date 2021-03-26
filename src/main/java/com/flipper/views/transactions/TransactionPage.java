@@ -13,7 +13,7 @@ public class TransactionPage extends JPanel {
     private JPanel container;
 
     public TransactionPage() {
-        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        this.setLayout(new BorderLayout());
         this.setBackground(ColorScheme.DARK_GRAY_COLOR);
     }
 
@@ -27,10 +27,11 @@ public class TransactionPage extends JPanel {
         scrollPane.setBackground(ColorScheme.LIGHT_GRAY_COLOR);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-        this.add(container, BorderLayout.WEST);
+        this.add(scrollPane, BorderLayout.CENTER);
     }
 
     public void addTransactionPanel(TransactionPanel transactionPanel) {
-        container.add(transactionPanel);
+        container.add(transactionPanel, BorderLayout.CENTER);
+        this.revalidate();
     }
 }

@@ -6,6 +6,8 @@ import java.util.ListIterator;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+import java.awt.BorderLayout;
+
 import javax.swing.SwingUtilities;
 
 import com.flipper.helpers.GrandExchange;
@@ -99,8 +101,8 @@ public class TransactionController {
     public void buildView() {
         SwingUtilities.invokeLater(() -> {
             this.transactionPage.removeAll();
+            this.transactionPage.add(this.pagination.getComponent(this.transactions), BorderLayout.SOUTH);
             this.transactionPage.build();
-            this.transactionPage.add(this.pagination.getComponent(this.transactions));
             this.pagination.renderList(this.transactions);
         });
     }

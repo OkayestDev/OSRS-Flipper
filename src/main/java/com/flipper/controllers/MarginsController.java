@@ -6,6 +6,8 @@ import java.util.ListIterator;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+import java.awt.BorderLayout;
+
 import javax.swing.SwingUtilities;
 
 import com.flipper.helpers.Persistor;
@@ -81,7 +83,7 @@ public class MarginsController {
         SwingUtilities.invokeLater(() -> {
             this.marginPage.removeAll();
             this.marginPage.build();
-            this.marginPage.add(this.pagination.getComponent(this.margins));
+            this.marginPage.add(this.pagination.getComponent(this.margins), BorderLayout.SOUTH);
             this.pagination.renderList(this.margins);
         });
     }

@@ -1,6 +1,6 @@
 package com.flipper.views.margins;
 
-import javax.swing.JButton;
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -10,9 +10,9 @@ import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 
+import com.flipper.helpers.Numbers;
 import com.flipper.helpers.UiUtilities;
 import com.flipper.models.Flip;
-import com.flipper.models.Transaction;
 import com.flipper.views.components.DeleteButton;
 import com.flipper.views.components.ItemHeader;
 
@@ -22,10 +22,12 @@ import net.runelite.client.game.ItemManager;
 import java.awt.event.*;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.awt.Dimension;
 
 public class MarginPanel extends JPanel {
     private Flip margin;
 
+    private JPanel container = new JPanel();
     private JPanel itemInfo = new JPanel(new BorderLayout());
     private JPanel leftInfoTextPanel = new JPanel(new GridLayout(3, 1));
     private JPanel rightValuesPanel = new JPanel(new GridLayout(3, 1));
@@ -43,11 +45,14 @@ public class MarginPanel extends JPanel {
             });
             ItemComposition itemComp = itemManager.getItemComposition(margin.getItemId());
 
-            setLayout(new BorderLayout());
+            this.setLayout(new BorderLayout());
+            container.setLayout(new BorderLayout());
             setBackground(ColorScheme.DARK_GRAY_COLOR);
-            this.add(new ItemHeader(margin.getItemId(), 0, itemComp.getName(), itemManager, false, deleteMarginButton), BorderLayout.NORTH);
+            container.add(new ItemHeader(margin.getItemId(), 0, itemComp.getName(), itemManager, false, deleteMarginButton), BorderLayout.NORTH);
             constructItemInfo();
-            this.setBorder(new EmptyBorder(0, 0, 5, 0));
+            container.setBorder(new EmptyBorder(0, 5, 3, 5));
+
+            this.add(container, BorderLayout.NORTH);
         });
     }
 
@@ -58,7 +63,7 @@ public class MarginPanel extends JPanel {
         itemInfo.add(leftInfoTextPanel, BorderLayout.WEST);
         itemInfo.add(rightValuesPanel, BorderLayout.EAST);
         itemInfo.setBorder(UiUtilities.ITEM_INFO_BORDER);
-        add(itemInfo, BorderLayout.CENTER);
+        container.add(itemInfo, BorderLayout.CENTER);
     }
 
     private JLabel newLeftLabel(String text) {
@@ -105,9 +110,9 @@ public class MarginPanel extends JPanel {
         String sellAtText = Integer.toString(this.margin.buyPrice);
         String potentialProfitEachText = Integer.toString(potentialProfitPer);
 
-        JLabel buyAtLabel = newRightLabel(buyAtText);
-        JLabel sellAtLabel = newRightLabel(sellAtText);
-        JLabel potentialProfitEachLabel = newRightLabel(potentialProfitEachText);
+        JLabel buyAtLabel = newRightLabel(Numbers.numberWithCommas(buyAtText));
+        JLabel sellAtLabel = newRightLabel(Numbers.numberWithCommas(sellAtText));
+        JLabel potentialProfitEachLabel = newRightLabel(Numbers.numberWithCommas(potentialProfitEachText));
 
         addRightLabel(buyAtLabel);
         addRightLabel(sellAtLabel);

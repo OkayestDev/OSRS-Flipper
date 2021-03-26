@@ -44,8 +44,8 @@ public class TransactionPanel extends JPanel {
             container.add(new AmountProgressBar(transaction), BorderLayout.SOUTH);
             container.setBorder(UiUtilities.ITEM_INFO_BORDER);
 
-            this.add(container);
-            this.setBorder(new EmptyBorder(0, 0, 3, 0));
+            this.add(container, BorderLayout.NORTH);
+            this.setBorder(new EmptyBorder(0, 5, 3, 5));
         });
     }
 }

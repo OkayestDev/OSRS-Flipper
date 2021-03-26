@@ -12,6 +12,8 @@ import java.util.function.Consumer;
 import java.awt.Color;
 import java.awt.event.*;
 
+import com.flipper.helpers.Numbers;
+import com.flipper.helpers.Timestamps;
 import com.flipper.helpers.UiUtilities;
 import com.flipper.models.Flip;
 import com.flipper.views.components.DeleteButton;
@@ -24,9 +26,12 @@ import net.runelite.client.game.ItemManager;
 public class FlipPanel extends JPanel {
     private Flip flip;
 
+    private static int LABEL_COUNT = 6;
+
+    private JPanel container = new JPanel();
     private JPanel itemInfo = new JPanel(new BorderLayout());
-    private JPanel leftInfoTextPanel = new JPanel(new GridLayout(3, 1));
-    private JPanel rightValuesPanel = new JPanel(new GridLayout(3, 1));
+    private JPanel leftInfoTextPanel = new JPanel(new GridLayout(LABEL_COUNT, 1));
+    private JPanel rightValuesPanel = new JPanel(new GridLayout(LABEL_COUNT, 1));
 
     public FlipPanel(Flip flip, ItemManager itemManager, Consumer<UUID> removeFlipConsumer) {
         this.flip = flip;
@@ -41,11 +46,14 @@ public class FlipPanel extends JPanel {
             }
         });
 
-        setLayout(new BorderLayout());
-        setBackground(ColorScheme.DARK_GRAY_COLOR);
-        this.add(new ItemHeader(flip.getItemId(), 0, itemComp.getName(), itemManager, false, deleteFlipButton), BorderLayout.NORTH);
+        this.setLayout(new BorderLayout());
+        container.setLayout(new BorderLayout());
+        container.setBackground(ColorScheme.DARK_GRAY_COLOR);
+        container.add(new ItemHeader(flip.getItemId(), 0, itemComp.getName(), itemManager, false, deleteFlipButton), BorderLayout.NORTH);
         constructItemInfo();
-        this.setBorder(new EmptyBorder(0, 0, 5, 0));
+        this.setBorder(new EmptyBorder(0, 5, 3, 5));
+
+        this.add(container, BorderLayout.NORTH);
     }
 
     private void constructItemInfo() {
@@ -55,7 +63,7 @@ public class FlipPanel extends JPanel {
         itemInfo.add(leftInfoTextPanel, BorderLayout.WEST);
         itemInfo.add(rightValuesPanel, BorderLayout.EAST);
         itemInfo.setBorder(UiUtilities.ITEM_INFO_BORDER);
-        add(itemInfo, BorderLayout.CENTER);
+        container.add(itemInfo, BorderLayout.CENTER);
     }
 
     private JLabel newLeftLabel(String text) {
@@ -74,10 +82,16 @@ public class FlipPanel extends JPanel {
         JLabel amountFlippedLabel = newLeftLabel("Amount Flipped:");
         JLabel profitEachLabel = newLeftLabel("Profit Per:");
         JLabel totalProfitLabel = newLeftLabel("Total Profit:");
+        JLabel buyPrice = newLeftLabel("Buy Price");
+        JLabel sellPrice = newLeftLabel("Sell Price");
+        JLabel flipLastUpdatedAt = newLeftLabel("Flipped at");
 
         addLeftLabel(amountFlippedLabel);
         addLeftLabel(profitEachLabel);
         addLeftLabel(totalProfitLabel);
+        addLeftLabel(buyPrice);
+        addLeftLabel(sellPrice);
+        addLeftLabel(flipLastUpdatedAt);
 
         leftInfoTextPanel.setBorder(new EmptyBorder(2, 5, 2, 10));
     }
@@ -105,18 +119,25 @@ public class FlipPanel extends JPanel {
         String totalProfitText = Integer.toString(totalProfit);
         String profitEachText = Integer.toString(profitEach);
 
-        JLabel amountFlippedLabel = newRightLabel(amountFlippedText, ColorScheme.GRAND_EXCHANGE_ALCH);
+        JLabel amountFlippedLabel = newRightLabel(Numbers.numberWithCommas(amountFlippedText), ColorScheme.GRAND_EXCHANGE_ALCH);
 
         Color profitEachColor = profitEach > 0 ? ColorScheme.GRAND_EXCHANGE_ALCH : ColorScheme.PROGRESS_ERROR_COLOR;
-        JLabel profitEachLabel = newRightLabel(profitEachText, profitEachColor);
+        JLabel profitEachLabel = newRightLabel(Numbers.numberWithCommas(profitEachText), profitEachColor);
 
         Color profitColor = flip.getTotalProfit() > 0 ? ColorScheme.GRAND_EXCHANGE_ALCH
                 : ColorScheme.PROGRESS_ERROR_COLOR;
-        JLabel totalProfitLabel = newRightLabel(totalProfitText, profitColor);
+        JLabel totalProfitLabel = newRightLabel(Numbers.numberWithCommas(totalProfitText), profitColor);
+
+        JLabel buyPrice = newRightLabel(Numbers.numberWithCommas(flip.getBuyPrice()),  ColorScheme.GRAND_EXCHANGE_ALCH);
+        JLabel sellPrice = newRightLabel(Numbers.numberWithCommas(flip.getSellPrice()),  ColorScheme.GRAND_EXCHANGE_ALCH);
+        JLabel flipLastUpdatedAt = newRightLabel(Timestamps.format(flip.getUpdatedAt()),  ColorScheme.GRAND_EXCHANGE_ALCH);
 
         addRightLabel(amountFlippedLabel);
         addRightLabel(profitEachLabel);
         addRightLabel(totalProfitLabel);
+        addRightLabel(buyPrice);
+        addRightLabel(sellPrice);
+        addRightLabel(flipLastUpdatedAt);
 
         rightValuesPanel.setBorder(new EmptyBorder(2, 5, 2, 10));
     }
