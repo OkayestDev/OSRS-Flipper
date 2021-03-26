@@ -79,7 +79,7 @@ public class FlipsController {
     public void addFlip(Flip flip) {
         Consumer<FlipResponse> createFlipCallback = flipResponse -> {
             this.totalProfit = flipResponse.totalProfit;
-            this.flips.add(flipResponse.flip);
+            this.flips.add(0, flipResponse.flip);
             this.buildView();
         };
 

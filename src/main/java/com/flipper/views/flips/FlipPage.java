@@ -2,7 +2,6 @@ package com.flipper.views.flips;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -12,14 +11,12 @@ import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
 import java.awt.Font;
-
-import java.math.BigDecimal;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import com.flipper.helpers.Numbers;
 import com.flipper.helpers.UiUtilities;
 
 import net.runelite.client.ui.ColorScheme;
@@ -91,7 +88,7 @@ public class FlipPage extends JPanel {
     }
 
     public void setTotalProfit(String totalProfit) {
-        totalProfitValueLabel.setText(totalProfit);
+        totalProfitValueLabel.setText(Numbers.numberWithCommas(totalProfit));
     }
 
     public void build() {
