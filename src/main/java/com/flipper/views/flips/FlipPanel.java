@@ -115,7 +115,7 @@ public class FlipPanel extends JPanel {
         String totalProfitText = Integer.toString(totalProfit);
         String profitEachText = Integer.toString(profitEach);
 
-        JLabel amountFlippedLabel = newRightLabel(amountFlippedText, ColorScheme.GRAND_EXCHANGE_ALCH);
+        JLabel amountFlippedLabel = newRightLabel(Numbers.numberWithCommas(amountFlippedText), ColorScheme.GRAND_EXCHANGE_ALCH);
 
         Color profitEachColor = profitEach > 0 ? ColorScheme.GRAND_EXCHANGE_ALCH : ColorScheme.PROGRESS_ERROR_COLOR;
         JLabel profitEachLabel = newRightLabel(Numbers.numberWithCommas(profitEachText), profitEachColor);

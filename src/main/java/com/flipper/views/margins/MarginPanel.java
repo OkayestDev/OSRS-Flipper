@@ -1,6 +1,5 @@
 package com.flipper.views.margins;
 
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -10,9 +9,9 @@ import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 
+import com.flipper.helpers.Numbers;
 import com.flipper.helpers.UiUtilities;
 import com.flipper.models.Flip;
-import com.flipper.models.Transaction;
 import com.flipper.views.components.DeleteButton;
 import com.flipper.views.components.ItemHeader;
 
@@ -105,9 +104,9 @@ public class MarginPanel extends JPanel {
         String sellAtText = Integer.toString(this.margin.buyPrice);
         String potentialProfitEachText = Integer.toString(potentialProfitPer);
 
-        JLabel buyAtLabel = newRightLabel(buyAtText);
-        JLabel sellAtLabel = newRightLabel(sellAtText);
-        JLabel potentialProfitEachLabel = newRightLabel(potentialProfitEachText);
+        JLabel buyAtLabel = newRightLabel(Numbers.numberWithCommas(buyAtText));
+        JLabel sellAtLabel = newRightLabel(Numbers.numberWithCommas(sellAtText));
+        JLabel potentialProfitEachLabel = newRightLabel(Numbers.numberWithCommas(potentialProfitEachText));
 
         addRightLabel(buyAtLabel);
         addRightLabel(sellAtLabel);
