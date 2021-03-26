@@ -31,14 +31,13 @@ public class FlipPage extends JPanel {
 
     public FlipPage(Runnable refreshFlipsRunnable) {
         this.refreshFlipsRunnable = refreshFlipsRunnable;
-        SwingUtilities.invokeLater(() -> {
-            this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-            this.setBackground(ColorScheme.DARK_GRAY_COLOR);
-        });
+        this.setLayout(new BorderLayout());
+        this.setBackground(ColorScheme.DARK_GRAY_COLOR);
     }
 
     public void addFlipPanel(FlipPanel flipPanel) {
-        container.add(flipPanel);
+        container.add(flipPanel, BorderLayout.CENTER);
+        this.revalidate();
     }
 
     private void constructTotalProfit(String totalProfit) {
@@ -84,7 +83,7 @@ public class FlipPage extends JPanel {
         container.add(totalProfitContainer);
 
         container.setBorder(new EmptyBorder(0, 0, 3, 0));
-        this.add(container, BorderLayout.WEST);
+        this.add(container, BorderLayout.NORTH);
     }
 
     public void setTotalProfit(String totalProfit) {
@@ -101,6 +100,6 @@ public class FlipPage extends JPanel {
         scrollPane.setBackground(ColorScheme.LIGHT_GRAY_COLOR);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-        this.add(container, BorderLayout.WEST);
+        this.add(scrollPane, BorderLayout.CENTER);
     }
 }

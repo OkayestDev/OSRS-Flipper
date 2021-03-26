@@ -28,6 +28,7 @@ public class FlipPanel extends JPanel {
 
     private static int LABEL_COUNT = 6;
 
+    private JPanel container = new JPanel();
     private JPanel itemInfo = new JPanel(new BorderLayout());
     private JPanel leftInfoTextPanel = new JPanel(new GridLayout(LABEL_COUNT, 1));
     private JPanel rightValuesPanel = new JPanel(new GridLayout(LABEL_COUNT, 1));
@@ -45,11 +46,14 @@ public class FlipPanel extends JPanel {
             }
         });
 
-        setLayout(new BorderLayout());
-        setBackground(ColorScheme.DARK_GRAY_COLOR);
-        this.add(new ItemHeader(flip.getItemId(), 0, itemComp.getName(), itemManager, false, deleteFlipButton), BorderLayout.NORTH);
+        this.setLayout(new BorderLayout());
+        container.setLayout(new BorderLayout());
+        container.setBackground(ColorScheme.DARK_GRAY_COLOR);
+        container.add(new ItemHeader(flip.getItemId(), 0, itemComp.getName(), itemManager, false, deleteFlipButton), BorderLayout.NORTH);
         constructItemInfo();
-        this.setBorder(new EmptyBorder(0, 0, 5, 0));
+        this.setBorder(new EmptyBorder(0, 5, 3, 5));
+
+        this.add(container, BorderLayout.NORTH);
     }
 
     private void constructItemInfo() {
@@ -59,7 +63,7 @@ public class FlipPanel extends JPanel {
         itemInfo.add(leftInfoTextPanel, BorderLayout.WEST);
         itemInfo.add(rightValuesPanel, BorderLayout.EAST);
         itemInfo.setBorder(UiUtilities.ITEM_INFO_BORDER);
-        add(itemInfo, BorderLayout.CENTER);
+        container.add(itemInfo, BorderLayout.CENTER);
     }
 
     private JLabel newLeftLabel(String text) {

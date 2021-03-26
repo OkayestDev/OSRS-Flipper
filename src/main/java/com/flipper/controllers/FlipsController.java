@@ -26,6 +26,8 @@ import com.flipper.api.UploadApi;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.awt.BorderLayout;
+
 import net.runelite.client.game.ItemManager;
 
 public class FlipsController {
@@ -46,7 +48,7 @@ public class FlipsController {
         this.flipPage = new FlipPage(refreshFlipsRunnable);
         Consumer<Object> renderItemCallback = (Object flip) -> {
             FlipPanel flipPanel = new FlipPanel((Flip) flip, itemManager, this.removeFlipConsumer);
-            this.flipPage.add(flipPanel);
+            this.flipPage.addFlipPanel(flipPanel);
         };
         Runnable buildViewCallback = () -> this.buildView();
 
@@ -188,9 +190,10 @@ public class FlipsController {
         SwingUtilities.invokeLater(() -> {
             this.flipPage.removeAll();
             this.flipPage.build();
+            this.flipPage.add(this.pagination.getComponent(this.flips), BorderLayout.SOUTH);
             this.pagination.renderFromBeginning(this.flips);
-            this.flipPage.add(this.pagination.getComponent(this.flips));
             this.flipPage.setTotalProfit(totalProfit);
+            this.flipPage.revalidate();
         });
     }
 }

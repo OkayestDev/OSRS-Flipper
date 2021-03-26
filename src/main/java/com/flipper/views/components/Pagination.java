@@ -115,6 +115,7 @@ public class Pagination {
 		container.add(previous, BorderLayout.WEST);
 		container.add(pageLabel, BorderLayout.CENTER);
 		container.add(next, BorderLayout.EAST);
+		container.setBackground(ColorScheme.DARKER_GRAY_COLOR.darker());
 
 		return container;
 	}

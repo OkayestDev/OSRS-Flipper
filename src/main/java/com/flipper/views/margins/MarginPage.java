@@ -15,7 +15,6 @@ public class MarginPage extends JPanel {
     public MarginPage() {
         this.setLayout(new BorderLayout());
         this.setBackground(ColorScheme.DARK_GRAY_COLOR);
-        this.setBorder(new EmptyBorder(5, 0, 0, 0));
     }
 
     public void addMarginPanel(MarginPanel marginPanel) {
@@ -25,6 +24,7 @@ public class MarginPage extends JPanel {
 
     public void build() {
         container = new JPanel();
+        container.setBorder(new EmptyBorder(5, 0, 0, 0));
         container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
         container.setBackground(ColorScheme.DARK_GRAY_COLOR);
 
