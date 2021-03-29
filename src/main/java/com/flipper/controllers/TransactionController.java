@@ -72,7 +72,7 @@ public class TransactionController {
             }
         }
 
-        // It's a new sell, create one
+        // It's a new transaction, create one
         Transaction newTransaction = GrandExchange.createTransactionFromOffer(offer, itemManager, slot);
         this.addTransaction(newTransaction);
         return newTransaction;

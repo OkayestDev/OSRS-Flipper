@@ -54,7 +54,7 @@ public class GrandExchange {
 
     public static boolean checkIsOfferPartOfTransaction(Transaction transaction, GrandExchangeOffer offer, int slot) {
         return 
-            !transaction.isComplete() &&
+            (!transaction.isComplete() || (transaction.isComplete() && GrandExchange.checkIsComplete(offer.getState()))) &&
             transaction.getSlot() == slot &&
             transaction.getItemId() == offer.getItemId() &&
             transaction.getTotalQuantity() == offer.getTotalQuantity();
