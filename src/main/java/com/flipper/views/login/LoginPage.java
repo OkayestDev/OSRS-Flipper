@@ -30,6 +30,8 @@ import net.runelite.client.util.ImageUtil;
 public class LoginPage extends JPanel {
     private final static int PAGE_WIDTH = 225;
 
+    JPanel loginContainer;
+
     private JButton loginButton;
     private JTextField emailTextField;
     private JTextField passwordTextField;
@@ -43,7 +45,7 @@ public class LoginPage extends JPanel {
         Consumer<String> onPasswordTextChangedListener,
         ActionListener onLoginPressedListener
     ) {
-        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        this.setLayout(new BorderLayout());
         this.setBackground(ColorScheme.DARK_GRAY_COLOR);
         this.setSize(PAGE_WIDTH, 250);
 
@@ -51,27 +53,27 @@ public class LoginPage extends JPanel {
         this.onPasswordTextChangedListener = onPasswordTextChangedListener;
         this.onLoginPressedListener = onLoginPressedListener;
 
+        loginContainer = new JPanel();
+        loginContainer.setLayout(new BoxLayout(loginContainer, BoxLayout.PAGE_AXIS));
+
         this.createLogo();
         this.createEmailInput();
         this.createPasswordInput();
         this.createLoginButton();
         this.createCreateAccountLink();
+
+        this.add(loginContainer, BorderLayout.NORTH);
     }
 
     public void createLogo() {
         JPanel container = new JPanel();
-        ImageIcon flipperIcon = new ImageIcon(
-            ImageUtil.loadImageResource(
-                getClass(), 
-                UiUtilities.flipperNavIcon
-            )
-        );
+        ImageIcon flipperIcon = new ImageIcon(ImageUtil.loadImageResource(getClass(), UiUtilities.flipperNavIcon));
         Image resizedLogo = flipperIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
         JLabel logoLabel = new JLabel(new ImageIcon(resizedLogo));
         logoLabel.setSize(40, 40);
         container.add(logoLabel, BorderLayout.CENTER);
         container.setBorder(new EmptyBorder(10, 0, 10, 0));
-        add(container);
+        loginContainer.add(container, BorderLayout.CENTER);
     }
 
     public void createEmailInput() {
@@ -81,22 +83,24 @@ public class LoginPage extends JPanel {
         emailTextField.setSize(PAGE_WIDTH, 40);
         emailTextField.addKeyListener(new KeyListener() {
             @Override
-            public void keyTyped(KeyEvent event) {}
-        
+            public void keyTyped(KeyEvent event) {
+            }
+
             @Override
             public void keyReleased(KeyEvent event) {
                 JTextField textField = (JTextField) event.getSource();
                 String text = textField.getText();
                 onEmailTextChangedListener.accept(text);
             }
-        
+
             @Override
-            public void keyPressed(KeyEvent event) {}
+            public void keyPressed(KeyEvent event) {
+            }
         });
         JLabel emailLabel = new JLabel("Email");
         container.add(emailLabel, BorderLayout.WEST);
         container.add(emailTextField);
-        add(container);
+        loginContainer.add(container, BorderLayout.CENTER);
     }
 
     public void createPasswordInput() {
@@ -106,22 +110,24 @@ public class LoginPage extends JPanel {
         passwordTextField.setSize(PAGE_WIDTH, 40);
         passwordTextField.addKeyListener(new KeyListener() {
             @Override
-            public void keyTyped(KeyEvent event) {}
-        
+            public void keyTyped(KeyEvent event) {
+            }
+
             @Override
             public void keyReleased(KeyEvent event) {
                 JTextField textField = (JTextField) event.getSource();
                 String text = textField.getText();
                 onPasswordTextChangedListener.accept(text);
             }
-        
+
             @Override
-            public void keyPressed(KeyEvent event) {}
+            public void keyPressed(KeyEvent event) {
+            }
         });
         JLabel passwordLabel = new JLabel("Password");
         container.add(passwordLabel);
         container.add(passwordTextField);
-        add(container);
+        loginContainer.add(container, BorderLayout.CENTER);
     }
 
     public void createCreateAccountLink() {
@@ -136,7 +142,7 @@ public class LoginPage extends JPanel {
                     URI flipperFrontendURI = new URI("https://www.osrs-flipper.com");
                     desktop.browse(flipperFrontendURI);
                 } catch (Exception error) {
-        
+
                 }
             }
 
@@ -149,9 +155,9 @@ public class LoginPage extends JPanel {
             public void mouseExited(MouseEvent e) {
                 createAccountLabel.setForeground(ColorScheme.LIGHT_GRAY_COLOR);
             }
-        }); 
+        });
         container.add(createAccountLabel);
-        add(container);
+        loginContainer.add(container, BorderLayout.CENTER);
     }
 
     public void createLoginButton() {
@@ -159,6 +165,6 @@ public class LoginPage extends JPanel {
         loginButton = new JButton("Login");
         loginButton.addActionListener(this.onLoginPressedListener);
         container.add(loginButton);
-        add(container);
+        loginContainer.add(container, BorderLayout.CENTER);
     }
 }

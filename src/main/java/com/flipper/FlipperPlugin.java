@@ -145,11 +145,15 @@ public class FlipperPlugin extends Plugin {
         }
     }
 
-    private void saveAll() throws IOException {
-        buysController.saveTransactions();
-        sellsController.saveTransactions();
-        marginsController.saveMargins();
-        Persistor.saveLoginResponse(Api.loginResponse);
+    private void saveAll() {
+        try {
+            buysController.saveTransactions();
+            sellsController.saveTransactions();
+            marginsController.saveMargins();
+            Persistor.saveLoginResponse(Api.loginResponse);
+        } catch (Exception error) {
+            Log.info("Failed to save Flipper files");
+        }
     }
 
     @Override

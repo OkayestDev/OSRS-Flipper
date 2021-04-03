@@ -156,7 +156,7 @@ public class TabManager extends PluginPanel {
             header.add(tabGroupContainer, BorderLayout.CENTER);
             add(header, BorderLayout.NORTH);
             add(display, BorderLayout.CENTER);
-            this.repaint();
+            this.revalidate();
         });
     }
 
@@ -165,7 +165,7 @@ public class TabManager extends PluginPanel {
             this.removeAll();
             JPanel topBar = this.constructTopBar(false);
             add(topBar, BorderLayout.NORTH);
-            add(loginPage);
+            add(loginPage, BorderLayout.CENTER);
             this.revalidate();
         });
     }
