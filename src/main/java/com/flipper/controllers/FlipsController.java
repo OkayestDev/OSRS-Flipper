@@ -152,9 +152,9 @@ public class FlipsController {
         // If sell has already been flipped, look for it's corresponding buy and update
         // the flip
         if (sell.isFlipped()) {
-            ListIterator<Flip> flipsIterator = flips.listIterator(flips.size());
-            while (flipsIterator.hasPrevious()) {
-                Flip flip = flipsIterator.previous();
+            ListIterator<Flip> flipsIterator = flips.listIterator();
+            while (flipsIterator.hasNext()) {
+                Flip flip = flipsIterator.next();
                 if (flip.getSellId().equals(sell.id)) {
                     // Now find the corresponding buy
                     while (buysIterator.hasPrevious()) {
