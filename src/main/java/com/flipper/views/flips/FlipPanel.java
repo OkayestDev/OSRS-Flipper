@@ -84,7 +84,7 @@ public class FlipPanel extends JPanel {
         JLabel totalProfitLabel = newLeftLabel("Total Profit:");
         JLabel buyPrice = newLeftLabel("Buy Price");
         JLabel sellPrice = newLeftLabel("Sell Price");
-        JLabel flipLastUpdatedAt = newLeftLabel("Flipped at");
+        JLabel flipLastUpdatedAt = newLeftLabel("Date");
 
         addLeftLabel(amountFlippedLabel);
         addLeftLabel(profitEachLabel);

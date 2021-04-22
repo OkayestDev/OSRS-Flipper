@@ -73,6 +73,7 @@ public class FlipperPlugin extends Plugin {
     private FlipsController flipsController;
     private MarginsController marginsController;
     private LoginController loginController;
+    private AlchsController alchsController;
     // Views
     private NavigationButton navButton;
     private TabManager tabManager;
@@ -119,6 +120,7 @@ public class FlipperPlugin extends Plugin {
                 buysController = new BuysController(itemManager);
                 sellsController = new SellsController(itemManager);
                 marginsController = new MarginsController(itemManager);
+                
                 this.tabManager.renderLoggedInView(
                     buysController.getPage(),
                     sellsController.getPage(),

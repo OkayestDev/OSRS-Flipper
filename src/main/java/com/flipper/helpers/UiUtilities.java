@@ -1,5 +1,6 @@
 package com.flipper.helpers;
 
+import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
@@ -21,4 +22,11 @@ public class UiUtilities {
     public static final String githubIcon = "/github.png";
     public static final String logoutIcon = "/logout.png";
     public static final int ITEMS_PER_PAGE = 15;
+
+    // Colors
+    public static final Color GREEN = Color.decode("#2ea043");
+    public static final Color ORANGE = Color.decode("#e78709");
+    public static final Color BLUE = Color.decode("#388bfd");
+    public static final Color RED = Color.decode("#da3633");
+    public static final Color FONT_COLOR = Color.decode("#c9d1d9");
 }
