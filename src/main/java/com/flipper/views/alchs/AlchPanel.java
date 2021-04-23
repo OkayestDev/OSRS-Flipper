@@ -55,13 +55,13 @@ public class AlchPanel extends JPanel {
         container.setLayout(new BorderLayout());
         container.setBackground(ColorScheme.DARK_GRAY_COLOR);
         container.add(new ItemHeader(
-            alch.getItemId(), 
-            0, 
+            alch.getItemId(),
+            0,
             itemComp.getName(),
-            itemManager, 
-            false, 
+            itemManager,
+            false,
             deleteAlchButton
-        ));
+        ), BorderLayout.NORTH);
         constructItemInfo();
         this.setBorder(new EmptyBorder(0, 5, 3, 5));
 
