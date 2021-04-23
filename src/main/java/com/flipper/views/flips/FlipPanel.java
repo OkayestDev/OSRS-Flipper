@@ -82,16 +82,16 @@ public class FlipPanel extends JPanel {
         JLabel amountFlippedLabel = newLeftLabel("Amount Flipped:");
         JLabel profitEachLabel = newLeftLabel("Profit Per:");
         JLabel totalProfitLabel = newLeftLabel("Total Profit:");
-        JLabel buyPrice = newLeftLabel("Buy Price");
-        JLabel sellPrice = newLeftLabel("Sell Price");
-        JLabel flipLastUpdatedAt = newLeftLabel("Date");
+        JLabel buyPrice = newLeftLabel("Buy Price:");
+        JLabel sellPrice = newLeftLabel("Sell Price:");
+        JLabel flipCreatedAt = newLeftLabel("Date:");
 
         addLeftLabel(amountFlippedLabel);
         addLeftLabel(profitEachLabel);
         addLeftLabel(totalProfitLabel);
         addLeftLabel(buyPrice);
         addLeftLabel(sellPrice);
-        addLeftLabel(flipLastUpdatedAt);
+        addLeftLabel(flipCreatedAt);
 
         leftInfoTextPanel.setBorder(new EmptyBorder(2, 5, 2, 10));
     }
@@ -130,14 +130,14 @@ public class FlipPanel extends JPanel {
 
         JLabel buyPrice = newRightLabel(Numbers.numberWithCommas(flip.getBuyPrice()),  ColorScheme.GRAND_EXCHANGE_ALCH);
         JLabel sellPrice = newRightLabel(Numbers.numberWithCommas(flip.getSellPrice()),  ColorScheme.GRAND_EXCHANGE_ALCH);
-        JLabel flipLastUpdatedAt = newRightLabel(Timestamps.format(flip.getUpdatedAt()),  ColorScheme.GRAND_EXCHANGE_ALCH);
+        JLabel flipCreatedAt = newRightLabel(Timestamps.format(flip.getCreatedAt()),  ColorScheme.GRAND_EXCHANGE_ALCH);
 
         addRightLabel(amountFlippedLabel);
         addRightLabel(profitEachLabel);
         addRightLabel(totalProfitLabel);
         addRightLabel(buyPrice);
         addRightLabel(sellPrice);
-        addRightLabel(flipLastUpdatedAt);
+        addRightLabel(flipCreatedAt);
 
         rightValuesPanel.setBorder(new EmptyBorder(2, 5, 2, 10));
     }
