@@ -1,6 +1,5 @@
 package com.flipper.views.margins;
 
-import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -22,7 +21,6 @@ import net.runelite.client.game.ItemManager;
 import java.awt.event.*;
 import java.util.UUID;
 import java.util.function.Consumer;
-import java.awt.Dimension;
 
 public class MarginPanel extends JPanel {
     private Flip margin;

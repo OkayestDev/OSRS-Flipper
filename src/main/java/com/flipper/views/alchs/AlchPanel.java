@@ -28,7 +28,7 @@ import net.runelite.client.game.ItemManager;
 public class AlchPanel extends JPanel {
     private Alch alch;
 
-    private static int LABEL_COUNT = 6;
+    private static int LABEL_COUNT = 7;
 
     private JPanel container = new JPanel();
     private JPanel itemInfo = new JPanel(new BorderLayout());
@@ -95,14 +95,16 @@ public class AlchPanel extends JPanel {
         JLabel profitEachLabel = newLeftLabel("Profit Per:");
         JLabel totalProfitLabel = newLeftLabel("Total Profit:");
         JLabel buyPrice = newLeftLabel("Buy Price:");
-        JLabel sellPrice = newLeftLabel("Sell Price:");
+        JLabel alchPrice = newLeftLabel("Alch Price:");
+        JLabel natureRunePrice = newLeftLabel("Nature Rune Price:");
         JLabel alchLastUpdatedAt = newLeftLabel("Date:");
 
         addLeftLabel(quantityLabel);
         addLeftLabel(profitEachLabel);
         addLeftLabel(totalProfitLabel);
         addLeftLabel(buyPrice);
-        addLeftLabel(sellPrice);
+        addLeftLabel(alchPrice);
+        addLeftLabel(natureRunePrice);
         addLeftLabel(alchLastUpdatedAt);
 
         leftInfoTextPanel.setBorder(new EmptyBorder(2, 5, 2, 10));
@@ -124,10 +126,10 @@ public class AlchPanel extends JPanel {
 
         int totalProfit = alch.getTotalProfit();
 
-        int quantity = this.alch.getQuantity();
-        int profitEach = quantity != 0 ? totalProfit / quantity : 0;
+        int quantity = alch.getQuantity();
+        int profitEach = quantity != 0 ? alch.getAlchPrice() - alch.getBuyPrice() - alch.getNatureRunePrice() : 0;
 
-        String quantityText = Integer.toString(this.alch.getQuantity());
+        String quantityText = Integer.toString(alch.getQuantity());
         String totalProfitText = Integer.toString(totalProfit);
         String profitEachText = Integer.toString(profitEach);
 
@@ -143,12 +145,14 @@ public class AlchPanel extends JPanel {
         JLabel buyPrice = newRightLabel(Numbers.numberWithCommas(alch.getBuyPrice()),  ColorScheme.GRAND_EXCHANGE_ALCH);
         JLabel alchPrice = newRightLabel(Numbers.numberWithCommas(alch.getAlchPrice()),  ColorScheme.GRAND_EXCHANGE_ALCH);
         JLabel alchCreatedAt = newRightLabel(Timestamps.format(alch.getCreatedAt()),  ColorScheme.GRAND_EXCHANGE_ALCH);
+        JLabel natureRunePrice = newRightLabel(String.valueOf(alch.natureRunePrice), ColorScheme.GRAND_EXCHANGE_ALCH);
 
         addRightLabel(quantityLabel);
         addRightLabel(profitEachLabel);
         addRightLabel(totalProfitLabel);
         addRightLabel(buyPrice);
         addRightLabel(alchPrice);
+        addRightLabel(natureRunePrice);
         addRightLabel(alchCreatedAt);
 
         rightValuesPanel.setBorder(new EmptyBorder(2, 5, 2, 10));
