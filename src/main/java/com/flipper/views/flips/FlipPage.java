@@ -46,7 +46,7 @@ public class FlipPage extends JPanel {
 
         JPanel totalProfitHeader = new JPanel();
         
-        JLabel totalProfitLabel = new JLabel("Total Profit");
+        JLabel totalProfitLabel = new JLabel("Flip Profit");
         totalProfitLabel.setFont(new Font(FontManager.getRunescapeBoldFont().getName(),
                 FontManager.getRunescapeBoldFont().getStyle(), 16));
         totalProfitLabel.setHorizontalAlignment(JLabel.CENTER);

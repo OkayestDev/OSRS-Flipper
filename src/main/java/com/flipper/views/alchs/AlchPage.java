@@ -46,7 +46,7 @@ public class AlchPage extends JPanel {
 
         JPanel totalProfitHeader = new JPanel();
         
-        JLabel totalProfitLabel = new JLabel("Total Profit");
+        JLabel totalProfitLabel = new JLabel("Alch Profit");
         totalProfitLabel.setFont(new Font(FontManager.getRunescapeBoldFont().getName(),
                 FontManager.getRunescapeBoldFont().getStyle(), 16));
         totalProfitLabel.setHorizontalAlignment(JLabel.CENTER);
