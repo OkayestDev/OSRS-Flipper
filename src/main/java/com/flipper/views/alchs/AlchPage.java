@@ -34,7 +34,7 @@ public class AlchPage extends JPanel {
         this.setBackground(ColorScheme.DARK_GRAY_COLOR);
     }
 
-    public void addFlipPanel(AlchPanel alchPanel) {
+    public void addAlchPanel(AlchPanel alchPanel) {
         container.add(alchPanel, BorderLayout.CENTER);
         this.revalidate();
     }
@@ -43,16 +43,13 @@ public class AlchPage extends JPanel {
         JPanel container = new JPanel();
         container.setLayout(new BorderLayout());
         JPanel totalProfitContainer = new JPanel(new GridLayout(2, 1));
-
         JPanel totalProfitHeader = new JPanel();
-        
         JLabel totalProfitLabel = new JLabel("Alch Profit");
         totalProfitLabel.setFont(new Font(FontManager.getRunescapeBoldFont().getName(),
                 FontManager.getRunescapeBoldFont().getStyle(), 16));
         totalProfitLabel.setHorizontalAlignment(JLabel.CENTER);
         totalProfitLabel.setForeground(Color.WHITE);
         
-
         ImageIcon refreshIcon = new ImageIcon(ImageUtil.loadImageResource(getClass(), UiUtilities.refreshIcon));
         JLabel refreshFlips = new JLabel();
         refreshFlips.setToolTipText("Refresh alchs");
@@ -93,6 +90,7 @@ public class AlchPage extends JPanel {
         constructTotalProfit("0");
         container = new JPanel();
         container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
+        container.setBackground(ColorScheme.DARK_GRAY_COLOR);
 
         JScrollPane scrollPane = new JScrollPane(container);
         scrollPane.setBackground(ColorScheme.LIGHT_GRAY_COLOR);

@@ -40,7 +40,7 @@ public class AlchsController {
         this.alchPage = new AlchPage(refreshAlchsRunnable);
         Consumer<Object> renderItemCallback = (Object alch) -> {
             AlchPanel alchPanel = new AlchPanel((Alch) alch, itemManager, this.removeAlchConsumer);
-            this.alchPage.addFlipPanel(alchPanel);
+            this.alchPage.addAlchPanel(alchPanel);
         };
         Runnable buildViewCallback = () -> this.buildView();
 
