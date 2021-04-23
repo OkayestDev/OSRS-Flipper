@@ -10,8 +10,11 @@ import javax.swing.SwingUtilities;
 import com.flipper.models.Alch;
 import com.flipper.responses.AlchResponse;
 import com.flipper.views.alchs.AlchPage;
+import com.flipper.views.alchs.AlchPanel;
 import com.flipper.views.components.Pagination;
 import com.flipper.api.AlchApi;
+
+import java.awt.BorderLayout;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -29,14 +32,15 @@ public class AlchsController {
 
     public AlchsController(ItemManager itemManager) {
         this.alchs = new ArrayList<Alch>();
+        this.removeAlchConsumer = id -> this.removeAlch(id);
         this.refreshAlchsRunnable = () -> this.loadAlchs();
 
         this.alchPage = new AlchPage(refreshAlchsRunnable);
 
-        // Consumer<Object> renderItemCallback = (Object flip) -> {
-        //     FlipPanel flipPanel = new FlipPanel((Flip) flip, itemManager, this.removeFlipConsumer);
-        //     this.flipPage.addFlipPanel(flipPanel);
-        // };
+        Consumer<Object> renderItemCallback = (Object alch) -> {
+            AlchPanel alchPanel = new AlchPanel((Alch) alch, itemManager, this.removeAlchConsumer);
+            this.alchPage.addFlipPanel(alchPanel);
+        };
     }
 
     public void addAlch(Alch alch) {
@@ -75,7 +79,10 @@ public class AlchsController {
 
     public void buildView() {
         SwingUtilities.invokeLater(() -> {
-
+            this.alchPage.removeAll();
+            this.alchPage.build();
+            this.alchPage.add(this.pagination.getComponent(this.alchs), BorderLayout.SOUTH);
+            this.pagination.renderFromBeginning(this.alchs);
         });
     }
 }

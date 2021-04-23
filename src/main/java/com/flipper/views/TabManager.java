@@ -16,6 +16,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.flipper.api.Api;
 import com.flipper.helpers.UiUtilities;
+import com.flipper.views.alchs.AlchPage;
 import com.flipper.views.components.Tab;
 import com.flipper.views.flips.FlipPage;
 import com.flipper.views.login.LoginPage;
@@ -127,6 +128,7 @@ public class TabManager extends PluginPanel {
         TransactionPage buyPage, 
         TransactionPage sellPage, 
         FlipPage flipPage, 
+        AlchPage alchPage,
         MarginPage marginPage, 
         Runnable changeToLoggedOutView
     ) {
@@ -141,11 +143,13 @@ public class TabManager extends PluginPanel {
             Tab buysTab = new Tab("Buys", tabGroup, buyPage);
             Tab sellsTab = new Tab("Sells", tabGroup, sellPage);
             Tab flipsTab = new Tab("Flips", tabGroup, flipPage);
+            Tab alchsTab = new Tab("Alchs", tabGroup, alchPage);
             Tab marginsTab = new Tab("Margins", tabGroup, marginPage);
             tabGroup.setBorder(new EmptyBorder(5, 0, 2, 0));
             tabGroup.addTab(buysTab);
             tabGroup.addTab(sellsTab);
             tabGroup.addTab(flipsTab);
+            tabGroup.addTab(alchsTab);
             tabGroup.addTab(marginsTab);
             // Initialize with buys tab open.
             tabGroup.select(buysTab);

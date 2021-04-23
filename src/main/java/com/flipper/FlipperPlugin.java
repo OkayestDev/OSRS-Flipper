@@ -26,6 +26,7 @@
 package com.flipper;
 
 import com.flipper.api.Api;
+import com.flipper.controllers.AlchsController;
 import com.flipper.controllers.BuysController;
 import com.flipper.controllers.FlipsController;
 import com.flipper.controllers.LoginController;
@@ -113,18 +114,19 @@ public class FlipperPlugin extends Plugin {
     }
 
     private void changeToLoggedInView() {
-            SwingUtilities.invokeLater(() -> {
+        SwingUtilities.invokeLater(() -> {
             try {
                 Runnable changeToLoggedOutViewRunnable = () -> this.changeToLoggedOutView();
+                alchsController = new AlchsController(itemManager);
                 flipsController = new FlipsController(itemManager);
                 buysController = new BuysController(itemManager);
                 sellsController = new SellsController(itemManager);
                 marginsController = new MarginsController(itemManager);
-                
                 this.tabManager.renderLoggedInView(
                     buysController.getPage(),
                     sellsController.getPage(),
                     flipsController.getPage(),
+                    alchsController.getPage(),
                     marginsController.getPage(),
                     changeToLoggedOutViewRunnable
                 );
