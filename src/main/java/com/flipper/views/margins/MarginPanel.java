@@ -67,6 +67,7 @@ public class MarginPanel extends JPanel {
     private JLabel newLeftLabel(String text) {
         JLabel newJLabel = new JLabel(text);
         newJLabel.setForeground(ColorScheme.GRAND_EXCHANGE_PRICE);
+        newJLabel.setBorder(new EmptyBorder(0, 0, 2, 0));
         return newJLabel;
     }
 
@@ -92,6 +93,7 @@ public class MarginPanel extends JPanel {
         JLabel newRightLabel = new JLabel(value);
         newRightLabel.setHorizontalAlignment(JLabel.RIGHT);
         newRightLabel.setForeground(ColorScheme.GRAND_EXCHANGE_ALCH);
+        newRightLabel.setBorder(new EmptyBorder(0, 0, 2, 0));
         return newRightLabel;
     }
 

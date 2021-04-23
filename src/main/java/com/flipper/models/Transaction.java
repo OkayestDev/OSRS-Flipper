@@ -89,4 +89,8 @@ public class Transaction {
     public int getTotalPrice() {
         return pricePer * quantity;
     }
+
+    public boolean isFilled() {
+        return quantity == totalQuantity;
+    }
 }
