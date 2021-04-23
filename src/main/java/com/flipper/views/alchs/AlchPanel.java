@@ -96,7 +96,7 @@ public class AlchPanel extends JPanel {
         JLabel totalProfitLabel = newLeftLabel("Total Profit:");
         JLabel buyPrice = newLeftLabel("Buy Price:");
         JLabel alchPrice = newLeftLabel("Alch Price:");
-        JLabel natureRunePrice = newLeftLabel("Nature Rune Price:");
+        JLabel natureRunePrice = newLeftLabel("Nature Rune:");
         JLabel alchLastUpdatedAt = newLeftLabel("Date:");
 
         addLeftLabel(quantityLabel);
