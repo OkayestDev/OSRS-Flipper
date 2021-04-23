@@ -45,8 +45,8 @@ public class Pagination {
 		int startIndex = (page - 1) * itemsPerPage;
 		int endIndex = (page * itemsPerPage) - 1;
 
-		if (endIndex > items.size() - 1) {
-			endIndex = items.size() - 1;
+		if (endIndex > items.size()) {
+			endIndex = items.size();
 		}
 
 		for (int i = startIndex; i < endIndex; i++) {
@@ -71,6 +71,9 @@ public class Pagination {
 			public void mouseClicked(MouseEvent e) {
 				if (page != 1) {
 					page--;
+					buildViewCallback.run();
+				} else {
+					page = numberOfPages;
 					buildViewCallback.run();
 				}
 			}
@@ -97,6 +100,9 @@ public class Pagination {
 			public void mouseClicked(MouseEvent e) {
 				if (page < numberOfPages) {
 					page++;
+					buildViewCallback.run();
+				} else {
+					page = 1;
 					buildViewCallback.run();
 				}
 			}
