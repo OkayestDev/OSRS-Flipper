@@ -6,8 +6,8 @@ import com.flipper.helpers.Persistor;
 import net.runelite.client.game.ItemManager;
 
 public class SellsController extends TransactionController {
-    public SellsController(ItemManager itemManager) throws IOException {
-        super("Sell", itemManager);
+    public SellsController(ItemManager itemManager, boolean isPrompt) throws IOException {
+        super("Sell", itemManager, isPrompt);
     }
 
     @Override

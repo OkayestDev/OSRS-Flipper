@@ -16,13 +16,14 @@ import net.runelite.client.util.ImageUtil;
 public class BuysController extends TransactionController {
     Consumer<Transaction> highAlchCallback;
 
-    public BuysController(ItemManager itemManager, Consumer<Transaction> highAlchCallback) throws IOException {
-        super("Buy", itemManager);
+    public BuysController(ItemManager itemManager, Consumer<Transaction> highAlchCallback, boolean isPrompt) throws IOException {
+        super("Buy", itemManager, isPrompt);
         this.highAlchCallback = highAlchCallback;
     }
 
     @Override
     public void extraComponentPressed(Transaction transaction) {
+        transaction.setAlched(true);
         highAlchCallback.accept(transaction);
     }
 

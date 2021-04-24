@@ -1,7 +1,6 @@
 package com.flipper.views.transactions;
 
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -45,6 +44,7 @@ public class TransactionPanel extends JPanel {
         Transaction transaction, 
         ItemManager itemManager, 
         Consumer<UUID> removeTransactionConsumer,
+        boolean isPrompt,
         Supplier<JButton> renderExtraComponentSupplier,
         Consumer<Transaction> extraComponentPressedConsumer
     ) { 
@@ -54,7 +54,8 @@ public class TransactionPanel extends JPanel {
             name,
             transaction,
             itemManager,
-            removeTransactionConsumer
+            removeTransactionConsumer,
+            isPrompt
         );
     }
 
@@ -62,13 +63,15 @@ public class TransactionPanel extends JPanel {
         String name, 
         Transaction transaction, 
         ItemManager itemManager, 
-        Consumer<UUID> removeTransactionConsumer
+        Consumer<UUID> removeTransactionConsumer,
+        boolean isPrompt
     ) {
         init(
             name,
             transaction,
             itemManager,
-            removeTransactionConsumer
+            removeTransactionConsumer,
+            isPrompt
         );
     }
 
@@ -76,7 +79,8 @@ public class TransactionPanel extends JPanel {
         String name, 
         Transaction transaction, 
         ItemManager itemManager, 
-        Consumer<UUID> removeTransactionConsumer
+        Consumer<UUID> removeTransactionConsumer,
+        boolean isPrompt
     ) {
         SwingUtilities.invokeLater(() -> {
             this.transaction = transaction;
@@ -85,10 +89,12 @@ public class TransactionPanel extends JPanel {
 
             DeleteButton deleteTransactionButton = new DeleteButton((ActionEvent action) -> {
                 String describeTransaction = transaction.describeTransaction();
-                int input = JOptionPane.showConfirmDialog(
-                    null, 
-                    "Delete " + name + " of " + describeTransaction + "?"
-                );
+                int input = isPrompt
+                    ? JOptionPane.showConfirmDialog(
+                        null, 
+                        "Delete " + name + " of " + describeTransaction + "?"
+                    )
+                    : 0;
                 if (input == 0) {
                     removeTransactionConsumer.accept(transaction.getId());
                     setVisible(false);
@@ -120,9 +126,10 @@ public class TransactionPanel extends JPanel {
                 container.add(new AmountProgressBar(transaction), BorderLayout.SOUTH);
             } else {
                 JButton extraComponent = renderExtraComponentSupplier.get();
-                if (extraComponent != null) {
+                if (extraComponent != null && !transaction.isAlched()) {
                     extraComponent.addActionListener((ActionEvent event) -> {
                         this.extraComponentPressedConsumer.accept(transaction);
+                        extraComponent.setVisible(false);
                     });
                     container.add(
                         extraComponent,

@@ -32,14 +32,19 @@ public class AlchsController {
     private String totalProfit = "0";
     private Pagination pagination;
 
-    public AlchsController(ItemManager itemManager) {
+    public AlchsController(ItemManager itemManager, boolean isPrompt) {
         this.alchs = new ArrayList<Alch>();
         this.removeAlchConsumer = id -> this.removeAlch(id);
         this.refreshAlchsRunnable = () -> this.loadAlchs();
 
         this.alchPage = new AlchPage(refreshAlchsRunnable);
         Consumer<Object> renderItemCallback = (Object alch) -> {
-            AlchPanel alchPanel = new AlchPanel((Alch) alch, itemManager, this.removeAlchConsumer);
+            AlchPanel alchPanel = new AlchPanel(
+                (Alch) alch, 
+                itemManager, 
+                this.removeAlchConsumer, 
+                isPrompt
+            );
             this.alchPage.addAlchPanel(alchPanel);
         };
         Runnable buildViewCallback = () -> this.buildView();

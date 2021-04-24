@@ -33,13 +33,20 @@ public class FlipPanel extends JPanel {
     private JPanel leftInfoTextPanel = new JPanel(new GridLayout(LABEL_COUNT, 1));
     private JPanel rightValuesPanel = new JPanel(new GridLayout(LABEL_COUNT, 1));
 
-    public FlipPanel(Flip flip, ItemManager itemManager, Consumer<UUID> removeFlipConsumer) {
+    public FlipPanel(
+        Flip flip, 
+        ItemManager itemManager, 
+        Consumer<UUID> removeFlipConsumer, 
+        boolean isPrompt
+    ) {
         this.flip = flip;
         ItemComposition itemComp = itemManager.getItemComposition(flip.getItemId());
 
         DeleteButton deleteFlipButton = new DeleteButton((ActionEvent action) -> {
             String describedBuy = flip.describeFlip(itemComp.getName());
-            int input = JOptionPane.showConfirmDialog(null, "Delete flip of " + describedBuy + "?");
+            int input = isPrompt
+                ? JOptionPane.showConfirmDialog(null, "Delete flip of " + describedBuy + "?")
+                : 0;
             if (input == 0) {
                 removeFlipConsumer.accept(flip.getId());
                 setVisible(false);

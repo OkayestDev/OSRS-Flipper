@@ -30,12 +30,12 @@ public class MarginPanel extends JPanel {
     private JPanel leftInfoTextPanel = new JPanel(new GridLayout(3, 1));
     private JPanel rightValuesPanel = new JPanel(new GridLayout(3, 1));
 
-    public MarginPanel(Flip margin, ItemManager itemManager, Consumer<UUID> removeMarginConsumer) {
+    public MarginPanel(Flip margin, ItemManager itemManager, Consumer<UUID> removeMarginConsumer, boolean isPrompt) {
         SwingUtilities.invokeLater(() -> {
             this.margin = margin;
 
             DeleteButton deleteMarginButton = new DeleteButton((ActionEvent action) -> {
-                int input = JOptionPane.showConfirmDialog(null, "Delete margin check?");
+                int input = isPrompt ? JOptionPane.showConfirmDialog(null, "Delete margin check?") : 0;
                 if (input == 0) {
                     removeMarginConsumer.accept(margin.getId());
                     setVisible(false);

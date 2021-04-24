@@ -29,11 +29,16 @@ public class MarginsController {
     private Consumer<UUID> removeMarginConsumer;
     private Pagination pagination;
 
-    public MarginsController(ItemManager itemManager) throws IOException {
+    public MarginsController(ItemManager itemManager, boolean isPrompt) throws IOException {
         this.removeMarginConsumer = id -> this.removeMargin(id);
         this.marginPage = new MarginPage();
         Consumer<Object> renderItemCallback = (Object margin) -> {
-            MarginPanel marginPanel = new MarginPanel((Flip) margin, itemManager, this.removeMarginConsumer);
+            MarginPanel marginPanel = new MarginPanel(
+                (Flip) margin,
+                itemManager,
+                this.removeMarginConsumer,
+                isPrompt
+            );
             this.marginPage.addMarginPanel(marginPanel);
         };
         Runnable buildViewCallback = () -> this.buildView();

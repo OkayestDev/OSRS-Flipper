@@ -35,16 +35,18 @@ public class AlchPanel extends JPanel {
     private JPanel leftInfoTextPanel = new JPanel(new GridLayout(LABEL_COUNT, 1));
     private JPanel rightValuesPanel = new JPanel(new GridLayout(LABEL_COUNT, 1));
 
-    public AlchPanel(Alch alch, ItemManager itemManager, Consumer<UUID> removeAlchConsumer) {
+    public AlchPanel(Alch alch, ItemManager itemManager, Consumer<UUID> removeAlchConsumer, boolean isPrompt) {
         this.alch = alch;
         ItemComposition itemComp = itemManager.getItemComposition(alch.getItemId());
 
         DeleteButton deleteAlchButton = new DeleteButton((ActionEvent action) -> {
             String describedAlch = alch.describeAlch(itemComp.getName());
-            int input = JOptionPane.showConfirmDialog(
-                null, 
-                "Delete alch of " + describedAlch + "?"
-            );
+            int input = isPrompt 
+                ? JOptionPane.showConfirmDialog(
+                    null,
+                    "Delete alch of " + describedAlch + "?"
+                )
+                : 0;
             if (input == 0) {
                 removeAlchConsumer.accept(alch.getId());
                 setVisible(false);

@@ -40,14 +40,19 @@ public class FlipsController {
     private String totalProfit = "0";
     private Pagination pagination;
 
-    public FlipsController(ItemManager itemManager) throws IOException {
+    public FlipsController(ItemManager itemManager, boolean isPrompt) throws IOException {
         this.flips = new ArrayList<Flip>();
         this.removeFlipConsumer = id -> this.removeFlip(id);
         this.refreshFlipsRunnable = () -> this.loadFlips();
 
         this.flipPage = new FlipPage(refreshFlipsRunnable);
         Consumer<Object> renderItemCallback = (Object flip) -> {
-            FlipPanel flipPanel = new FlipPanel((Flip) flip, itemManager, this.removeFlipConsumer);
+            FlipPanel flipPanel = new FlipPanel(
+                (Flip) flip,
+                itemManager,
+                this.removeFlipConsumer,
+                isPrompt
+            );
             this.flipPage.addFlipPanel(flipPanel);
         };
         Runnable buildViewCallback = () -> this.buildView();

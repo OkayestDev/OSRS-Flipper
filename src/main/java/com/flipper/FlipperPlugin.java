@@ -70,6 +70,8 @@ public class FlipperPlugin extends Plugin {
     private ClientToolbar clientToolbar;
     @Inject
     private ItemManager itemManager;
+    @Inject
+	private FlipperConfig config;
     // Controllers
     private BuysController buysController;
     private SellsController sellsController;
@@ -125,12 +127,28 @@ public class FlipperPlugin extends Plugin {
         SwingUtilities.invokeLater(() -> {
             try {
                 Runnable changeToLoggedOutViewRunnable = () -> this.changeToLoggedOutView();
-                alchsController = new AlchsController(itemManager);
+                alchsController = new AlchsController(
+                    itemManager,
+                    config.isPromptDeleteAlch()
+                );
                 Consumer<Transaction> highAlchCallback = (buy) -> alchFromBuy(buy);
-                flipsController = new FlipsController(itemManager);
-                buysController = new BuysController(itemManager, highAlchCallback);
-                sellsController = new SellsController(itemManager);
-                marginsController = new MarginsController(itemManager);
+                flipsController = new FlipsController(
+                    itemManager, 
+                    config.isPromptDeleteFlip()
+                );
+                buysController = new BuysController(
+                    itemManager, 
+                    highAlchCallback,
+                    config.isPromptDeleteBuy()
+                );
+                sellsController = new SellsController(
+                    itemManager, 
+                    config.isPromptDeleteSell()
+                );
+                marginsController = new MarginsController(
+                    itemManager, 
+                    config.isPromptDeleteMargin()
+                );
                 this.tabManager.renderLoggedInView(
                     buysController.getPage(),
                     sellsController.getPage(),

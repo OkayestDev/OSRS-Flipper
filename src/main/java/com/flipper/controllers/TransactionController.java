@@ -34,8 +34,10 @@ public class TransactionController {
     protected Pagination pagination;
     protected Consumer<UUID> removeTransactionConsumer;
     protected JButton extraComponent;
+    protected boolean isPrompt;
 
-    public TransactionController(String name, ItemManager itemManager) throws IOException {
+    public TransactionController(String name, ItemManager itemManager, boolean isPrompt) throws IOException {
+        this.isPrompt = isPrompt;
         this.itemManager = itemManager;
         this.removeTransactionConsumer = id -> this.removeTransaction(id);
         this.transactionPage = new TransactionPage();
@@ -51,6 +53,7 @@ public class TransactionController {
                 (Transaction) sell,
                 itemManager,
                 this.removeTransactionConsumer,
+                isPrompt,
                 renderExtraComponentSupplier,
                 extraComponentPressedConsumer
             );
