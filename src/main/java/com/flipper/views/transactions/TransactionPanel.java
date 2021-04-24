@@ -1,5 +1,6 @@
 package com.flipper.views.transactions;
 
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -28,14 +29,45 @@ import java.util.function.Consumer;
 public class TransactionPanel extends JPanel {
     JPanel container;
 
-    private static int LABEL_COUNT = 2;
-
-    private Transaction transaction;
+    private final int LABEL_COUNT = 2;
 
     private JPanel leftInfoTextPanel = new JPanel(new GridLayout(LABEL_COUNT, 1));
     private JPanel rightValuesPanel = new JPanel(new GridLayout(LABEL_COUNT, 1));
 
+    private Transaction transaction;
+    private JComponent extraComponent;
+
     public TransactionPanel(
+        String name, 
+        Transaction transaction, 
+        ItemManager itemManager, 
+        Consumer<UUID> removeTransactionConsumer,
+        JComponent extraComponent
+    ) { 
+        this.extraComponent = extraComponent;
+        init(
+            name,
+            transaction,
+            itemManager,
+            removeTransactionConsumer
+        );
+    }
+
+    public TransactionPanel(
+        String name, 
+        Transaction transaction, 
+        ItemManager itemManager, 
+        Consumer<UUID> removeTransactionConsumer
+    ) {
+        init(
+            name,
+            transaction,
+            itemManager,
+            removeTransactionConsumer
+        );
+    }
+
+    private void init(
         String name, 
         Transaction transaction, 
         ItemManager itemManager, 
@@ -81,6 +113,8 @@ public class TransactionPanel extends JPanel {
 
             if (transaction.getQuantity() != transaction.getTotalQuantity()) {
                 container.add(new AmountProgressBar(transaction), BorderLayout.SOUTH);
+            } else if (this.extraComponent != null) {
+                container.add(this.extraComponent, BorderLayout.SOUTH);
             }
 
             container.setBorder(UiUtilities.ITEM_INFO_BORDER);

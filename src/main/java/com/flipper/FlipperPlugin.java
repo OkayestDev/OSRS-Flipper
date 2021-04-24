@@ -44,6 +44,7 @@ import com.google.inject.Provides;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import javax.inject.Inject;
 import javax.swing.SwingUtilities;
@@ -113,13 +114,18 @@ public class FlipperPlugin extends Plugin {
         clientToolbar.addNavigation(navButton);
     }
 
+    private void alchFromBuy(Transaction buy) {
+        // Create alch from transaction
+    }
+
     private void changeToLoggedInView() {
         SwingUtilities.invokeLater(() -> {
             try {
                 Runnable changeToLoggedOutViewRunnable = () -> this.changeToLoggedOutView();
                 alchsController = new AlchsController(itemManager);
+                Consumer<Transaction> highAlchCallback = (buy) -> alchFromBuy(buy);
                 flipsController = new FlipsController(itemManager);
-                buysController = new BuysController(itemManager);
+                buysController = new BuysController(itemManager, highAlchCallback);
                 sellsController = new SellsController(itemManager);
                 marginsController = new MarginsController(itemManager);
                 this.tabManager.renderLoggedInView(

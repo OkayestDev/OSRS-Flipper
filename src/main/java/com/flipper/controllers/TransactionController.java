@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 
 import java.awt.BorderLayout;
 
+import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
 import com.flipper.helpers.GrandExchange;
@@ -30,6 +31,8 @@ public class TransactionController {
     protected ItemManager itemManager;
     protected Pagination pagination;
     protected Consumer<UUID> removeTransactionConsumer;
+    
+    protected JComponent extraComponent;
 
     public TransactionController(String name, ItemManager itemManager) throws IOException {
         this.itemManager = itemManager;
@@ -40,7 +43,8 @@ public class TransactionController {
                 name,
                 (Transaction) sell,
                 itemManager,
-                this.removeTransactionConsumer
+                this.removeTransactionConsumer,
+                extraComponent
             );
             this.transactionPage.addTransactionPanel(transactionPanel);
         };

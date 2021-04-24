@@ -1,14 +1,17 @@
 package com.flipper.controllers;
 
 import java.io.IOException;
+import java.util.function.Consumer;
 
 import com.flipper.helpers.Persistor;
+import com.flipper.models.Transaction;
 
 import net.runelite.client.game.ItemManager;
 
 public class BuysController extends TransactionController {
-    public BuysController(ItemManager itemManager) throws IOException {
+    public BuysController(ItemManager itemManager, Consumer<Transaction> highAlchCallback) throws IOException {
         super("Buy", itemManager);
+        this.extraComponent = new JButton();
     }
 
     @Override
