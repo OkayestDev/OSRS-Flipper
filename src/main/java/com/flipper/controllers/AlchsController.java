@@ -13,6 +13,7 @@ import com.flipper.responses.AlchResponse;
 import com.flipper.views.alchs.AlchPage;
 import com.flipper.views.alchs.AlchPanel;
 import com.flipper.views.components.Pagination;
+import com.flipper.FlipperConfig;
 import com.flipper.api.AlchApi;
 import com.flipper.helpers.UiUtilities;
 
@@ -32,7 +33,7 @@ public class AlchsController {
     private String totalProfit = "0";
     private Pagination pagination;
 
-    public AlchsController(ItemManager itemManager, boolean isPrompt) {
+    public AlchsController(ItemManager itemManager, FlipperConfig config) {
         this.alchs = new ArrayList<Alch>();
         this.removeAlchConsumer = id -> this.removeAlch(id);
         this.refreshAlchsRunnable = () -> this.loadAlchs();
@@ -43,7 +44,7 @@ public class AlchsController {
                 (Alch) alch, 
                 itemManager, 
                 this.removeAlchConsumer, 
-                isPrompt
+                config.isPromptDeleteAlch()
             );
             this.alchPage.addAlchPanel(alchPanel);
         };

@@ -10,6 +10,7 @@ import java.awt.BorderLayout;
 
 import javax.swing.SwingUtilities;
 
+import com.flipper.FlipperConfig;
 import com.flipper.helpers.Persistor;
 import com.flipper.helpers.UiUtilities;
 import com.flipper.models.Flip;
@@ -29,7 +30,7 @@ public class MarginsController {
     private Consumer<UUID> removeMarginConsumer;
     private Pagination pagination;
 
-    public MarginsController(ItemManager itemManager, boolean isPrompt) throws IOException {
+    public MarginsController(ItemManager itemManager, FlipperConfig config) throws IOException {
         this.removeMarginConsumer = id -> this.removeMargin(id);
         this.marginPage = new MarginPage();
         Consumer<Object> renderItemCallback = (Object margin) -> {
@@ -37,7 +38,7 @@ public class MarginsController {
                 (Flip) margin,
                 itemManager,
                 this.removeMarginConsumer,
-                isPrompt
+                config.isPromptDeleteMargin()
             );
             this.marginPage.addMarginPanel(marginPanel);
         };

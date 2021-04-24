@@ -2,12 +2,13 @@ package com.flipper.controllers;
 
 import java.io.IOException;
 
+import com.flipper.FlipperConfig;
 import com.flipper.helpers.Persistor;
 import net.runelite.client.game.ItemManager;
 
 public class SellsController extends TransactionController {
-    public SellsController(ItemManager itemManager, boolean isPrompt) throws IOException {
-        super("Sell", itemManager, isPrompt);
+    public SellsController(ItemManager itemManager, FlipperConfig config) throws IOException {
+        super("Sell", itemManager, config.isPromptDeleteSell());
     }
 
     @Override

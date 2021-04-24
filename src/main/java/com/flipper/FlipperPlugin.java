@@ -129,25 +129,25 @@ public class FlipperPlugin extends Plugin {
                 Runnable changeToLoggedOutViewRunnable = () -> this.changeToLoggedOutView();
                 alchsController = new AlchsController(
                     itemManager,
-                    config.isPromptDeleteAlch()
+                    config
                 );
                 Consumer<Transaction> highAlchCallback = (buy) -> alchFromBuy(buy);
                 flipsController = new FlipsController(
                     itemManager, 
-                    config.isPromptDeleteFlip()
+                    config
                 );
                 buysController = new BuysController(
                     itemManager, 
                     highAlchCallback,
-                    config.isPromptDeleteBuy()
+                    config
                 );
                 sellsController = new SellsController(
                     itemManager, 
-                    config.isPromptDeleteSell()
+                    config
                 );
                 marginsController = new MarginsController(
                     itemManager, 
-                    config.isPromptDeleteMargin()
+                    config
                 );
                 this.tabManager.renderLoggedInView(
                     buysController.getPage(),

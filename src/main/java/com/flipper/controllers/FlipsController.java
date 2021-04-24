@@ -20,6 +20,7 @@ import com.flipper.responses.FlipResponse;
 import com.flipper.views.components.Pagination;
 import com.flipper.views.flips.FlipPage;
 import com.flipper.views.flips.FlipPanel;
+import com.flipper.FlipperConfig;
 import com.flipper.api.FlipApi;
 import com.flipper.api.UploadApi;
 
@@ -40,7 +41,7 @@ public class FlipsController {
     private String totalProfit = "0";
     private Pagination pagination;
 
-    public FlipsController(ItemManager itemManager, boolean isPrompt) throws IOException {
+    public FlipsController(ItemManager itemManager, FlipperConfig config) throws IOException {
         this.flips = new ArrayList<Flip>();
         this.removeFlipConsumer = id -> this.removeFlip(id);
         this.refreshFlipsRunnable = () -> this.loadFlips();
@@ -51,7 +52,7 @@ public class FlipsController {
                 (Flip) flip,
                 itemManager,
                 this.removeFlipConsumer,
-                isPrompt
+                config.isPromptDeleteBuy()
             );
             this.flipPage.addFlipPanel(flipPanel);
         };
