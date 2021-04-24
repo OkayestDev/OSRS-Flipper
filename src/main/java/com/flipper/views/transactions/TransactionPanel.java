@@ -1,5 +1,6 @@
 package com.flipper.views.transactions;
 
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -18,6 +19,7 @@ import com.flipper.models.Transaction;
 import com.flipper.views.components.AmountProgressBar;
 import com.flipper.views.components.DeleteButton;
 import com.flipper.views.components.ItemHeader;
+import com.google.common.base.Supplier;
 
 import net.runelite.api.ItemComposition;
 import net.runelite.client.game.ItemManager;
@@ -35,16 +37,19 @@ public class TransactionPanel extends JPanel {
     private JPanel rightValuesPanel = new JPanel(new GridLayout(LABEL_COUNT, 1));
 
     private Transaction transaction;
-    private JComponent extraComponent;
+    private Supplier<JButton> renderExtraComponentSupplier;
+    private Consumer<Transaction> extraComponentPressedConsumer;
 
     public TransactionPanel(
         String name, 
         Transaction transaction, 
         ItemManager itemManager, 
         Consumer<UUID> removeTransactionConsumer,
-        JComponent extraComponent
+        Supplier<JButton> renderExtraComponentSupplier,
+        Consumer<Transaction> extraComponentPressedConsumer
     ) { 
-        this.extraComponent = extraComponent;
+        this.renderExtraComponentSupplier = renderExtraComponentSupplier;
+        this.extraComponentPressedConsumer = extraComponentPressedConsumer;
         init(
             name,
             transaction,
@@ -113,8 +118,17 @@ public class TransactionPanel extends JPanel {
 
             if (transaction.getQuantity() != transaction.getTotalQuantity()) {
                 container.add(new AmountProgressBar(transaction), BorderLayout.SOUTH);
-            } else if (this.extraComponent != null) {
-                container.add(this.extraComponent, BorderLayout.SOUTH);
+            } else {
+                JButton extraComponent = renderExtraComponentSupplier.get();
+                if (extraComponent != null) {
+                    extraComponent.addActionListener((ActionEvent event) -> {
+                        this.extraComponentPressedConsumer.accept(transaction);
+                    });
+                    container.add(
+                        extraComponent,
+                        BorderLayout.SOUTH
+                    );
+                }
             }
 
             container.setBorder(UiUtilities.ITEM_INFO_BORDER);

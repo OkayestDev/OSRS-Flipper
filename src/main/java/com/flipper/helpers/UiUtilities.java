@@ -21,7 +21,9 @@ public class UiUtilities {
     public static final String discordIcon = "/discord.png";
     public static final String githubIcon = "/github.png";
     public static final String logoutIcon = "/logout.png";
+    public static final String highAlchIcon = "/high_alch.png";
     public static final int ITEMS_PER_PAGE = 15;
+    public static final int NATURE_RUNE_ID = 561;
 
     // Colors
     public static final Color GREEN = Color.decode("#2ea043");

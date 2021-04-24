@@ -36,6 +36,7 @@ import com.flipper.helpers.GrandExchange;
 import com.flipper.helpers.Log;
 import com.flipper.helpers.Persistor;
 import com.flipper.helpers.UiUtilities;
+import com.flipper.models.Alch;
 import com.flipper.models.Flip;
 import com.flipper.models.Transaction;
 import com.flipper.responses.LoginResponse;
@@ -116,6 +117,8 @@ public class FlipperPlugin extends Plugin {
 
     private void alchFromBuy(Transaction buy) {
         // Create alch from transaction
+        Alch alch = new Alch(buy, itemManager);
+        this.alchsController.addAlch(alch);
     }
 
     private void changeToLoggedInView() {
