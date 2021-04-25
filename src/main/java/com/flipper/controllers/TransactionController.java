@@ -8,12 +8,15 @@ import java.util.function.Consumer;
 
 import java.awt.BorderLayout;
 
+import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
 import com.flipper.helpers.GrandExchange;
 import com.flipper.helpers.UiUtilities;
 import com.flipper.models.Transaction;
 import com.flipper.views.transactions.TransactionPanel;
+import com.google.common.base.Supplier;
 import com.flipper.views.transactions.TransactionPage;
 import com.flipper.views.components.Pagination;
 
@@ -30,17 +33,29 @@ public class TransactionController {
     protected ItemManager itemManager;
     protected Pagination pagination;
     protected Consumer<UUID> removeTransactionConsumer;
+    protected JButton extraComponent;
+    protected boolean isPrompt;
 
-    public TransactionController(String name, ItemManager itemManager) throws IOException {
+    public TransactionController(String name, ItemManager itemManager, boolean isPrompt) throws IOException {
+        this.isPrompt = isPrompt;
         this.itemManager = itemManager;
         this.removeTransactionConsumer = id -> this.removeTransaction(id);
         this.transactionPage = new TransactionPage();
+        Supplier<JButton> renderExtraComponentSupplier = () -> {
+            return renderExtraComponent();
+        };
+        Consumer<Transaction> extraComponentPressedConsumer = (transaction) -> {
+            this.extraComponentPressed(transaction);
+        };
         Consumer<Object> renderItemCallback = (Object sell) -> {
             TransactionPanel transactionPanel = new TransactionPanel(
                 name,
                 (Transaction) sell,
                 itemManager,
-                this.removeTransactionConsumer
+                this.removeTransactionConsumer,
+                isPrompt,
+                renderExtraComponentSupplier,
+                extraComponentPressedConsumer
             );
             this.transactionPage.addTransactionPanel(transactionPanel);
         };
@@ -88,6 +103,12 @@ public class TransactionController {
                 return;
             }
         }
+    }
+
+    public void extraComponentPressed(Transaction transaction) {};
+
+    public JButton renderExtraComponent() {
+        return null;
     }
 
     public void loadTransactions() throws IOException {};

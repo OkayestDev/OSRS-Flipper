@@ -23,6 +23,7 @@ public class Transaction {
     private boolean isBuy;
     private boolean isComplete;
     private boolean isFlipped;
+    private boolean isAlched;
     private Instant completedTime;
     private Instant createdTime;
     /**
@@ -88,5 +89,9 @@ public class Transaction {
 
     public int getTotalPrice() {
         return pricePer * quantity;
+    }
+
+    public boolean isFilled() {
+        return quantity == totalQuantity;
     }
 }

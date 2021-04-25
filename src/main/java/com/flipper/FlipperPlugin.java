@@ -26,6 +26,7 @@
 package com.flipper;
 
 import com.flipper.api.Api;
+import com.flipper.controllers.AlchsController;
 import com.flipper.controllers.BuysController;
 import com.flipper.controllers.FlipsController;
 import com.flipper.controllers.LoginController;
@@ -35,6 +36,7 @@ import com.flipper.helpers.GrandExchange;
 import com.flipper.helpers.Log;
 import com.flipper.helpers.Persistor;
 import com.flipper.helpers.UiUtilities;
+import com.flipper.models.Alch;
 import com.flipper.models.Flip;
 import com.flipper.models.Transaction;
 import com.flipper.responses.LoginResponse;
@@ -43,6 +45,7 @@ import com.google.inject.Provides;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import javax.inject.Inject;
 import javax.swing.SwingUtilities;
@@ -67,12 +70,15 @@ public class FlipperPlugin extends Plugin {
     private ClientToolbar clientToolbar;
     @Inject
     private ItemManager itemManager;
+    @Inject
+	private FlipperConfig config;
     // Controllers
     private BuysController buysController;
     private SellsController sellsController;
     private FlipsController flipsController;
     private MarginsController marginsController;
     private LoginController loginController;
+    private AlchsController alchsController;
     // Views
     private NavigationButton navButton;
     private TabManager tabManager;
@@ -102,8 +108,8 @@ public class FlipperPlugin extends Plugin {
             .tooltip("Flipper")
             .icon(
                 ImageUtil.loadImageResource(
-                    getClass(), 
-                    UiUtilities.flipperNavIcon  
+                    getClass(),
+                    UiUtilities.flipperNavIcon
                 )
             )
             .priority(4)
@@ -111,18 +117,50 @@ public class FlipperPlugin extends Plugin {
         clientToolbar.addNavigation(navButton);
     }
 
+    private void alchFromBuy(Transaction buy) {
+        // Create alch from transaction
+        Alch alch = new Alch(buy, itemManager);
+        this.alchsController.addAlch(alch);
+    }
+
+    private void flipFromMargin(Flip margin) {
+        this.flipsController.addFlip(margin);
+        this.marginsController.removeMargin(margin.getId());
+    }
+
     private void changeToLoggedInView() {
-            SwingUtilities.invokeLater(() -> {
+        SwingUtilities.invokeLater(() -> {
             try {
                 Runnable changeToLoggedOutViewRunnable = () -> this.changeToLoggedOutView();
-                flipsController = new FlipsController(itemManager);
-                buysController = new BuysController(itemManager);
-                sellsController = new SellsController(itemManager);
-                marginsController = new MarginsController(itemManager);
+                alchsController = new AlchsController(
+                    itemManager,
+                    config
+                );
+                Consumer<Transaction> highAlchCallback = (buy) -> alchFromBuy(buy);
+                Consumer<Flip> convertToFlipConsumer = (margin) -> flipFromMargin(margin);
+                flipsController = new FlipsController(
+                    itemManager, 
+                    config
+                );
+                buysController = new BuysController(
+                    itemManager, 
+                    highAlchCallback,
+                    config
+                );
+                sellsController = new SellsController(
+                    itemManager, 
+                    config
+                );
+                marginsController = new MarginsController(
+                    itemManager,
+                    config,
+                    convertToFlipConsumer
+                );
                 this.tabManager.renderLoggedInView(
                     buysController.getPage(),
                     sellsController.getPage(),
                     flipsController.getPage(),
+                    alchsController.getPage(),
                     marginsController.getPage(),
                     changeToLoggedOutViewRunnable
                 );

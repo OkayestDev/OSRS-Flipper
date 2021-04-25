@@ -8,6 +8,6 @@ import java.time.format.DateTimeFormatter;
 public class Timestamps {
     public static String format(Timestamp timestamp) {
         LocalDateTime localTimestamp = timestamp.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-        return localTimestamp.format(DateTimeFormatter.ofPattern("d/M h:mm a"));
+        return localTimestamp.format(DateTimeFormatter.ofPattern("d MMM h:mm a"));
     }
 }

@@ -1,4 +1,4 @@
-package com.flipper.views.flips;
+package com.flipper.views.alchs;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -22,45 +22,43 @@ import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
 import net.runelite.client.util.ImageUtil;
 
-public class FlipPage extends JPanel {
+public class AlchPage extends JPanel {
     private JPanel container;
     private JLabel totalProfitValueLabel;
 
-    private Runnable refreshFlipsRunnable;
+    private Runnable refreshAlchsRunnable;
 
-    public FlipPage(Runnable refreshFlipsRunnable) {
-        this.refreshFlipsRunnable = refreshFlipsRunnable;
+    public AlchPage(Runnable refreshAlchsRunnable) {
+        this.refreshAlchsRunnable = refreshAlchsRunnable;
         this.setLayout(new BorderLayout());
         this.setBackground(ColorScheme.DARK_GRAY_COLOR);
     }
 
-    public void addFlipPanel(FlipPanel flipPanel) {
-        container.add(flipPanel, BorderLayout.CENTER);
+    public void addAlchPanel(AlchPanel alchPanel) {
+        container.add(alchPanel, BorderLayout.CENTER);
         this.revalidate();
     }
 
-    private void constructTotalProfit(String totalProfit) {
+    public void constructTotalProfit(String totalProfit) {
         JPanel container = new JPanel();
         container.setLayout(new BorderLayout());
         JPanel totalProfitContainer = new JPanel(new GridLayout(2, 1));
-
         JPanel totalProfitHeader = new JPanel();
-        
-        JLabel totalProfitLabel = new JLabel("Flip Profit");
+        JLabel totalProfitLabel = new JLabel("Alch Profit");
         totalProfitLabel.setFont(new Font(FontManager.getRunescapeBoldFont().getName(),
                 FontManager.getRunescapeBoldFont().getStyle(), 16));
         totalProfitLabel.setHorizontalAlignment(JLabel.CENTER);
         totalProfitLabel.setForeground(Color.WHITE);
-
+        
         ImageIcon refreshIcon = new ImageIcon(ImageUtil.loadImageResource(getClass(), UiUtilities.refreshIcon));
         JLabel refreshFlips = new JLabel();
-        refreshFlips.setToolTipText("Refresh flips");
+        refreshFlips.setToolTipText("Refresh alchs");
         refreshFlips.setIcon(refreshIcon);
         refreshFlips.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 try {
-                    refreshFlipsRunnable.run();
+                    refreshAlchsRunnable.run();
                 } catch (Exception error) {}
             }
         });

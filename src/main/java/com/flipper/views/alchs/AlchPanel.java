@@ -1,4 +1,4 @@
-package com.flipper.views.flips;
+package com.flipper.views.alchs;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -15,7 +15,9 @@ import java.awt.event.*;
 import com.flipper.helpers.Numbers;
 import com.flipper.helpers.Timestamps;
 import com.flipper.helpers.UiUtilities;
-import com.flipper.models.Flip;
+
+import com.flipper.models.Alch;
+
 import com.flipper.views.components.DeleteButton;
 import com.flipper.views.components.ItemHeader;
 
@@ -23,32 +25,30 @@ import net.runelite.client.ui.ColorScheme;
 import net.runelite.api.ItemComposition;
 import net.runelite.client.game.ItemManager;
 
-public class FlipPanel extends JPanel {
-    private Flip flip;
+public class AlchPanel extends JPanel {
+    private Alch alch;
 
-    private static int LABEL_COUNT = 6;
+    private static int LABEL_COUNT = 7;
 
     private JPanel container = new JPanel();
     private JPanel itemInfo = new JPanel(new BorderLayout());
     private JPanel leftInfoTextPanel = new JPanel(new GridLayout(LABEL_COUNT, 1));
     private JPanel rightValuesPanel = new JPanel(new GridLayout(LABEL_COUNT, 1));
 
-    public FlipPanel(
-        Flip flip, 
-        ItemManager itemManager, 
-        Consumer<UUID> removeFlipConsumer, 
-        boolean isPrompt
-    ) {
-        this.flip = flip;
-        ItemComposition itemComp = itemManager.getItemComposition(flip.getItemId());
+    public AlchPanel(Alch alch, ItemManager itemManager, Consumer<UUID> removeAlchConsumer, boolean isPrompt) {
+        this.alch = alch;
+        ItemComposition itemComp = itemManager.getItemComposition(alch.getItemId());
 
-        DeleteButton deleteFlipButton = new DeleteButton((ActionEvent action) -> {
-            String describedBuy = flip.describeFlip(itemComp.getName());
-            int input = isPrompt
-                ? JOptionPane.showConfirmDialog(null, "Delete flip of " + describedBuy + "?")
+        DeleteButton deleteAlchButton = new DeleteButton((ActionEvent action) -> {
+            String describedAlch = alch.describeAlch(itemComp.getName());
+            int input = isPrompt 
+                ? JOptionPane.showConfirmDialog(
+                    null,
+                    "Delete alch of " + describedAlch + "?"
+                )
                 : 0;
             if (input == 0) {
-                removeFlipConsumer.accept(flip.getId());
+                removeAlchConsumer.accept(alch.getId());
                 setVisible(false);
             }
         });
@@ -56,14 +56,21 @@ public class FlipPanel extends JPanel {
         this.setLayout(new BorderLayout());
         container.setLayout(new BorderLayout());
         container.setBackground(ColorScheme.DARK_GRAY_COLOR);
-        container.add(new ItemHeader(flip.getItemId(), 0, itemComp.getName(), itemManager, false, deleteFlipButton), BorderLayout.NORTH);
+        container.add(new ItemHeader(
+            alch.getItemId(),
+            0,
+            itemComp.getName(),
+            itemManager,
+            false,
+            deleteAlchButton
+        ), BorderLayout.NORTH);
         constructItemInfo();
         this.setBorder(new EmptyBorder(0, 5, 3, 5));
 
         this.add(container, BorderLayout.NORTH);
     }
 
-    private void constructItemInfo() {
+    public void constructItemInfo() {
         constructLeftLabels();
         constructRightLabels();
         itemInfo.setBackground(ColorScheme.DARK_GRAY_COLOR);
@@ -87,19 +94,21 @@ public class FlipPanel extends JPanel {
     private void constructLeftLabels() {
         leftInfoTextPanel.setBackground(ColorScheme.DARK_GRAY_COLOR);
 
-        JLabel amountFlippedLabel = newLeftLabel("Amount Flipped:");
+        JLabel quantityLabel = newLeftLabel("Quantity:");
         JLabel profitEachLabel = newLeftLabel("Profit Per:");
         JLabel totalProfitLabel = newLeftLabel("Total Profit:");
         JLabel buyPrice = newLeftLabel("Buy Price:");
-        JLabel sellPrice = newLeftLabel("Sell Price:");
-        JLabel flipCreatedAt = newLeftLabel("Date:");
+        JLabel alchPrice = newLeftLabel("Alch Price:");
+        JLabel natureRunePrice = newLeftLabel("Nature Rune:");
+        JLabel alchLastUpdatedAt = newLeftLabel("Date:");
 
-        addLeftLabel(amountFlippedLabel);
+        addLeftLabel(quantityLabel);
         addLeftLabel(profitEachLabel);
         addLeftLabel(totalProfitLabel);
         addLeftLabel(buyPrice);
-        addLeftLabel(sellPrice);
-        addLeftLabel(flipCreatedAt);
+        addLeftLabel(alchPrice);
+        addLeftLabel(natureRunePrice);
+        addLeftLabel(alchLastUpdatedAt);
 
         leftInfoTextPanel.setBorder(new EmptyBorder(2, 5, 2, 10));
     }
@@ -119,34 +128,36 @@ public class FlipPanel extends JPanel {
     private void constructRightLabels() {
         rightValuesPanel.setBackground(ColorScheme.DARK_GRAY_COLOR);
 
-        int totalProfit = flip.getTotalProfit();
+        int totalProfit = alch.getTotalProfit();
 
-        int quantity = this.flip.getQuantity();
-        int profitEach = quantity != 0 ? totalProfit / quantity : 0;
+        int quantity = alch.getQuantity();
+        int profitEach = quantity != 0 ? alch.getAlchPrice() - alch.getBuyPrice() - alch.getNatureRunePrice() : 0;
 
-        String amountFlippedText = Integer.toString(this.flip.getQuantity());
+        String quantityText = Integer.toString(alch.getQuantity());
         String totalProfitText = Integer.toString(totalProfit);
         String profitEachText = Integer.toString(profitEach);
 
-        JLabel amountFlippedLabel = newRightLabel(Numbers.numberWithCommas(amountFlippedText), ColorScheme.GRAND_EXCHANGE_ALCH);
+        JLabel quantityLabel = newRightLabel(Numbers.numberWithCommas(quantityText), ColorScheme.GRAND_EXCHANGE_ALCH);
 
         Color profitEachColor = profitEach > 0 ? ColorScheme.GRAND_EXCHANGE_ALCH : ColorScheme.PROGRESS_ERROR_COLOR;
         JLabel profitEachLabel = newRightLabel(Numbers.numberWithCommas(profitEachText), profitEachColor);
 
-        Color profitColor = flip.getTotalProfit() > 0 ? ColorScheme.GRAND_EXCHANGE_ALCH
+        Color profitColor = alch.getTotalProfit() > 0 ? ColorScheme.GRAND_EXCHANGE_ALCH
                 : ColorScheme.PROGRESS_ERROR_COLOR;
         JLabel totalProfitLabel = newRightLabel(Numbers.numberWithCommas(totalProfitText), profitColor);
 
-        JLabel buyPrice = newRightLabel(Numbers.numberWithCommas(flip.getBuyPrice()),  ColorScheme.GRAND_EXCHANGE_ALCH);
-        JLabel sellPrice = newRightLabel(Numbers.numberWithCommas(flip.getSellPrice()),  ColorScheme.GRAND_EXCHANGE_ALCH);
-        JLabel flipCreatedAt = newRightLabel(Timestamps.format(flip.getCreatedAt()),  ColorScheme.GRAND_EXCHANGE_ALCH);
+        JLabel buyPrice = newRightLabel(Numbers.numberWithCommas(alch.getBuyPrice()),  ColorScheme.GRAND_EXCHANGE_ALCH);
+        JLabel alchPrice = newRightLabel(Numbers.numberWithCommas(alch.getAlchPrice()),  ColorScheme.GRAND_EXCHANGE_ALCH);
+        JLabel alchCreatedAt = newRightLabel(Timestamps.format(alch.getCreatedAt()),  ColorScheme.GRAND_EXCHANGE_ALCH);
+        JLabel natureRunePrice = newRightLabel(String.valueOf(alch.natureRunePrice), ColorScheme.GRAND_EXCHANGE_ALCH);
 
-        addRightLabel(amountFlippedLabel);
+        addRightLabel(quantityLabel);
         addRightLabel(profitEachLabel);
         addRightLabel(totalProfitLabel);
         addRightLabel(buyPrice);
-        addRightLabel(sellPrice);
-        addRightLabel(flipCreatedAt);
+        addRightLabel(alchPrice);
+        addRightLabel(natureRunePrice);
+        addRightLabel(alchCreatedAt);
 
         rightValuesPanel.setBorder(new EmptyBorder(2, 5, 2, 10));
     }
