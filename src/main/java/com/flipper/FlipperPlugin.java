@@ -108,8 +108,8 @@ public class FlipperPlugin extends Plugin {
             .tooltip("Flipper")
             .icon(
                 ImageUtil.loadImageResource(
-                    getClass(), 
-                    UiUtilities.flipperNavIcon  
+                    getClass(),
+                    UiUtilities.flipperNavIcon
                 )
             )
             .priority(4)
@@ -123,6 +123,11 @@ public class FlipperPlugin extends Plugin {
         this.alchsController.addAlch(alch);
     }
 
+    private void flipFromMargin(Flip margin) {
+        this.flipsController.addFlip(margin);
+        this.marginsController.removeMargin(margin.getId());
+    }
+
     private void changeToLoggedInView() {
         SwingUtilities.invokeLater(() -> {
             try {
@@ -132,6 +137,7 @@ public class FlipperPlugin extends Plugin {
                     config
                 );
                 Consumer<Transaction> highAlchCallback = (buy) -> alchFromBuy(buy);
+                Consumer<Flip> convertToFlipConsumer = (margin) -> flipFromMargin(margin);
                 flipsController = new FlipsController(
                     itemManager, 
                     config
@@ -146,8 +152,9 @@ public class FlipperPlugin extends Plugin {
                     config
                 );
                 marginsController = new MarginsController(
-                    itemManager, 
-                    config
+                    itemManager,
+                    config,
+                    convertToFlipConsumer
                 );
                 this.tabManager.renderLoggedInView(
                     buysController.getPage(),

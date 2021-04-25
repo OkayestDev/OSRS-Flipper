@@ -30,7 +30,11 @@ public class MarginsController {
     private Consumer<UUID> removeMarginConsumer;
     private Pagination pagination;
 
-    public MarginsController(ItemManager itemManager, FlipperConfig config) throws IOException {
+    public MarginsController(
+        ItemManager itemManager, 
+        FlipperConfig config,
+        Consumer<Flip> convertToFlipConsumer
+    ) throws IOException {
         this.removeMarginConsumer = id -> this.removeMargin(id);
         this.marginPage = new MarginPage();
         Consumer<Object> renderItemCallback = (Object margin) -> {
@@ -38,7 +42,8 @@ public class MarginsController {
                 (Flip) margin,
                 itemManager,
                 this.removeMarginConsumer,
-                config.isPromptDeleteMargin()
+                config.isPromptDeleteMargin(),
+                convertToFlipConsumer
             );
             this.marginPage.addMarginPanel(marginPanel);
         };

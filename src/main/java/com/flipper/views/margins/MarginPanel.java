@@ -1,5 +1,6 @@
 package com.flipper.views.margins;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -30,7 +31,16 @@ public class MarginPanel extends JPanel {
     private JPanel leftInfoTextPanel = new JPanel(new GridLayout(3, 1));
     private JPanel rightValuesPanel = new JPanel(new GridLayout(3, 1));
 
-    public MarginPanel(Flip margin, ItemManager itemManager, Consumer<UUID> removeMarginConsumer, boolean isPrompt) {
+    private Consumer<Flip> convertToFlipConsumer;
+
+    public MarginPanel(
+        Flip margin,
+        ItemManager itemManager,
+        Consumer<UUID> removeMarginConsumer,
+        boolean isPrompt,
+        Consumer<Flip> convertToFlipConsumer
+    ) {
+        this.convertToFlipConsumer = convertToFlipConsumer;
         SwingUtilities.invokeLater(() -> {
             this.margin = margin;
 
@@ -44,11 +54,17 @@ public class MarginPanel extends JPanel {
             ItemComposition itemComp = itemManager.getItemComposition(margin.getItemId());
 
             this.setLayout(new BorderLayout());
+            this.setBorder(new EmptyBorder(0, 5, 3, 5));
             container.setLayout(new BorderLayout());
             setBackground(ColorScheme.DARK_GRAY_COLOR);
             container.add(new ItemHeader(margin.getItemId(), 0, itemComp.getName(), itemManager, false, deleteMarginButton), BorderLayout.NORTH);
             constructItemInfo();
-            container.setBorder(new EmptyBorder(0, 5, 3, 5));
+            JButton convertToFlipButton = new JButton("Convert To Flip");
+            convertToFlipButton.addActionListener((ActionEvent event) -> {
+                convertToFlipConsumer.accept(margin);
+            });
+            container.add(convertToFlipButton, BorderLayout.SOUTH);
+            container.setBorder(UiUtilities.ITEM_INFO_BORDER);
 
             this.add(container, BorderLayout.NORTH);
         });
@@ -60,7 +76,6 @@ public class MarginPanel extends JPanel {
         itemInfo.setBackground(ColorScheme.DARK_GRAY_COLOR);
         itemInfo.add(leftInfoTextPanel, BorderLayout.WEST);
         itemInfo.add(rightValuesPanel, BorderLayout.EAST);
-        itemInfo.setBorder(UiUtilities.ITEM_INFO_BORDER);
         container.add(itemInfo, BorderLayout.CENTER);
     }
 
