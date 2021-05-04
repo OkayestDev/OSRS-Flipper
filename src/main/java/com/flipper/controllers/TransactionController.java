@@ -1,15 +1,16 @@
 package com.flipper.controllers;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.UUID;
 import java.util.function.Consumer;
-
+import java.util.function.Function;
 import java.awt.BorderLayout;
 
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
 import com.flipper.helpers.GrandExchange;
@@ -28,25 +29,29 @@ import net.runelite.client.game.ItemManager;
 public class TransactionController {
     @Getter
     @Setter
-    protected List<Transaction> transactions;
+    protected List<Transaction> transactions = new ArrayList<Transaction>();
+    protected List<Transaction> filteredTransactions = new ArrayList<Transaction>();
     protected TransactionPage transactionPage;
     protected ItemManager itemManager;
     protected Pagination pagination;
     protected Consumer<UUID> removeTransactionConsumer;
     protected JButton extraComponent;
     protected boolean isPrompt;
+    protected String searchText;
+    protected Function<Transaction, Boolean> isRenderCallback;
+    protected Consumer<String> onSearchTextChangedCallback;
 
     public TransactionController(String name, ItemManager itemManager, boolean isPrompt) throws IOException {
         this.isPrompt = isPrompt;
         this.itemManager = itemManager;
         this.removeTransactionConsumer = id -> this.removeTransaction(id);
-        this.transactionPage = new TransactionPage();
         Supplier<JButton> renderExtraComponentSupplier = () -> {
             return renderExtraComponent();
         };
         Consumer<Transaction> extraComponentPressedConsumer = (transaction) -> {
             this.extraComponentPressed(transaction);
         };
+        this.isRenderCallback = (Transaction transaction) -> isRender(transaction);
         Consumer<Object> renderItemCallback = (Object sell) -> {
             TransactionPanel transactionPanel = new TransactionPanel(
                 name,
@@ -65,7 +70,30 @@ public class TransactionController {
             UiUtilities.ITEMS_PER_PAGE,
             buildViewCallback
         );
+        this.onSearchTextChangedCallback = (searchText) -> this.onSearchTextChanged(searchText);
+        this.transactionPage = new TransactionPage(this.onSearchTextChangedCallback);
         this.loadTransactions();
+    }
+
+    public void onSearchTextChanged(String searchText) {
+        this.searchText = searchText;
+
+        if (this.searchText == "" || this.searchText == null) {
+            this.filteredTransactions = this.transactions;
+        } else {
+            // Create filtered list
+            Iterator<Transaction> transactionIter = this.transactions.iterator();
+            this.filteredTransactions = new ArrayList<Transaction>();
+            while (transactionIter.hasNext()) {
+                Transaction currentTransaction = transactionIter.next();
+                if (this.isRender(currentTransaction)) {
+                    filteredTransactions.add(currentTransaction);
+                }
+            }
+        }
+
+        this.pagination.resetPage();
+        this.buildView();
     }
 
     public void addTransaction(Transaction transaction) {
@@ -119,12 +147,32 @@ public class TransactionController {
         return this.transactionPage;
     }
 
+    private boolean isRender(Transaction transaction) {
+        String itemName = transaction.getItemName();
+
+        if (
+            this.searchText != null && 
+            itemName.toLowerCase().contains(this.searchText)
+        ) {
+            return true;
+        } else if (this.searchText != null && this.searchText != "") {
+            return false;
+        }
+
+        return true;
+    }
+
     public void buildView() {
         SwingUtilities.invokeLater(() -> {
-            this.transactionPage.removeAll();
-            this.transactionPage.add(this.pagination.getComponent(this.transactions), BorderLayout.SOUTH);
-            this.transactionPage.build();
-            this.pagination.renderList(this.transactions);
+            this.transactionPage.resetContainer();
+            this.transactionPage.add(
+                this.pagination.getComponent(this.filteredTransactions), 
+                BorderLayout.SOUTH
+            );
+            this.pagination.renderList(
+                this.filteredTransactions,
+                this.isRenderCallback
+            );
         });
     }
 }

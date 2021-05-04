@@ -39,6 +39,7 @@ public class BuysController extends TransactionController {
     @Override
     public void loadTransactions() throws IOException {
         this.transactions = Persistor.loadBuys();
+        this.filteredTransactions = this.transactions;
         this.buildView();
     }
 

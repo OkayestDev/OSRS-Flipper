@@ -14,6 +14,7 @@ public class SellsController extends TransactionController {
     @Override
     public void loadTransactions() throws IOException {
         this.transactions = Persistor.loadSells();
+        this.filteredTransactions = this.transactions;
         this.buildView();
     }
 
