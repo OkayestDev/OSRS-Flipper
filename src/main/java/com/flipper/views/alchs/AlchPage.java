@@ -87,7 +87,7 @@ public class AlchPage extends JPanel {
         totalProfitContainer.setBorder(UiUtilities.ITEM_INFO_BORDER);
         container.add(totalProfitContainer, BorderLayout.NORTH);
 
-        SearchBar searchBar = new SearchBar(null, this.onSearchTextChanged);
+        SearchBar searchBar = new SearchBar(this.onSearchTextChanged);
         container.add(searchBar, BorderLayout.SOUTH);
 
         container.setBorder(new EmptyBorder(0, 0, 3, 0));

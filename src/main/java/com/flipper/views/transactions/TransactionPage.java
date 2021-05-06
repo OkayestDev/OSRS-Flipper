@@ -23,7 +23,7 @@ public class TransactionPage extends JPanel {
     }
 
     private void addSearchText(Consumer<String> onSearchTextChanged) {
-        SearchBar searchBar = new SearchBar(null, onSearchTextChanged);
+        SearchBar searchBar = new SearchBar(onSearchTextChanged);
         this.add(searchBar, BorderLayout.NORTH);
     }
 

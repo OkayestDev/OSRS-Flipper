@@ -23,7 +23,7 @@ public class MarginPage extends JPanel {
     }
 
     private void addSearchBar(Consumer<String> onSearchTextChangedCallback) {
-        SearchBar searchBar = new SearchBar(null, onSearchTextChangedCallback);
+        SearchBar searchBar = new SearchBar(onSearchTextChangedCallback);
         this.add(searchBar, BorderLayout.NORTH);
     }
 

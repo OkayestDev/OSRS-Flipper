@@ -19,13 +19,8 @@ public class SearchBar extends JTextField {
     private Timer timer;
     private final String ph = "Search";
 
-    public SearchBar(
-        String searchText,
-        Consumer<String> onSearchTextChanged
-    ) {
+    public SearchBar(Consumer<String> onSearchTextChanged) {
         super();
-
-        this.setText(searchText);
         this.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent event) {}
