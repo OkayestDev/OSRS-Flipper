@@ -11,6 +11,7 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 
 import com.flipper.helpers.Numbers;
+import com.flipper.helpers.Timestamps;
 import com.flipper.helpers.UiUtilities;
 import com.flipper.models.Flip;
 import com.flipper.views.components.DeleteButton;
@@ -26,12 +27,12 @@ import java.util.function.Consumer;
 public class MarginPanel extends JPanel {
     private Flip margin;
 
+    private final int LABEL_COUNT = 4;
+
     private JPanel container = new JPanel();
     private JPanel itemInfo = new JPanel(new BorderLayout());
-    private JPanel leftInfoTextPanel = new JPanel(new GridLayout(3, 1));
-    private JPanel rightValuesPanel = new JPanel(new GridLayout(3, 1));
-
-    private Consumer<Flip> convertToFlipConsumer;
+    private JPanel leftInfoTextPanel = new JPanel(new GridLayout(LABEL_COUNT, 1));
+    private JPanel rightValuesPanel = new JPanel(new GridLayout(LABEL_COUNT, 1));
 
     public MarginPanel(
         Flip margin,
@@ -40,7 +41,6 @@ public class MarginPanel extends JPanel {
         boolean isPrompt,
         Consumer<Flip> convertToFlipConsumer
     ) {
-        this.convertToFlipConsumer = convertToFlipConsumer;
         SwingUtilities.invokeLater(() -> {
             this.margin = margin;
 
@@ -96,10 +96,12 @@ public class MarginPanel extends JPanel {
         JLabel buyAtLabel = newLeftLabel("Buy At:");
         JLabel sellAtLabel = newLeftLabel("Sell At:");
         JLabel potentialProfitLabel = newLeftLabel("Potential Profit Per:");
+        JLabel dateLabel = newLeftLabel("Date:");
 
         addLeftLabel(buyAtLabel);
         addLeftLabel(sellAtLabel);
         addLeftLabel(potentialProfitLabel);
+        addLeftLabel(dateLabel);
 
         leftInfoTextPanel.setBorder(new EmptyBorder(2, 5, 2, 10));
     }
@@ -128,10 +130,13 @@ public class MarginPanel extends JPanel {
         JLabel buyAtLabel = newRightLabel(Numbers.numberWithCommas(buyAtText));
         JLabel sellAtLabel = newRightLabel(Numbers.numberWithCommas(sellAtText));
         JLabel potentialProfitEachLabel = newRightLabel(Numbers.numberWithCommas(potentialProfitEachText));
+        String formattedTimestamp = margin.getCreatedAt() != null ? Timestamps.format(margin.getCreatedAt()) : "--";
+        JLabel dateLabel = newRightLabel(formattedTimestamp);
 
         addRightLabel(buyAtLabel);
         addRightLabel(sellAtLabel);
         addRightLabel(potentialProfitEachLabel);
+        addRightLabel(dateLabel);
 
         rightValuesPanel.setBorder(new EmptyBorder(2, 5, 2, 10));
     }

@@ -21,24 +21,34 @@ import java.awt.BorderLayout;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.runelite.api.ItemComposition;
 import net.runelite.client.game.ItemManager;
 
 public class AlchsController {
     @Getter
     @Setter
-    private List<Alch> alchs;
+    private List<Alch> alchs = new ArrayList<Alch>();
+    private List<Alch> filteredAlchs = new ArrayList<Alch>();
     private AlchPage alchPage;
     private Consumer<UUID> removeAlchConsumer;
     private Runnable refreshAlchsRunnable;
     private String totalProfit = "0";
     private Pagination pagination;
+    private ItemManager itemManager;
+    private String searchText;
+    private Consumer<String> onSearchTextChangedCallback;
 
     public AlchsController(ItemManager itemManager, FlipperConfig config) {
         this.alchs = new ArrayList<Alch>();
         this.removeAlchConsumer = id -> this.removeAlch(id);
         this.refreshAlchsRunnable = () -> this.loadAlchs();
+        this.itemManager = itemManager;
+        this.onSearchTextChangedCallback = (searchText) -> this.onSearchTextChanged(searchText);
 
-        this.alchPage = new AlchPage(refreshAlchsRunnable);
+        this.alchPage = new AlchPage(
+            refreshAlchsRunnable,
+            this.onSearchTextChangedCallback
+        );
         Consumer<Object> renderItemCallback = (Object alch) -> {
             AlchPanel alchPanel = new AlchPanel(
                 (Alch) alch, 
@@ -52,6 +62,42 @@ public class AlchsController {
 
         this.pagination = new Pagination(renderItemCallback, UiUtilities.ITEMS_PER_PAGE, buildViewCallback);
         this.loadAlchs();
+    }
+
+    public void onSearchTextChanged(String searchText) {
+        this.searchText = searchText;
+
+        if (this.searchText == "" || this.searchText == null) {
+            this.filteredAlchs = this.alchs;
+        } else {
+            Iterator<Alch> alchsIter = this.alchs.iterator();
+            this.filteredAlchs = new ArrayList<Alch>();
+            while (alchsIter.hasNext()) {
+                Alch currentAlch = alchsIter.next();
+                if (this.isRender(currentAlch)) {
+                    filteredAlchs.add(currentAlch);
+                }
+            }
+        }
+
+        this.pagination.resetPage();
+        this.buildView();
+    }
+
+    private boolean isRender(Alch alch) {
+        ItemComposition itemComp = this.itemManager.getItemComposition(alch.getItemId());
+        String itemName = itemComp.getName();
+
+        if (
+            this.searchText != null && 
+            itemName.toLowerCase().contains(this.searchText.toLowerCase())
+        ) {
+            return true;
+        } else if (this.searchText != null && this.searchText != "") {
+            return false;
+        }
+
+        return true;
     }
 
     public void addAlch(Alch alch) {
@@ -91,6 +137,7 @@ public class AlchsController {
             if (alchResponse != null) {
                 this.totalProfit = alchResponse.totalProfit;
                 this.alchs = alchResponse.alchs;
+                this.filteredAlchs = this.alchs;
             }
             this.buildView();
         };
@@ -100,10 +147,12 @@ public class AlchsController {
 
     public void buildView() {
         SwingUtilities.invokeLater(() -> {
-            this.alchPage.removeAll();
-            this.alchPage.build();
-            this.alchPage.add(this.pagination.getComponent(this.alchs), BorderLayout.SOUTH);
-            this.pagination.renderFromBeginning(this.alchs);
+            this.alchPage.resetContainer();
+            this.alchPage.add(
+                this.pagination.getComponent(this.filteredAlchs),
+                BorderLayout.SOUTH
+            );
+            this.pagination.renderFromBeginning(this.filteredAlchs);
             this.alchPage.setTotalProfit(totalProfit);
             this.alchPage.revalidate();
         });

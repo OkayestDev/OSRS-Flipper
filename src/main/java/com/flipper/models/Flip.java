@@ -30,6 +30,9 @@ public class Flip {
         this.quantity = sell.getQuantity(); 
         this.buyPrice = buy.getPricePer();
         this.sellPrice = sell.getPricePer();
+
+        this.updatedAt = new Timestamp(System.currentTimeMillis());
+        this.createdAt = new Timestamp(System.currentTimeMillis());
     }
 
     /**

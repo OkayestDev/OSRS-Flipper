@@ -14,6 +14,7 @@ import java.awt.event.*;
 
 import com.flipper.helpers.UiUtilities;
 import com.flipper.helpers.Numbers;
+import com.flipper.helpers.Timestamps;
 import com.flipper.models.Transaction;
 import com.flipper.views.components.AmountProgressBar;
 import com.flipper.views.components.DeleteButton;
@@ -30,7 +31,7 @@ import java.util.function.Consumer;
 public class TransactionPanel extends JPanel {
     JPanel container;
 
-    private final int LABEL_COUNT = 2;
+    private final int LABEL_COUNT = 3;
 
     private JPanel leftInfoTextPanel = new JPanel(new GridLayout(LABEL_COUNT, 1));
     private JPanel rightValuesPanel = new JPanel(new GridLayout(LABEL_COUNT, 1));
@@ -195,6 +196,14 @@ public class TransactionPanel extends JPanel {
         );
         addLeftLabel(quantityLabel);
         addRightLabel(quantityValue);
+
+        JLabel dateLabel = newLeftLabel("Date:");
+        JLabel dateValue = newRightLabel(
+            Timestamps.format(transaction.getCreatedTime()),
+            ColorScheme.GRAND_EXCHANGE_ALCH
+        );
+        addLeftLabel(dateLabel);
+        addRightLabel(dateValue);
 
         itemInfoContainer.add(leftInfoTextPanel, BorderLayout.WEST);
         itemInfoContainer.add(rightValuesPanel, BorderLayout.EAST);

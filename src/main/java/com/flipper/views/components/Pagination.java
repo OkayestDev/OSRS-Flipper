@@ -6,6 +6,7 @@ import java.awt.BorderLayout;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -28,6 +29,10 @@ public class Pagination {
 		this.renderItemCallback = renderItemCallback;
 		this.page = 1;
 		this.buildViewCallback = buildViewCallback;
+	}
+
+	public void resetPage() {
+		this.page = 1;
 	}
 
 	public <T> void renderList(List<T> items) {
