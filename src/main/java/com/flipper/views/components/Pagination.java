@@ -35,19 +35,6 @@ public class Pagination {
 		this.page = 1;
 	}
 
-	public <T> void renderList(List<T> items, Function<T, Boolean> isRender) {
-		int endIndex = items.size() - (page * itemsPerPage) - 1;
-		if (endIndex < 0) {
-			endIndex = -1;
-		}
-		int startIndex = items.size() - ((page - 1) * itemsPerPage) - 1;
-		for (int i = startIndex; i > endIndex; i--) {
-			if (isRender.apply(items.get(i))) {
-				this.renderItemCallback.accept(items.get(i));
-			}
-		}
-	}
-
 	public <T> void renderList(List<T> items) {
 		int endIndex = items.size() - (page * itemsPerPage) - 1;
 		if (endIndex < 0) {
@@ -56,21 +43,6 @@ public class Pagination {
 		int startIndex = items.size() - ((page - 1) * itemsPerPage) - 1;
 		for (int i = startIndex; i > endIndex; i--) {
 			this.renderItemCallback.accept(items.get(i));
-		}
-	}
-
-	public <T> void renderFromBeginning(List<T> items, Function<T, Boolean> isRender) {
-		int startIndex = (page - 1) * itemsPerPage;
-		int endIndex = (page * itemsPerPage) - 1;
-
-		if (endIndex > items.size()) {
-			endIndex = items.size();
-		}
-
-		for (int i = startIndex; i < endIndex; i++) {
-			if (isRender.apply(items.get(i))) {
-				this.renderItemCallback.accept(items.get(i));
-			}
 		}
 	}
 

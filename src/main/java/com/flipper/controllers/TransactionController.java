@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.UUID;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.awt.BorderLayout;
 
 import javax.swing.JButton;
@@ -38,7 +37,6 @@ public class TransactionController {
     protected JButton extraComponent;
     protected boolean isPrompt;
     protected String searchText;
-    protected Function<Transaction, Boolean> isRenderCallback;
     protected Consumer<String> onSearchTextChangedCallback;
 
     public TransactionController(String name, ItemManager itemManager, boolean isPrompt) throws IOException {
@@ -51,7 +49,6 @@ public class TransactionController {
         Consumer<Transaction> extraComponentPressedConsumer = (transaction) -> {
             this.extraComponentPressed(transaction);
         };
-        this.isRenderCallback = (Transaction transaction) -> isRender(transaction);
         Consumer<Object> renderItemCallback = (Object sell) -> {
             TransactionPanel transactionPanel = new TransactionPanel(
                 name,
@@ -169,10 +166,7 @@ public class TransactionController {
                 this.pagination.getComponent(this.filteredTransactions), 
                 BorderLayout.SOUTH
             );
-            this.pagination.renderList(
-                this.filteredTransactions,
-                this.isRenderCallback
-            );
+            this.pagination.renderList(this.filteredTransactions);
         });
     }
 }

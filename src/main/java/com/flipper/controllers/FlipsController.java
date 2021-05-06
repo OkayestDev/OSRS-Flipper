@@ -29,24 +29,33 @@ import lombok.Setter;
 
 import java.awt.BorderLayout;
 
+import net.runelite.api.ItemComposition;
 import net.runelite.client.game.ItemManager;
 
 public class FlipsController {
     @Getter
     @Setter
-    private List<Flip> flips;
+    private List<Flip> flips = new ArrayList<Flip>();
+    private List<Flip> filteredFlips = new ArrayList<Flip>();
     private FlipPage flipPage;
     private Consumer<UUID> removeFlipConsumer;
     private Runnable refreshFlipsRunnable;
     private String totalProfit = "0";
     private Pagination pagination;
+    private String searchText;
+    private ItemManager itemManager;
+    private Consumer<String> onSearchTextChangedCallback;
 
     public FlipsController(ItemManager itemManager, FlipperConfig config) throws IOException {
         this.flips = new ArrayList<Flip>();
         this.removeFlipConsumer = id -> this.removeFlip(id);
         this.refreshFlipsRunnable = () -> this.loadFlips();
-
-        this.flipPage = new FlipPage(refreshFlipsRunnable);
+        this.itemManager = itemManager;
+        this.onSearchTextChangedCallback = (searchText) -> this.onSearchTextChanged(searchText);
+        this.flipPage = new FlipPage(
+            refreshFlipsRunnable,
+            this.onSearchTextChangedCallback
+        );
         Consumer<Object> renderItemCallback = (Object flip) -> {
             FlipPanel flipPanel = new FlipPanel(
                 (Flip) flip,
@@ -82,6 +91,27 @@ public class FlipsController {
 
         this.pagination = new Pagination(renderItemCallback, UiUtilities.ITEMS_PER_PAGE, buildViewCallback);
         this.loadFlips();
+    }
+
+    public void onSearchTextChanged(String searchText) {
+        this.searchText = searchText;
+
+        if (this.searchText == "" || this.searchText == null) {
+            this.filteredFlips = this.flips;
+        } else {
+            // Create filtered list
+            Iterator<Flip> flipsIter = this.flips.iterator();
+            this.filteredFlips = new ArrayList<Flip>();
+            while (flipsIter.hasNext()) {
+                Flip currentFlip = flipsIter.next();
+                if (this.isRender(currentFlip)) {
+                    filteredFlips.add(currentFlip);
+                }
+            }
+        }
+
+        this.pagination.resetPage();
+        this.buildView();
     }
 
     public void addFlip(Flip flip) {
@@ -122,6 +152,7 @@ public class FlipsController {
             if (flipResponse != null) {
                 this.totalProfit = flipResponse.totalProfit;
                 this.flips = flipResponse.flips;
+                this.filteredFlips = this.flips;
             }
     
             this.buildView();
@@ -145,6 +176,21 @@ public class FlipsController {
         FlipApi.updateFlip(flip, updateFlipCallback);
     }
 
+    private boolean isRender(Flip flip) {
+        ItemComposition itemComp = this.itemManager.getItemComposition(flip.getItemId());
+        String itemName = itemComp.getName();
+
+        if (
+            this.searchText != null && 
+            itemName.toLowerCase().contains(this.searchText)
+        ) {
+            return true;
+        } else if (this.searchText != null && this.searchText != "") {
+            return false;
+        }
+
+        return true;
+    }
 
     /**
      * Potentially creates a flip if the sell is complete and has a corresponding
@@ -194,10 +240,14 @@ public class FlipsController {
 
     public void buildView() {
         SwingUtilities.invokeLater(() -> {
-            this.flipPage.removeAll();
-            this.flipPage.build();
-            this.flipPage.add(this.pagination.getComponent(this.flips), BorderLayout.SOUTH);
-            this.pagination.renderFromBeginning(this.flips);
+            this.flipPage.resetContainer();
+            this.flipPage.add(
+                this.pagination.getComponent(this.filteredFlips), 
+                BorderLayout.SOUTH
+            );
+            this.pagination.renderFromBeginning(
+                this.filteredFlips
+            );
             this.flipPage.setTotalProfit(totalProfit);
             this.flipPage.revalidate();
         });

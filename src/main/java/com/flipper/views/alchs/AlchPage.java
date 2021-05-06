@@ -14,9 +14,11 @@ import java.awt.Font;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.function.Consumer;
 
 import com.flipper.helpers.Numbers;
 import com.flipper.helpers.UiUtilities;
+import com.flipper.views.components.SearchBar;
 
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
@@ -27,16 +29,23 @@ public class AlchPage extends JPanel {
     private JLabel totalProfitValueLabel;
 
     private Runnable refreshAlchsRunnable;
+    private Consumer<String> onSearchTextChanged;
 
-    public AlchPage(Runnable refreshAlchsRunnable) {
+    public AlchPage(Runnable refreshAlchsRunnable, Consumer<String> onSearchTextChanged) {
         this.refreshAlchsRunnable = refreshAlchsRunnable;
+        this.onSearchTextChanged = onSearchTextChanged;
         this.setLayout(new BorderLayout());
         this.setBackground(ColorScheme.DARK_GRAY_COLOR);
+        this.build();
     }
 
     public void addAlchPanel(AlchPanel alchPanel) {
         container.add(alchPanel, BorderLayout.CENTER);
         this.revalidate();
+    }
+
+    public void resetContainer() {
+        this.container.removeAll();
     }
 
     public void constructTotalProfit(String totalProfit) {
@@ -76,7 +85,10 @@ public class AlchPage extends JPanel {
         totalProfitContainer.add(totalProfitHeader);
         totalProfitContainer.add(totalProfitValueLabel);
         totalProfitContainer.setBorder(UiUtilities.ITEM_INFO_BORDER);
-        container.add(totalProfitContainer);
+        container.add(totalProfitContainer, BorderLayout.NORTH);
+
+        SearchBar searchBar = new SearchBar(null, this.onSearchTextChanged);
+        container.add(searchBar, BorderLayout.SOUTH);
 
         container.setBorder(new EmptyBorder(0, 0, 3, 0));
         this.add(container, BorderLayout.NORTH);

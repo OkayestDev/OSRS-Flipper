@@ -14,9 +14,11 @@ import java.awt.Font;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.function.Consumer;
 
 import com.flipper.helpers.Numbers;
 import com.flipper.helpers.UiUtilities;
+import com.flipper.views.components.SearchBar;
 
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
@@ -26,17 +28,25 @@ public class FlipPage extends JPanel {
     private JPanel container;
     private JLabel totalProfitValueLabel;
 
+    private Consumer<String> onSearchTextChanged;
     private Runnable refreshFlipsRunnable;
 
-    public FlipPage(Runnable refreshFlipsRunnable) {
+    public FlipPage(Runnable refreshFlipsRunnable, Consumer<String> onSearchTextChanged) {
         this.refreshFlipsRunnable = refreshFlipsRunnable;
+        this.onSearchTextChanged = onSearchTextChanged;
         this.setLayout(new BorderLayout());
         this.setBackground(ColorScheme.DARK_GRAY_COLOR);
+        constructTotalProfit("0");
+        this.build();
     }
 
     public void addFlipPanel(FlipPanel flipPanel) {
         container.add(flipPanel, BorderLayout.CENTER);
         this.revalidate();
+    }
+
+    public void resetContainer() {
+        container.removeAll();
     }
 
     private void constructTotalProfit(String totalProfit) {
@@ -78,7 +88,10 @@ public class FlipPage extends JPanel {
         totalProfitContainer.add(totalProfitHeader);
         totalProfitContainer.add(totalProfitValueLabel);
         totalProfitContainer.setBorder(UiUtilities.ITEM_INFO_BORDER);
-        container.add(totalProfitContainer);
+        container.add(totalProfitContainer, BorderLayout.NORTH);
+
+        SearchBar searchBar = new SearchBar(null, this.onSearchTextChanged);
+        container.add(searchBar, BorderLayout.SOUTH);
 
         container.setBorder(new EmptyBorder(0, 0, 3, 0));
         this.add(container, BorderLayout.NORTH);
@@ -89,7 +102,6 @@ public class FlipPage extends JPanel {
     }
 
     public void build() {
-        constructTotalProfit("0");
         JPanel scrollContainer = new JPanel();
         scrollContainer.setLayout(new BorderLayout());
         container = new JPanel();
