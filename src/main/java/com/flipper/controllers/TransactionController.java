@@ -149,7 +149,7 @@ public class TransactionController {
 
         if (
             this.searchText != null && 
-            itemName.toLowerCase().contains(this.searchText)
+            itemName.toLowerCase().contains(this.searchText.toLowerCase())
         ) {
             return true;
         } else if (this.searchText != null && this.searchText != "") {

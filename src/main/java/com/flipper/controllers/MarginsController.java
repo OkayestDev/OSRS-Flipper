@@ -113,7 +113,7 @@ public class MarginsController {
 
         if (
             this.searchText != null && 
-            itemName.toLowerCase().contains(this.searchText)
+            itemName.toLowerCase().contains(this.searchText.toLowerCase())
         ) {
             return true;
         } else if (this.searchText != null && this.searchText != "") {
@@ -145,6 +145,7 @@ public class MarginsController {
                 BorderLayout.SOUTH
             );
             this.pagination.renderList(this.filteredMargins);
+            this.marginPage.revalidate();
         });
     }
 }
