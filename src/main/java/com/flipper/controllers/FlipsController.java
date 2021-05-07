@@ -95,21 +95,6 @@ public class FlipsController {
 
     public void onSearchTextChanged(String searchText) {
         this.searchText = searchText;
-
-        if (this.searchText == "" || this.searchText == null) {
-            this.filteredFlips = this.flips;
-        } else {
-            // Create filtered list
-            Iterator<Flip> flipsIter = this.flips.iterator();
-            this.filteredFlips = new ArrayList<Flip>();
-            while (flipsIter.hasNext()) {
-                Flip currentFlip = flipsIter.next();
-                if (this.isRender(currentFlip)) {
-                    filteredFlips.add(currentFlip);
-                }
-            }
-        }
-
         this.pagination.resetPage();
         this.buildView();
     }
@@ -238,8 +223,25 @@ public class FlipsController {
         return null;
     }
 
+    public void filterList() {
+        if (this.searchText == "" || this.searchText == null) {
+            this.filteredFlips = this.flips;
+        } else {
+            // Create filtered list
+            Iterator<Flip> flipsIter = this.flips.iterator();
+            this.filteredFlips = new ArrayList<Flip>();
+            while (flipsIter.hasNext()) {
+                Flip currentFlip = flipsIter.next();
+                if (this.isRender(currentFlip)) {
+                    filteredFlips.add(currentFlip);
+                }
+            }
+        }
+    }
+
     public void buildView() {
         SwingUtilities.invokeLater(() -> {
+            this.filterList();
             this.flipPage.resetContainer();
             this.flipPage.add(
                 this.pagination.getComponent(this.filteredFlips), 

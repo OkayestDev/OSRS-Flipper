@@ -74,21 +74,6 @@ public class TransactionController {
 
     public void onSearchTextChanged(String searchText) {
         this.searchText = searchText;
-
-        if (this.searchText == "" || this.searchText == null) {
-            this.filteredTransactions = this.transactions;
-        } else {
-            // Create filtered list
-            Iterator<Transaction> transactionIter = this.transactions.iterator();
-            this.filteredTransactions = new ArrayList<Transaction>();
-            while (transactionIter.hasNext()) {
-                Transaction currentTransaction = transactionIter.next();
-                if (this.isRender(currentTransaction)) {
-                    filteredTransactions.add(currentTransaction);
-                }
-            }
-        }
-
         this.pagination.resetPage();
         this.buildView();
     }
@@ -159,8 +144,25 @@ public class TransactionController {
         return true;
     }
 
+    public void filterList() {
+        if (this.searchText == "" || this.searchText == null) {
+            this.filteredTransactions = this.transactions;
+        } else {
+            // Create filtered list
+            Iterator<Transaction> transactionIter = this.transactions.iterator();
+            this.filteredTransactions = new ArrayList<Transaction>();
+            while (transactionIter.hasNext()) {
+                Transaction currentTransaction = transactionIter.next();
+                if (this.isRender(currentTransaction)) {
+                    filteredTransactions.add(currentTransaction);
+                }
+            }
+        }
+    }
+
     public void buildView() {
         SwingUtilities.invokeLater(() -> {
+            this.filterList();
             this.transactionPage.resetContainer();
             this.transactionPage.add(
                 this.pagination.getComponent(this.filteredTransactions), 
