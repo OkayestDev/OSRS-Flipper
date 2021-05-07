@@ -89,20 +89,6 @@ public class MarginsController {
 
     public void onSearchTextChanged(String searchText) {
         this.searchText = searchText;
-
-        if (this.searchText == "" || this.searchText == null) {
-            this.filteredMargins = this.margins;
-        } else {
-            Iterator<Flip> marginsIter = this.margins.iterator();
-            this.filteredMargins = new ArrayList<Flip>();
-            while (marginsIter.hasNext()) {
-                Flip currentMargin = marginsIter.next();
-                if (this.isRender(currentMargin)) {
-                    filteredMargins.add(currentMargin);
-                }
-            }
-        }
-
         this.pagination.resetPage();
         this.buildView();
     }
@@ -137,8 +123,24 @@ public class MarginsController {
         Persistor.saveMargins(margins);
     }
 
+    public void filterList() {
+        if (this.searchText == "" || this.searchText == null) {
+            this.filteredMargins = this.margins;
+        } else {
+            Iterator<Flip> marginsIter = this.margins.iterator();
+            this.filteredMargins = new ArrayList<Flip>();
+            while (marginsIter.hasNext()) {
+                Flip currentMargin = marginsIter.next();
+                if (this.isRender(currentMargin)) {
+                    filteredMargins.add(currentMargin);
+                }
+            }
+        }
+    }
+
     public void buildView() {
         SwingUtilities.invokeLater(() -> {
+            this.filterList();
             this.marginPage.resetContainer();
             this.marginPage.add(
                 this.pagination.getComponent(this.filteredMargins), 

@@ -66,20 +66,6 @@ public class AlchsController {
 
     public void onSearchTextChanged(String searchText) {
         this.searchText = searchText;
-
-        if (this.searchText == "" || this.searchText == null) {
-            this.filteredAlchs = this.alchs;
-        } else {
-            Iterator<Alch> alchsIter = this.alchs.iterator();
-            this.filteredAlchs = new ArrayList<Alch>();
-            while (alchsIter.hasNext()) {
-                Alch currentAlch = alchsIter.next();
-                if (this.isRender(currentAlch)) {
-                    filteredAlchs.add(currentAlch);
-                }
-            }
-        }
-
         this.pagination.resetPage();
         this.buildView();
     }
@@ -145,8 +131,24 @@ public class AlchsController {
         AlchApi.getAlchs(getAlchsCallback);
     }
 
+    public void filterList() {
+        if (this.searchText == "" || this.searchText == null) {
+            this.filteredAlchs = this.alchs;
+        } else {
+            Iterator<Alch> alchsIter = this.alchs.iterator();
+            this.filteredAlchs = new ArrayList<Alch>();
+            while (alchsIter.hasNext()) {
+                Alch currentAlch = alchsIter.next();
+                if (this.isRender(currentAlch)) {
+                    filteredAlchs.add(currentAlch);
+                }
+            }
+        }
+    }
+
     public void buildView() {
         SwingUtilities.invokeLater(() -> {
+            this.filterList();
             this.alchPage.resetContainer();
             this.alchPage.add(
                 this.pagination.getComponent(this.filteredAlchs),
