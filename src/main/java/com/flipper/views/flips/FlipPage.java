@@ -19,6 +19,7 @@ import java.util.function.Consumer;
 import com.flipper.helpers.Numbers;
 import com.flipper.helpers.UiUtilities;
 import com.flipper.views.components.SearchBar;
+import com.flipper.views.components.Toggle;
 
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
@@ -30,14 +31,22 @@ public class FlipPage extends JPanel {
 
     private Consumer<String> onSearchTextChanged;
     private Runnable refreshFlipsRunnable;
+    private Runnable toggleIsTrackingFlipsRunnable;
+    private Toggle trackFlipsToggle;
 
-    public FlipPage(Runnable refreshFlipsRunnable, Consumer<String> onSearchTextChanged) {
+    public FlipPage(
+        Runnable refreshFlipsRunnable, 
+        Consumer<String> onSearchTextChanged,
+        Runnable toggleIsTrackingFlipsRunnable,
+        Boolean isTrackingFlips
+    ) {
         this.refreshFlipsRunnable = refreshFlipsRunnable;
         this.onSearchTextChanged = onSearchTextChanged;
+        this.toggleIsTrackingFlipsRunnable = toggleIsTrackingFlipsRunnable;
         this.setLayout(new BorderLayout());
         this.setBackground(ColorScheme.DARK_GRAY_COLOR);
         constructTotalProfit("0");
-        this.build();
+        this.build(isTrackingFlips);
     }
 
     public void addFlipPanel(FlipPanel flipPanel) {
@@ -45,7 +54,9 @@ public class FlipPage extends JPanel {
         this.revalidate();
     }
 
-    public void resetContainer() {
+    public void resetContainer(boolean isTrackingFlips) {
+        trackFlipsToggle.setSelected(isTrackingFlips);
+        trackFlipsToggle.revalidate();
         container.removeAll();
     }
 
@@ -90,8 +101,11 @@ public class FlipPage extends JPanel {
         totalProfitContainer.setBorder(UiUtilities.ITEM_INFO_BORDER);
         container.add(totalProfitContainer, BorderLayout.NORTH);
 
-        SearchBar searchBar = new SearchBar(this.onSearchTextChanged); 
-        container.add(searchBar, BorderLayout.SOUTH);
+        SearchBar searchBar = new SearchBar(this.onSearchTextChanged);
+        container.add(searchBar, BorderLayout.CENTER);
+
+        this.trackFlipsToggle = new Toggle("Track Flips", true, this.toggleIsTrackingFlipsRunnable);
+        container.add(trackFlipsToggle, BorderLayout.SOUTH);
 
         container.setBorder(new EmptyBorder(0, 0, 3, 0));
         this.add(container, BorderLayout.NORTH);
@@ -101,7 +115,7 @@ public class FlipPage extends JPanel {
         totalProfitValueLabel.setText(Numbers.numberWithCommas(totalProfit));
     }
 
-    public void build() {
+    public void build(Boolean isTrackingFlips) {
         JPanel scrollContainer = new JPanel();
         scrollContainer.setLayout(new BorderLayout());
         container = new JPanel();
@@ -114,5 +128,7 @@ public class FlipPage extends JPanel {
 
         scrollContainer.add(container, BorderLayout.PAGE_START);
         this.add(scrollPane, BorderLayout.CENTER);
+
+        this.trackFlipsToggle.setSelected(isTrackingFlips);
     }
 }
