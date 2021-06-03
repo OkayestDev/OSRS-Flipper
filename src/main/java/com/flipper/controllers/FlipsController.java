@@ -45,6 +45,7 @@ public class FlipsController {
     private String searchText;
     private ItemManager itemManager;
     private Consumer<String> onSearchTextChangedCallback;
+    private boolean isTrackingFlips = true;
 
     public FlipsController(ItemManager itemManager, FlipperConfig config) throws IOException {
         this.flips = new ArrayList<Flip>();
@@ -52,9 +53,14 @@ public class FlipsController {
         this.refreshFlipsRunnable = () -> this.loadFlips();
         this.itemManager = itemManager;
         this.onSearchTextChangedCallback = (searchText) -> this.onSearchTextChanged(searchText);
+        Runnable toggleIsTrackingFlipsRunnable = () -> {
+            this.isTrackingFlips = !this.isTrackingFlips;
+        };
         this.flipPage = new FlipPage(
             refreshFlipsRunnable,
-            this.onSearchTextChangedCallback
+            this.onSearchTextChangedCallback,
+            toggleIsTrackingFlipsRunnable,
+            this.isTrackingFlips
         );
         Consumer<Object> renderItemCallback = (Object flip) -> {
             FlipPanel flipPanel = new FlipPanel(
@@ -100,13 +106,15 @@ public class FlipsController {
     }
 
     public void addFlip(Flip flip) {
-        Consumer<FlipResponse> createFlipCallback = flipResponse -> {
-            this.totalProfit = flipResponse.totalProfit;
-            this.flips.add(0, flipResponse.flip);
-            this.buildView();
-        };
+        if (this.isTrackingFlips) {
+            Consumer<FlipResponse> createFlipCallback = flipResponse -> {
+                this.totalProfit = flipResponse.totalProfit;
+                this.flips.add(0, flipResponse.flip);
+                this.buildView();
+            };
 
-        FlipApi.createFlip(flip, createFlipCallback);
+            FlipApi.createFlip(flip, createFlipCallback);
+        }
     }
 
     public void removeFlip(UUID flipId) {
@@ -206,16 +214,18 @@ public class FlipsController {
             }
         } else {
             // Attempt to match sell to a buy
-            while (buysIterator.hasPrevious()) {
-                Transaction buy = buysIterator.previous();
-                if (GrandExchange.checkIsSellAFlipOfBuy(sell, buy)) {
-                    Flip flip = new Flip(buy, sell);
-                    if (!flip.isMarginCheck()) {
-                        this.addFlip(flip);
-                        buy.setIsFlipped(true);
-                        sell.setIsFlipped(true);
+            if (this.isTrackingFlips) {
+                while (buysIterator.hasPrevious()) {
+                    Transaction buy = buysIterator.previous();
+                    if (GrandExchange.checkIsSellAFlipOfBuy(sell, buy)) {
+                        Flip flip = new Flip(buy, sell);
+                        if (!flip.isMarginCheck()) {
+                            this.addFlip(flip);
+                            buy.setIsFlipped(true);
+                            sell.setIsFlipped(true);
+                        }
+                        return flip;
                     }
-                    return flip;
                 }
             }
         }
@@ -242,7 +252,7 @@ public class FlipsController {
     public void buildView() {
         SwingUtilities.invokeLater(() -> {
             this.filterList();
-            this.flipPage.resetContainer();
+            this.flipPage.resetContainer(isTrackingFlips);
             this.flipPage.add(
                 this.pagination.getComponent(this.filteredFlips), 
                 BorderLayout.SOUTH

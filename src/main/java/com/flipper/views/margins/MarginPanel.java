@@ -95,7 +95,7 @@ public class MarginPanel extends JPanel {
 
         JLabel buyAtLabel = newLeftLabel("Buy At:");
         JLabel sellAtLabel = newLeftLabel("Sell At:");
-        JLabel potentialProfitLabel = newLeftLabel("Potential Profit Per:");
+        JLabel potentialProfitLabel = newLeftLabel("Profit Per:");
         JLabel dateLabel = newLeftLabel("Date:");
 
         addLeftLabel(buyAtLabel);
