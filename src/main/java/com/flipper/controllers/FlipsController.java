@@ -1,15 +1,8 @@
 package com.flipper.controllers;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.UUID;
-import java.util.function.Consumer;
-
-import javax.swing.SwingUtilities;
-
+import com.flipper.FlipperConfig;
+import com.flipper.api.FlipApi;
+import com.flipper.api.UploadApi;
 import com.flipper.helpers.GrandExchange;
 import com.flipper.helpers.Log;
 import com.flipper.helpers.Persistor;
@@ -20,22 +13,26 @@ import com.flipper.responses.FlipResponse;
 import com.flipper.views.components.Pagination;
 import com.flipper.views.flips.FlipPage;
 import com.flipper.views.flips.FlipPanel;
-import com.flipper.FlipperConfig;
-import com.flipper.api.FlipApi;
-import com.flipper.api.UploadApi;
-
+import java.awt.BorderLayout;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.UUID;
+import java.util.function.Consumer;
+import javax.swing.SwingUtilities;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.awt.BorderLayout;
-
 import net.runelite.api.ItemComposition;
 import net.runelite.client.game.ItemManager;
 
 public class FlipsController {
+
     @Getter
     @Setter
     private List<Flip> flips = new ArrayList<Flip>();
+
     private List<Flip> filteredFlips = new ArrayList<Flip>();
     private FlipPage flipPage;
     private Consumer<UUID> removeFlipConsumer;
@@ -52,23 +49,13 @@ public class FlipsController {
         this.removeFlipConsumer = id -> this.removeFlip(id);
         this.refreshFlipsRunnable = () -> this.loadFlips();
         this.itemManager = itemManager;
-        this.onSearchTextChangedCallback = (searchText) -> this.onSearchTextChanged(searchText);
+        this.onSearchTextChangedCallback = searchText -> this.onSearchTextChanged(searchText);
         Runnable toggleIsTrackingFlipsRunnable = () -> {
             this.isTrackingFlips = !this.isTrackingFlips;
         };
-        this.flipPage = new FlipPage(
-            refreshFlipsRunnable,
-            this.onSearchTextChangedCallback,
-            toggleIsTrackingFlipsRunnable,
-            this.isTrackingFlips
-        );
+        this.flipPage = new FlipPage(refreshFlipsRunnable, this.onSearchTextChangedCallback, toggleIsTrackingFlipsRunnable, this.isTrackingFlips);
         Consumer<Object> renderItemCallback = (Object flip) -> {
-            FlipPanel flipPanel = new FlipPanel(
-                (Flip) flip,
-                itemManager,
-                this.removeFlipConsumer,
-                config.isPromptDeleteBuy()
-            );
+            FlipPanel flipPanel = new FlipPanel((Flip) flip, itemManager, this.removeFlipConsumer, config.isPromptDeleteBuy());
             this.flipPage.addFlipPanel(flipPanel);
         };
         Runnable buildViewCallback = () -> this.buildView();
@@ -85,7 +72,7 @@ public class FlipsController {
                             Log.info("Failed to delete flips json file");
                         }
                     }
-            
+
                     this.buildView();
                 };
 
@@ -121,7 +108,7 @@ public class FlipsController {
         Consumer<FlipResponse> deleteFlipCallback = flipResponse -> {
             if (flipResponse != null) {
                 this.totalProfit = flipResponse.totalProfit;
-                
+
                 Iterator<Flip> flipsIter = this.flips.iterator();
                 while (flipsIter.hasNext()) {
                     Flip flip = flipsIter.next();
@@ -147,7 +134,7 @@ public class FlipsController {
                 this.flips = flipResponse.flips;
                 this.filteredFlips = this.flips;
             }
-    
+
             this.buildView();
         };
 
@@ -173,10 +160,7 @@ public class FlipsController {
         ItemComposition itemComp = this.itemManager.getItemComposition(flip.getItemId());
         String itemName = itemComp.getName();
 
-        if (
-            this.searchText != null && 
-            itemName.toLowerCase().contains(this.searchText.toLowerCase())
-        ) {
+        if (this.searchText != null && itemName.toLowerCase().contains(this.searchText.toLowerCase())) {
             return true;
         } else if (this.searchText != null && this.searchText != "") {
             return false;
@@ -188,7 +172,7 @@ public class FlipsController {
     /**
      * Potentially creates a flip if the sell is complete and has a corresponding
      * buy
-     * 
+     *
      * @param sell
      * @param buys
      */
@@ -250,18 +234,15 @@ public class FlipsController {
     }
 
     public void buildView() {
-        SwingUtilities.invokeLater(() -> {
-            this.filterList();
-            this.flipPage.resetContainer(isTrackingFlips);
-            this.flipPage.add(
-                this.pagination.getComponent(this.filteredFlips), 
-                BorderLayout.SOUTH
-            );
-            this.pagination.renderFromBeginning(
-                this.filteredFlips
-            );
-            this.flipPage.setTotalProfit(totalProfit);
-            this.flipPage.revalidate();
-        });
+        SwingUtilities.invokeLater(
+            () -> {
+                this.filterList();
+                this.flipPage.resetContainer(isTrackingFlips);
+                this.flipPage.add(this.pagination.getComponent(this.filteredFlips), BorderLayout.SOUTH);
+                this.pagination.renderFromBeginning(this.filteredFlips);
+                this.flipPage.setTotalProfit(totalProfit);
+                this.flipPage.revalidate();
+            }
+        );
     }
 }

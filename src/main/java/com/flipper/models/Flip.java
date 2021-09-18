@@ -2,7 +2,6 @@ package com.flipper.models;
 
 import java.sql.Timestamp;
 import java.util.UUID;
-
 import lombok.Data;
 
 /**
@@ -10,6 +9,7 @@ import lombok.Data;
  */
 @Data
 public class Flip {
+
     public UUID id;
     public UUID userId;
     public UUID buyId;
@@ -27,7 +27,7 @@ public class Flip {
         this.buyId = buy.id;
         this.sellId = sell.id;
         this.itemId = sell.getItemId();
-        this.quantity = sell.getQuantity(); 
+        this.quantity = sell.getQuantity();
         this.buyPrice = buy.getPricePer();
         this.sellPrice = sell.getPricePer();
 
@@ -49,7 +49,7 @@ public class Flip {
 
     /**
      * We only concern ourselves with the amount sold (ignore extra bought and kept)
-     * 
+     *
      * @return profit of flip
      */
     public int getTotalProfit() {

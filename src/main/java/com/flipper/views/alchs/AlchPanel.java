@@ -1,31 +1,27 @@
 package com.flipper.views.alchs;
 
+import com.flipper.helpers.Numbers;
+import com.flipper.helpers.Timestamps;
+import com.flipper.helpers.UiUtilities;
+import com.flipper.models.Alch;
+import com.flipper.views.components.DeleteButton;
+import com.flipper.views.components.ItemHeader;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.GridLayout;
+import java.awt.event.*;
+import java.util.UUID;
+import java.util.function.Consumer;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import java.util.UUID;
-import java.util.function.Consumer;
-import java.awt.Color;
-import java.awt.event.*;
-
-import com.flipper.helpers.Numbers;
-import com.flipper.helpers.Timestamps;
-import com.flipper.helpers.UiUtilities;
-
-import com.flipper.models.Alch;
-
-import com.flipper.views.components.DeleteButton;
-import com.flipper.views.components.ItemHeader;
-
-import net.runelite.client.ui.ColorScheme;
 import net.runelite.api.ItemComposition;
 import net.runelite.client.game.ItemManager;
+import net.runelite.client.ui.ColorScheme;
 
 public class AlchPanel extends JPanel {
+
     private Alch alch;
 
     private static int LABEL_COUNT = 7;
@@ -39,31 +35,21 @@ public class AlchPanel extends JPanel {
         this.alch = alch;
         ItemComposition itemComp = itemManager.getItemComposition(alch.getItemId());
 
-        DeleteButton deleteAlchButton = new DeleteButton((ActionEvent action) -> {
-            String describedAlch = alch.describeAlch(itemComp.getName());
-            int input = isPrompt 
-                ? JOptionPane.showConfirmDialog(
-                    null,
-                    "Delete alch of " + describedAlch + "?"
-                )
-                : 0;
-            if (input == 0) {
-                removeAlchConsumer.accept(alch.getId());
-                setVisible(false);
+        DeleteButton deleteAlchButton = new DeleteButton(
+            (ActionEvent action) -> {
+                String describedAlch = alch.describeAlch(itemComp.getName());
+                int input = isPrompt ? JOptionPane.showConfirmDialog(null, "Delete alch of " + describedAlch + "?") : 0;
+                if (input == 0) {
+                    removeAlchConsumer.accept(alch.getId());
+                    setVisible(false);
+                }
             }
-        });
+        );
 
         this.setLayout(new BorderLayout());
         container.setLayout(new BorderLayout());
         container.setBackground(ColorScheme.DARK_GRAY_COLOR);
-        container.add(new ItemHeader(
-            alch.getItemId(),
-            0,
-            itemComp.getName(),
-            itemManager,
-            false,
-            deleteAlchButton
-        ), BorderLayout.NORTH);
+        container.add(new ItemHeader(alch.getItemId(), 0, itemComp.getName(), itemManager, false, deleteAlchButton), BorderLayout.NORTH);
         constructItemInfo();
         this.setBorder(new EmptyBorder(0, 5, 3, 5));
 
@@ -142,13 +128,12 @@ public class AlchPanel extends JPanel {
         Color profitEachColor = profitEach > 0 ? ColorScheme.GRAND_EXCHANGE_ALCH : ColorScheme.PROGRESS_ERROR_COLOR;
         JLabel profitEachLabel = newRightLabel(Numbers.numberWithCommas(profitEachText), profitEachColor);
 
-        Color profitColor = alch.getTotalProfit() > 0 ? ColorScheme.GRAND_EXCHANGE_ALCH
-                : ColorScheme.PROGRESS_ERROR_COLOR;
+        Color profitColor = alch.getTotalProfit() > 0 ? ColorScheme.GRAND_EXCHANGE_ALCH : ColorScheme.PROGRESS_ERROR_COLOR;
         JLabel totalProfitLabel = newRightLabel(Numbers.numberWithCommas(totalProfitText), profitColor);
 
-        JLabel buyPrice = newRightLabel(Numbers.numberWithCommas(alch.getBuyPrice()),  ColorScheme.GRAND_EXCHANGE_ALCH);
-        JLabel alchPrice = newRightLabel(Numbers.numberWithCommas(alch.getAlchPrice()),  ColorScheme.GRAND_EXCHANGE_ALCH);
-        JLabel alchCreatedAt = newRightLabel(Timestamps.format(alch.getCreatedAt()),  ColorScheme.GRAND_EXCHANGE_ALCH);
+        JLabel buyPrice = newRightLabel(Numbers.numberWithCommas(alch.getBuyPrice()), ColorScheme.GRAND_EXCHANGE_ALCH);
+        JLabel alchPrice = newRightLabel(Numbers.numberWithCommas(alch.getAlchPrice()), ColorScheme.GRAND_EXCHANGE_ALCH);
+        JLabel alchCreatedAt = newRightLabel(Timestamps.format(alch.getCreatedAt()), ColorScheme.GRAND_EXCHANGE_ALCH);
         JLabel natureRunePrice = newRightLabel(String.valueOf(alch.natureRunePrice), ColorScheme.GRAND_EXCHANGE_ALCH);
 
         addRightLabel(quantityLabel);

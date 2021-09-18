@@ -1,30 +1,28 @@
 package com.flipper.views.margins;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.border.EmptyBorder;
-
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
-
 import com.flipper.helpers.Numbers;
 import com.flipper.helpers.Timestamps;
 import com.flipper.helpers.UiUtilities;
 import com.flipper.models.Flip;
 import com.flipper.views.components.DeleteButton;
 import com.flipper.views.components.ItemHeader;
-
-import net.runelite.client.ui.ColorScheme;
-import net.runelite.api.ItemComposition;
-import net.runelite.client.game.ItemManager;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.*;
 import java.util.UUID;
 import java.util.function.Consumer;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
+import net.runelite.api.ItemComposition;
+import net.runelite.client.game.ItemManager;
+import net.runelite.client.ui.ColorScheme;
 
 public class MarginPanel extends JPanel {
+
     private Flip margin;
 
     private final int LABEL_COUNT = 4;
@@ -41,33 +39,39 @@ public class MarginPanel extends JPanel {
         boolean isPrompt,
         Consumer<Flip> convertToFlipConsumer
     ) {
-        SwingUtilities.invokeLater(() -> {
-            this.margin = margin;
+        SwingUtilities.invokeLater(
+            () -> {
+                this.margin = margin;
 
-            DeleteButton deleteMarginButton = new DeleteButton((ActionEvent action) -> {
-                int input = isPrompt ? JOptionPane.showConfirmDialog(null, "Delete margin check?") : 0;
-                if (input == 0) {
-                    removeMarginConsumer.accept(margin.getId());
-                    setVisible(false);
-                }
-            });
-            ItemComposition itemComp = itemManager.getItemComposition(margin.getItemId());
+                DeleteButton deleteMarginButton = new DeleteButton(
+                    (ActionEvent action) -> {
+                        int input = isPrompt ? JOptionPane.showConfirmDialog(null, "Delete margin check?") : 0;
+                        if (input == 0) {
+                            removeMarginConsumer.accept(margin.getId());
+                            setVisible(false);
+                        }
+                    }
+                );
+                ItemComposition itemComp = itemManager.getItemComposition(margin.getItemId());
 
-            this.setLayout(new BorderLayout());
-            this.setBorder(new EmptyBorder(0, 5, 3, 5));
-            container.setLayout(new BorderLayout());
-            setBackground(ColorScheme.DARK_GRAY_COLOR);
-            container.add(new ItemHeader(margin.getItemId(), 0, itemComp.getName(), itemManager, false, deleteMarginButton), BorderLayout.NORTH);
-            constructItemInfo();
-            JButton convertToFlipButton = new JButton("Convert To Flip");
-            convertToFlipButton.addActionListener((ActionEvent event) -> {
-                convertToFlipConsumer.accept(margin);
-            });
-            container.add(convertToFlipButton, BorderLayout.SOUTH);
-            container.setBorder(UiUtilities.ITEM_INFO_BORDER);
+                this.setLayout(new BorderLayout());
+                this.setBorder(new EmptyBorder(0, 5, 3, 5));
+                container.setLayout(new BorderLayout());
+                setBackground(ColorScheme.DARK_GRAY_COLOR);
+                container.add(new ItemHeader(margin.getItemId(), 0, itemComp.getName(), itemManager, false, deleteMarginButton), BorderLayout.NORTH);
+                constructItemInfo();
+                JButton convertToFlipButton = new JButton("Convert To Flip");
+                convertToFlipButton.addActionListener(
+                    (ActionEvent event) -> {
+                        convertToFlipConsumer.accept(margin);
+                    }
+                );
+                container.add(convertToFlipButton, BorderLayout.SOUTH);
+                container.setBorder(UiUtilities.ITEM_INFO_BORDER);
 
-            this.add(container, BorderLayout.NORTH);
-        });
+                this.add(container, BorderLayout.NORTH);
+            }
+        );
     }
 
     private void constructItemInfo() {

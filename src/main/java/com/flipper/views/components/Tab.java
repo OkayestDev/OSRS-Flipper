@@ -18,12 +18,13 @@ import net.runelite.client.ui.components.materialtabs.MaterialTab;
 import net.runelite.client.ui.components.materialtabs.MaterialTabGroup;
 
 public class Tab extends MaterialTab {
+
     private static final Border SELECTED_BORDER = new CompoundBorder(
         BorderFactory.createMatteBorder(0, 0, 1, 0, ColorScheme.BRAND_ORANGE),
-        BorderFactory.createEmptyBorder(5, 5, 4, 5));
+        BorderFactory.createEmptyBorder(5, 5, 4, 5)
+    );
 
-    private static final Border UNSELECTED_BORDER = BorderFactory
-        .createEmptyBorder(5, 5, 5, 5);
+    private static final Border UNSELECTED_BORDER = BorderFactory.createEmptyBorder(5, 5, 5, 5);
 
     /* The tab's containing group */
     private final MaterialTabGroup group;
@@ -41,40 +42,42 @@ public class Tab extends MaterialTab {
 
     public Tab(String string, MaterialTabGroup group, JComponent content) {
         super(string, group, content);
-
         this.group = group;
         this.content = content;
 
         if (selected) {
             select();
-        }
-        else {
+        } else {
             unselect();
         }
 
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent mouseEvent) {
-                group.select(Tab.this);
+        addMouseListener(
+            new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent mouseEvent) {
+                    group.select(Tab.this);
+                }
             }
-        });
+        );
 
         if (!Strings.isNullOrEmpty(string)) {
-            addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseEntered(MouseEvent e) {
-                    Tab tab = (Tab) e.getSource();
-                    tab.setForeground(Color.WHITE);
-                }
+            addMouseListener(
+                new MouseAdapter() {
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                        Tab tab = (Tab) e.getSource();
+                        tab.setForeground(Color.WHITE);
+                    }
 
-                @Override
-                public void mouseExited(MouseEvent e) {
-                    Tab tab = (Tab) e.getSource();
-                    if (!tab.isSelected()) {
-                        tab.setForeground(Color.GRAY);
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        Tab tab = (Tab) e.getSource();
+                        if (!tab.isSelected()) {
+                            tab.setForeground(Color.GRAY);
+                        }
                     }
                 }
-            });
+            );
         }
     }
 
@@ -86,20 +89,21 @@ public class Tab extends MaterialTab {
         setHorizontalAlignment(SwingConstants.CENTER);
         setBackground(ColorScheme.DARKER_GRAY_COLOR);
 
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                Tab tab = (Tab) e.getSource();
-                tab.setBackground(ColorScheme.DARKER_GRAY_HOVER_COLOR);
-            }
+        addMouseListener(
+            new MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    Tab tab = (Tab) e.getSource();
+                    tab.setBackground(ColorScheme.DARKER_GRAY_HOVER_COLOR);
+                }
 
-            @Override
-            public void mouseExited(MouseEvent e) {
-                Tab tab = (Tab) e.getSource();
-                tab.setBackground(ColorScheme.DARKER_GRAY_COLOR);
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    Tab tab = (Tab) e.getSource();
+                    tab.setBackground(ColorScheme.DARKER_GRAY_COLOR);
+                }
             }
-        });
-
+        );
     }
 
     @Override

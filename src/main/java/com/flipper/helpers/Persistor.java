@@ -4,8 +4,6 @@ import com.flipper.api.Api;
 import com.flipper.models.Flip;
 import com.flipper.models.Transaction;
 import com.flipper.responses.LoginResponse;
-
-import net.runelite.client.RuneLite;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.io.File;
@@ -16,11 +14,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import net.runelite.client.RuneLite;
 
 /**
  * Read/Writes information to json file for storage
  */
 public class Persistor {
+
     public static Gson gson = new Gson();
     public static final File PARENT_DIRECTORY = new File(RuneLite.RUNELITE_DIR, "flipper");
     public static File directory;

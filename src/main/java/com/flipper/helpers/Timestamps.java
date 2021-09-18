@@ -7,6 +7,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 public class Timestamps {
+
     public static String format(Timestamp timestamp) {
         LocalDateTime localDateTime = timestamp.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
         return Timestamps.format(localDateTime);

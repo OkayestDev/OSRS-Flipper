@@ -1,18 +1,17 @@
 package com.flipper.models;
 
-import lombok.Data;
-import net.runelite.api.GrandExchangeOffer;
-
+import com.flipper.helpers.GrandExchange;
 import java.time.Instant;
 import java.util.UUID;
-
-import com.flipper.helpers.GrandExchange;
+import lombok.Data;
+import net.runelite.api.GrandExchangeOffer;
 
 /**
  * Represents either a buy or sell of an item(s) on the GE
  */
 @Data
 public class Transaction {
+
     public final UUID id;
     private int quantity;
     private int totalQuantity;
@@ -34,16 +33,7 @@ public class Transaction {
      */
     private boolean hasCancelledOnce = false;
 
-    public Transaction(
-        int quantity, 
-        int totalQuantity, 
-        int itemId, 
-        int pricePer,
-        int slot,
-        String itemName, 
-        boolean isBuy,
-        boolean isComplete
-    ) {
+    public Transaction(int quantity, int totalQuantity, int itemId, int pricePer, int slot, String itemName, boolean isBuy, boolean isComplete) {
         id = UUID.randomUUID();
         this.quantity = quantity;
         this.totalQuantity = totalQuantity;

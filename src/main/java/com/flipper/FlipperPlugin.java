@@ -7,7 +7,7 @@
  *
  * 1. Redistributions of source code must retain the above copyright notice, this
  *    list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
@@ -42,14 +42,11 @@ import com.flipper.models.Transaction;
 import com.flipper.responses.LoginResponse;
 import com.flipper.views.TabManager;
 import com.google.inject.Provides;
-
 import java.io.IOException;
 import java.util.UUID;
 import java.util.function.Consumer;
-
 import javax.inject.Inject;
 import javax.swing.SwingUtilities;
-
 import net.runelite.api.GrandExchangeOffer;
 import net.runelite.api.GrandExchangeOfferState;
 import net.runelite.api.events.GrandExchangeOfferChanged;
@@ -65,13 +62,17 @@ import net.runelite.client.util.ImageUtil;
 
 @PluginDescriptor(name = "Flipper")
 public class FlipperPlugin extends Plugin {
+
     // Injects
     @Inject
     private ClientToolbar clientToolbar;
+
     @Inject
     private ItemManager itemManager;
+
     @Inject
-	private FlipperConfig config;
+    private FlipperConfig config;
+
     // Controllers
     private BuysController buysController;
     private SellsController sellsController;
@@ -103,17 +104,14 @@ public class FlipperPlugin extends Plugin {
     }
 
     private void setUpNavigationButton() {
-        navButton = NavigationButton
-            .builder()
-            .tooltip("Flipper")
-            .icon(
-                ImageUtil.loadImageResource(
-                    getClass(),
-                    UiUtilities.flipperNavIcon
-                )
-            )
-            .priority(4)
-            .panel(tabManager).build();
+        navButton =
+            NavigationButton
+                .builder()
+                .tooltip("Flipper")
+                .icon(ImageUtil.loadImageResource(getClass(), UiUtilities.flipperNavIcon))
+                .priority(4)
+                .panel(tabManager)
+                .build();
         clientToolbar.addNavigation(navButton);
     }
 
@@ -129,55 +127,42 @@ public class FlipperPlugin extends Plugin {
     }
 
     private void changeToLoggedInView() {
-        SwingUtilities.invokeLater(() -> {
-            try {
-                Runnable changeToLoggedOutViewRunnable = () -> this.changeToLoggedOutView();
-                alchsController = new AlchsController(
-                    itemManager,
-                    config
-                );
-                Consumer<Transaction> highAlchCallback = (buy) -> alchFromBuy(buy);
-                Consumer<Flip> convertToFlipConsumer = (margin) -> flipFromMargin(margin);
-                flipsController = new FlipsController(
-                    itemManager, 
-                    config
-                );
-                buysController = new BuysController(
-                    itemManager, 
-                    highAlchCallback,
-                    config
-                );
-                sellsController = new SellsController(
-                    itemManager, 
-                    config
-                );
-                marginsController = new MarginsController(
-                    itemManager,
-                    config,
-                    convertToFlipConsumer
-                );
-                this.tabManager.renderLoggedInView(
-                    buysController.getPage(),
-                    sellsController.getPage(),
-                    flipsController.getPage(),
-                    alchsController.getPage(),
-                    marginsController.getPage(),
-                    changeToLoggedOutViewRunnable
-                );
-            } catch (IOException e) {
-                Log.info("Flipper: Failed to load required files");
+        SwingUtilities.invokeLater(
+            () -> {
+                try {
+                    Runnable changeToLoggedOutViewRunnable = () -> this.changeToLoggedOutView();
+                    alchsController = new AlchsController(itemManager, config);
+                    Consumer<Transaction> highAlchCallback = buy -> alchFromBuy(buy);
+                    Consumer<Flip> convertToFlipConsumer = margin -> flipFromMargin(margin);
+                    flipsController = new FlipsController(itemManager, config);
+                    buysController = new BuysController(itemManager, highAlchCallback, config);
+                    sellsController = new SellsController(itemManager, config);
+                    marginsController = new MarginsController(itemManager, config, convertToFlipConsumer);
+                    this.tabManager.renderLoggedInView(
+                            buysController.getPage(),
+                            sellsController.getPage(),
+                            flipsController.getPage(),
+                            alchsController.getPage(),
+                            marginsController.getPage(),
+                            changeToLoggedOutViewRunnable
+                        );
+                } catch (IOException e) {
+                    Log.info("Flipper: Failed to load required files");
+                }
             }
-        });
+        );
     }
 
     private void changeToLoggedOutView() {
         try {
             Runnable changeToLoggedInViewRunnable = () -> changeToLoggedInView();
             Persistor.deleteLoginResponse();
-            SwingUtilities.invokeLater(() -> {
-                loginController = new LoginController(changeToLoggedInViewRunnable);
-                this.tabManager.renderLoggedOutView(loginController.getPanel());
-            });
+            SwingUtilities.invokeLater(
+                () -> {
+                    loginController = new LoginController(changeToLoggedInViewRunnable);
+                    this.tabManager.renderLoggedOutView(loginController.getPanel());
+                }
+            );
         } catch (IOException e) {
             Log.info("Flipper: Failed to load required files");
         }

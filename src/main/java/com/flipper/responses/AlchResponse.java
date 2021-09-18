@@ -1,13 +1,12 @@
 package com.flipper.responses;
 
-import java.util.List;
-
 import com.flipper.models.Alch;
-
+import java.util.List;
 import lombok.Data;
 
 @Data
 public class AlchResponse {
+
     public Boolean error;
     public String message;
     public List<Alch> alchs;

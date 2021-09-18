@@ -1,16 +1,15 @@
 package com.flipper.models;
 
+import com.flipper.helpers.UiUtilities;
 import java.sql.Timestamp;
 import java.util.UUID;
-
-import com.flipper.helpers.UiUtilities;
-
 import lombok.Data;
 import net.runelite.api.ItemComposition;
 import net.runelite.client.game.ItemManager;
 
 @Data
 public class Alch {
+
     public UUID id;
     public UUID userId;
     public UUID buyId;
@@ -22,7 +21,7 @@ public class Alch {
     private Timestamp updatedAt;
     private Timestamp createdAt;
 
-    public Alch() {};
+    public Alch() {}
 
     public Alch(Transaction transaction, ItemManager itemManager) {
         ItemComposition itemComposition = itemManager.getItemComposition(transaction.getItemId());
@@ -30,10 +29,7 @@ public class Alch {
         this.itemId = transaction.getItemId();
         this.quantity = transaction.getQuantity();
         this.buyPrice = transaction.getPricePer();
-        this.natureRunePrice = itemManager.getItemPriceWithSource(
-            UiUtilities.NATURE_RUNE_ID,
-            true
-        );
+        this.natureRunePrice = itemManager.getItemPriceWithSource(UiUtilities.NATURE_RUNE_ID, true);
         this.alchPrice = itemComposition.getHaPrice();
     }
 

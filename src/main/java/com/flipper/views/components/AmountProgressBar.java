@@ -1,15 +1,12 @@
 package com.flipper.views.components;
 
+import com.flipper.models.Transaction;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-
 import java.util.Collections;
 import java.util.List;
-
-import com.flipper.models.Transaction;
-
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.components.DimmableJPanel;
 
@@ -17,6 +14,7 @@ import net.runelite.client.ui.components.DimmableJPanel;
  * Shows a progress par of amount bought/sold out of total quantity
  */
 public class AmountProgressBar extends DimmableJPanel {
+
     private int maximumValue;
     private int value;
     private List<Integer> positions = Collections.emptyList();

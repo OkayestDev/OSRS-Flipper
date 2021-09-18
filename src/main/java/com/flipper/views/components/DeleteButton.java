@@ -1,14 +1,13 @@
 package com.flipper.views.components;
 
+import com.flipper.helpers.UiUtilities;
+import java.awt.event.*;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-
-import com.flipper.helpers.UiUtilities;
-
 import net.runelite.client.util.ImageUtil;
-import java.awt.event.*;
 
 public class DeleteButton extends JButton {
+
     public DeleteButton(ActionListener onClick) {
         ImageIcon deleteIcon = new ImageIcon(ImageUtil.loadImageResource(getClass(), UiUtilities.deleteX));
         setIcon(deleteIcon);

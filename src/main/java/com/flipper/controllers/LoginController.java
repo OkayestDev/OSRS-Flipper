@@ -1,18 +1,16 @@
 package com.flipper.controllers;
 
-import java.util.function.Consumer;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
 import com.flipper.api.Api;
 import com.flipper.api.UserApi;
 import com.flipper.responses.LoginResponse;
 import com.flipper.views.login.LoginPage;
-
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.function.Consumer;
 import javax.swing.JOptionPane;
 
 public class LoginController {
+
     LoginPage loginPage;
 
     private String email;
@@ -25,11 +23,7 @@ public class LoginController {
         Consumer<String> onEmailTextChangedListener = text -> onEmailTextChanged(text);
         Consumer<String> onPasswordTextChangedListener = text -> onPasswordTextChanged(text);
         ActionListener onLoginPressedListener = (ActionEvent event) -> onLoginPressed(event);
-        this.loginPage = new LoginPage(
-            onEmailTextChangedListener,
-            onPasswordTextChangedListener,
-            onLoginPressedListener
-        );
+        this.loginPage = new LoginPage(onEmailTextChangedListener, onPasswordTextChangedListener, onLoginPressedListener);
     }
 
     public void onLoginPressed(ActionEvent event) {

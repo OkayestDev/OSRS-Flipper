@@ -38,15 +38,15 @@ Track Margins:
 
 v1.0 <br />
 
-- Plugin added!
+-   Plugin added!
 
 v1.1.0 <br />
 
-- Added ability to delete flips, margin checks, buys, and sells
+-   Added ability to delete flips, margin checks, buys, and sells
 
 v1.2.0 <br />
 
-- Fixed issue causing stutters when switching between tabs
-- Introduced Users
-- Introduced Flipper API when saving flips to allow cross-platform access of flips
-- Note: buys, sells, & margins are still stored locally
+-   Fixed issue causing stutters when switching between tabs
+-   Introduced Users
+-   Introduced Flipper API when saving flips to allow cross-platform access of flips
+-   Note: buys, sells, & margins are still stored locally

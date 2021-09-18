@@ -1,31 +1,28 @@
 package com.flipper.views.flips;
 
+import com.flipper.helpers.Numbers;
+import com.flipper.helpers.UiUtilities;
+import com.flipper.views.components.SearchBar;
+import com.flipper.views.components.Toggle;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.function.Consumer;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.GridLayout;
-import java.awt.Font;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.function.Consumer;
-
-import com.flipper.helpers.Numbers;
-import com.flipper.helpers.UiUtilities;
-import com.flipper.views.components.SearchBar;
-import com.flipper.views.components.Toggle;
-
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
 import net.runelite.client.util.ImageUtil;
 
 public class FlipPage extends JPanel {
+
     private JPanel container;
     private JLabel totalProfitValueLabel;
 
@@ -35,7 +32,7 @@ public class FlipPage extends JPanel {
     private Toggle trackFlipsToggle;
 
     public FlipPage(
-        Runnable refreshFlipsRunnable, 
+        Runnable refreshFlipsRunnable,
         Consumer<String> onSearchTextChanged,
         Runnable toggleIsTrackingFlipsRunnable,
         Boolean isTrackingFlips
@@ -66,10 +63,9 @@ public class FlipPage extends JPanel {
         JPanel totalProfitContainer = new JPanel(new GridLayout(2, 1));
 
         JPanel totalProfitHeader = new JPanel();
-        
+
         JLabel totalProfitLabel = new JLabel("Flip Profit");
-        totalProfitLabel.setFont(new Font(FontManager.getRunescapeBoldFont().getName(),
-                FontManager.getRunescapeBoldFont().getStyle(), 16));
+        totalProfitLabel.setFont(new Font(FontManager.getRunescapeBoldFont().getName(), FontManager.getRunescapeBoldFont().getStyle(), 16));
         totalProfitLabel.setHorizontalAlignment(JLabel.CENTER);
         totalProfitLabel.setForeground(Color.WHITE);
 
@@ -77,21 +73,22 @@ public class FlipPage extends JPanel {
         JLabel refreshFlips = new JLabel();
         refreshFlips.setToolTipText("Refresh flips");
         refreshFlips.setIcon(refreshIcon);
-        refreshFlips.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                try {
-                    refreshFlipsRunnable.run();
-                } catch (Exception error) {}
+        refreshFlips.addMouseListener(
+            new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    try {
+                        refreshFlipsRunnable.run();
+                    } catch (Exception error) {}
+                }
             }
-        });
+        );
 
         totalProfitHeader.add(totalProfitLabel);
         totalProfitHeader.add(refreshFlips);
 
         totalProfitValueLabel = new JLabel("0");
-        totalProfitValueLabel.setFont(
-                new Font(FontManager.getRunescapeFont().getName(), FontManager.getRunescapeFont().getStyle(), 24));
+        totalProfitValueLabel.setFont(new Font(FontManager.getRunescapeFont().getName(), FontManager.getRunescapeFont().getStyle(), 24));
         totalProfitValueLabel.setHorizontalAlignment(JLabel.CENTER);
         Color totalProfitColor = ColorScheme.GRAND_EXCHANGE_ALCH;
         totalProfitValueLabel.setForeground(totalProfitColor);

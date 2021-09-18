@@ -1,5 +1,3 @@
 package com.flipper.responses;
 
-public class WikiLatestPrice {
-    
-}
+public class WikiLatestPrice {}

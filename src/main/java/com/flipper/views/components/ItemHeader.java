@@ -1,30 +1,27 @@
 package com.flipper.views.components;
 
+import com.flipper.helpers.Numbers;
+import com.flipper.helpers.UiUtilities;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.*;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Color;
-import java.awt.Dimension;
-
-import com.flipper.helpers.Numbers;
-import com.flipper.helpers.UiUtilities;
-
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
 import net.runelite.client.util.AsyncBufferedImage;
 
-import java.awt.event.*;
-
 /**
  * Item header: Item Icon / Item Name / Number bought/soul out of total
  */
 public class ItemHeader extends JPanel {
+
     private ItemManager itemManager;
     private int itemId;
     private int pricePer;
@@ -32,14 +29,7 @@ public class ItemHeader extends JPanel {
     private JPanel topRightContainer;
     private JLabel costPerLabel;
 
-    public ItemHeader(
-        int itemId,
-        int pricePer,
-        String itemName, 
-        ItemManager itemManager, 
-        boolean isAddCostPer, 
-        JButton hoverButton
-    ) {
+    public ItemHeader(int itemId, int pricePer, String itemName, ItemManager itemManager, boolean isAddCostPer, JButton hoverButton) {
         this.itemId = itemId;
         this.pricePer = pricePer;
         this.itemName = itemName;
@@ -64,41 +54,45 @@ public class ItemHeader extends JPanel {
         add(itemNameLabel, BorderLayout.CENTER);
         setBorder(new EmptyBorder(2, 1, 2, 5));
 
-        this.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent me) {
-                hoverButton.setVisible(true);
-                if (isAddCostPer) {
-                    costPerLabel.setVisible(false);
-                }
-            }
+        this.addMouseListener(
+                new MouseAdapter() {
+                    @Override
+                    public void mouseEntered(MouseEvent me) {
+                        hoverButton.setVisible(true);
+                        if (isAddCostPer) {
+                            costPerLabel.setVisible(false);
+                        }
+                    }
 
-            @Override
-            public void mouseExited(MouseEvent me) {
-                if (isAddCostPer) {
-                    costPerLabel.setVisible(true);
+                    @Override
+                    public void mouseExited(MouseEvent me) {
+                        if (isAddCostPer) {
+                            costPerLabel.setVisible(true);
+                        }
+                        hoverButton.setVisible(false);
+                    }
                 }
-                hoverButton.setVisible(false);
-            }
-        });
+            );
 
-        hoverButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent me) {
-                hoverButton.setVisible(true);
-                if (isAddCostPer) {
-                    costPerLabel.setVisible(false);
+        hoverButton.addMouseListener(
+            new MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent me) {
+                    hoverButton.setVisible(true);
+                    if (isAddCostPer) {
+                        costPerLabel.setVisible(false);
+                    }
                 }
-            }
 
-            @Override
-            public void mouseExited(MouseEvent me) {
-                if (isAddCostPer) {
-                    costPerLabel.setVisible(true);
+                @Override
+                public void mouseExited(MouseEvent me) {
+                    if (isAddCostPer) {
+                        costPerLabel.setVisible(true);
+                    }
+                    hoverButton.setVisible(false);
                 }
-                hoverButton.setVisible(false);
             }
-        });
+        );
     }
 
     private JPanel constructItemIcon() {

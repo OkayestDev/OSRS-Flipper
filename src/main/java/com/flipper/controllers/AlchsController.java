@@ -1,33 +1,31 @@
 package com.flipper.controllers;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
-import java.util.function.Consumer;
-
-import javax.swing.SwingUtilities;
-
+import com.flipper.FlipperConfig;
+import com.flipper.api.AlchApi;
+import com.flipper.helpers.UiUtilities;
 import com.flipper.models.Alch;
 import com.flipper.responses.AlchResponse;
 import com.flipper.views.alchs.AlchPage;
 import com.flipper.views.alchs.AlchPanel;
 import com.flipper.views.components.Pagination;
-import com.flipper.FlipperConfig;
-import com.flipper.api.AlchApi;
-import com.flipper.helpers.UiUtilities;
-
 import java.awt.BorderLayout;
-
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
+import java.util.function.Consumer;
+import javax.swing.SwingUtilities;
 import lombok.Getter;
 import lombok.Setter;
 import net.runelite.api.ItemComposition;
 import net.runelite.client.game.ItemManager;
 
 public class AlchsController {
+
     @Getter
     @Setter
     private List<Alch> alchs = new ArrayList<Alch>();
+
     private List<Alch> filteredAlchs = new ArrayList<Alch>();
     private AlchPage alchPage;
     private Consumer<UUID> removeAlchConsumer;
@@ -43,19 +41,11 @@ public class AlchsController {
         this.removeAlchConsumer = id -> this.removeAlch(id);
         this.refreshAlchsRunnable = () -> this.loadAlchs();
         this.itemManager = itemManager;
-        this.onSearchTextChangedCallback = (searchText) -> this.onSearchTextChanged(searchText);
+        this.onSearchTextChangedCallback = searchText -> this.onSearchTextChanged(searchText);
 
-        this.alchPage = new AlchPage(
-            refreshAlchsRunnable,
-            this.onSearchTextChangedCallback
-        );
+        this.alchPage = new AlchPage(refreshAlchsRunnable, this.onSearchTextChangedCallback);
         Consumer<Object> renderItemCallback = (Object alch) -> {
-            AlchPanel alchPanel = new AlchPanel(
-                (Alch) alch, 
-                itemManager, 
-                this.removeAlchConsumer, 
-                config.isPromptDeleteAlch()
-            );
+            AlchPanel alchPanel = new AlchPanel((Alch) alch, itemManager, this.removeAlchConsumer, config.isPromptDeleteAlch());
             this.alchPage.addAlchPanel(alchPanel);
         };
         Runnable buildViewCallback = () -> this.buildView();
@@ -74,10 +64,7 @@ public class AlchsController {
         ItemComposition itemComp = this.itemManager.getItemComposition(alch.getItemId());
         String itemName = itemComp.getName();
 
-        if (
-            this.searchText != null && 
-            itemName.toLowerCase().contains(this.searchText.toLowerCase())
-        ) {
+        if (this.searchText != null && itemName.toLowerCase().contains(this.searchText.toLowerCase())) {
             return true;
         } else if (this.searchText != null && this.searchText != "") {
             return false;
@@ -147,16 +134,15 @@ public class AlchsController {
     }
 
     public void buildView() {
-        SwingUtilities.invokeLater(() -> {
-            this.filterList();
-            this.alchPage.resetContainer();
-            this.alchPage.add(
-                this.pagination.getComponent(this.filteredAlchs),
-                BorderLayout.SOUTH
-            );
-            this.pagination.renderFromBeginning(this.filteredAlchs);
-            this.alchPage.setTotalProfit(totalProfit);
-            this.alchPage.revalidate();
-        });
+        SwingUtilities.invokeLater(
+            () -> {
+                this.filterList();
+                this.alchPage.resetContainer();
+                this.alchPage.add(this.pagination.getComponent(this.filteredAlchs), BorderLayout.SOUTH);
+                this.pagination.renderFromBeginning(this.filteredAlchs);
+                this.alchPage.setTotalProfit(totalProfit);
+                this.alchPage.revalidate();
+            }
+        );
     }
 }

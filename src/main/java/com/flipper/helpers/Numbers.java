@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.text.NumberFormat;
 
 public class Numbers {
+
     public static String numberWithCommas(int number) {
         return NumberFormat.getIntegerInstance().format(number);
     }

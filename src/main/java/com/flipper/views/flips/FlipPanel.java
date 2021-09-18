@@ -1,29 +1,27 @@
 package com.flipper.views.flips;
 
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import java.util.UUID;
-import java.util.function.Consumer;
-import java.awt.Color;
-import java.awt.event.*;
-
 import com.flipper.helpers.Numbers;
 import com.flipper.helpers.Timestamps;
 import com.flipper.helpers.UiUtilities;
 import com.flipper.models.Flip;
 import com.flipper.views.components.DeleteButton;
 import com.flipper.views.components.ItemHeader;
-
-import net.runelite.client.ui.ColorScheme;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.GridLayout;
+import java.awt.event.*;
+import java.util.UUID;
+import java.util.function.Consumer;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 import net.runelite.api.ItemComposition;
 import net.runelite.client.game.ItemManager;
+import net.runelite.client.ui.ColorScheme;
 
 public class FlipPanel extends JPanel {
+
     private Flip flip;
 
     private static int LABEL_COUNT = 6;
@@ -33,25 +31,20 @@ public class FlipPanel extends JPanel {
     private JPanel leftInfoTextPanel = new JPanel(new GridLayout(LABEL_COUNT, 1));
     private JPanel rightValuesPanel = new JPanel(new GridLayout(LABEL_COUNT, 1));
 
-    public FlipPanel(
-        Flip flip, 
-        ItemManager itemManager, 
-        Consumer<UUID> removeFlipConsumer, 
-        boolean isPrompt
-    ) {
+    public FlipPanel(Flip flip, ItemManager itemManager, Consumer<UUID> removeFlipConsumer, boolean isPrompt) {
         this.flip = flip;
         ItemComposition itemComp = itemManager.getItemComposition(flip.getItemId());
 
-        DeleteButton deleteFlipButton = new DeleteButton((ActionEvent action) -> {
-            String describedBuy = flip.describeFlip(itemComp.getName());
-            int input = isPrompt
-                ? JOptionPane.showConfirmDialog(null, "Delete flip of " + describedBuy + "?")
-                : 0;
-            if (input == 0) {
-                removeFlipConsumer.accept(flip.getId());
-                setVisible(false);
+        DeleteButton deleteFlipButton = new DeleteButton(
+            (ActionEvent action) -> {
+                String describedBuy = flip.describeFlip(itemComp.getName());
+                int input = isPrompt ? JOptionPane.showConfirmDialog(null, "Delete flip of " + describedBuy + "?") : 0;
+                if (input == 0) {
+                    removeFlipConsumer.accept(flip.getId());
+                    setVisible(false);
+                }
             }
-        });
+        );
 
         this.setLayout(new BorderLayout());
         container.setLayout(new BorderLayout());
@@ -133,13 +126,12 @@ public class FlipPanel extends JPanel {
         Color profitEachColor = profitEach > 0 ? ColorScheme.GRAND_EXCHANGE_ALCH : ColorScheme.PROGRESS_ERROR_COLOR;
         JLabel profitEachLabel = newRightLabel(Numbers.numberWithCommas(profitEachText), profitEachColor);
 
-        Color profitColor = flip.getTotalProfit() > 0 ? ColorScheme.GRAND_EXCHANGE_ALCH
-                : ColorScheme.PROGRESS_ERROR_COLOR;
+        Color profitColor = flip.getTotalProfit() > 0 ? ColorScheme.GRAND_EXCHANGE_ALCH : ColorScheme.PROGRESS_ERROR_COLOR;
         JLabel totalProfitLabel = newRightLabel(Numbers.numberWithCommas(totalProfitText), profitColor);
 
-        JLabel buyPrice = newRightLabel(Numbers.numberWithCommas(flip.getBuyPrice()),  ColorScheme.GRAND_EXCHANGE_ALCH);
-        JLabel sellPrice = newRightLabel(Numbers.numberWithCommas(flip.getSellPrice()),  ColorScheme.GRAND_EXCHANGE_ALCH);
-        JLabel flipCreatedAt = newRightLabel(Timestamps.format(flip.getCreatedAt()),  ColorScheme.GRAND_EXCHANGE_ALCH);
+        JLabel buyPrice = newRightLabel(Numbers.numberWithCommas(flip.getBuyPrice()), ColorScheme.GRAND_EXCHANGE_ALCH);
+        JLabel sellPrice = newRightLabel(Numbers.numberWithCommas(flip.getSellPrice()), ColorScheme.GRAND_EXCHANGE_ALCH);
+        JLabel flipCreatedAt = newRightLabel(Timestamps.format(flip.getCreatedAt()), ColorScheme.GRAND_EXCHANGE_ALCH);
 
         addRightLabel(amountFlippedLabel);
         addRightLabel(profitEachLabel);

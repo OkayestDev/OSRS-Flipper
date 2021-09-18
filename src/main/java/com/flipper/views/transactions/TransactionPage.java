@@ -1,18 +1,16 @@
 package com.flipper.views.transactions;
 
+import com.flipper.views.components.SearchBar;
+import java.awt.BorderLayout;
+import java.util.function.Consumer;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
-
-import com.flipper.views.components.SearchBar;
-
-import java.awt.BorderLayout;
-import java.util.function.Consumer;
-
 import net.runelite.client.ui.ColorScheme;
 
 public class TransactionPage extends JPanel {
+
     private JPanel container;
 
     public TransactionPage(Consumer<String> onSearchTextChanged) {
