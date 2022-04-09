@@ -10,6 +10,8 @@ import lombok.Data;
  */
 @Data
 public class Flip {
+    public static final double TAX_RATE = 0.01;
+
     public UUID id;
     public UUID userId;
     public UUID buyId;
@@ -53,6 +55,15 @@ public class Flip {
      * @return profit of flip
      */
     public int getTotalProfit() {
-        return (sellPrice - buyPrice) * quantity;
+        return (sellPrice - buyPrice - getTax()) * quantity;
+    }
+
+    /**
+     * The GE floors tax per item.
+     *
+     * @return tax per item of flip
+     */
+    public int getTax() {
+        return (int) Math.floor((double)this.sellPrice * TAX_RATE);
     }
 }

@@ -92,6 +92,7 @@ public class FlipPanel extends JPanel {
         JLabel totalProfitLabel = newLeftLabel("Total Profit:");
         JLabel buyPrice = newLeftLabel("Buy Price:");
         JLabel sellPrice = newLeftLabel("Sell Price:");
+        JLabel tax = newLeftLabel("Tax:");
         JLabel flipCreatedAt = newLeftLabel("Date:");
 
         addLeftLabel(amountFlippedLabel);
@@ -99,6 +100,7 @@ public class FlipPanel extends JPanel {
         addLeftLabel(totalProfitLabel);
         addLeftLabel(buyPrice);
         addLeftLabel(sellPrice);
+        addLeftLabel(tax);
         addLeftLabel(flipCreatedAt);
 
         leftInfoTextPanel.setBorder(new EmptyBorder(2, 5, 2, 10));
@@ -120,12 +122,14 @@ public class FlipPanel extends JPanel {
         rightValuesPanel.setBackground(ColorScheme.DARK_GRAY_COLOR);
 
         int totalProfit = flip.getTotalProfit();
+        int tax = flip.getTax();
 
         int quantity = this.flip.getQuantity();
         int profitEach = quantity != 0 ? totalProfit / quantity : 0;
 
         String amountFlippedText = Integer.toString(this.flip.getQuantity());
         String totalProfitText = Integer.toString(totalProfit);
+        String taxEachText = Integer.toString(tax);
         String profitEachText = Integer.toString(profitEach);
 
         JLabel amountFlippedLabel = newRightLabel(Numbers.numberWithCommas(amountFlippedText), ColorScheme.GRAND_EXCHANGE_ALCH);
@@ -136,6 +140,7 @@ public class FlipPanel extends JPanel {
         Color profitColor = flip.getTotalProfit() > 0 ? ColorScheme.GRAND_EXCHANGE_ALCH
                 : ColorScheme.PROGRESS_ERROR_COLOR;
         JLabel totalProfitLabel = newRightLabel(Numbers.numberWithCommas(totalProfitText), profitColor);
+        JLabel taxPerItem = newRightLabel(Numbers.numberWithCommas(taxEachText), ColorScheme.LIGHT_GRAY_COLOR);
 
         JLabel buyPrice = newRightLabel(Numbers.numberWithCommas(flip.getBuyPrice()),  ColorScheme.GRAND_EXCHANGE_ALCH);
         JLabel sellPrice = newRightLabel(Numbers.numberWithCommas(flip.getSellPrice()),  ColorScheme.GRAND_EXCHANGE_ALCH);
@@ -146,6 +151,7 @@ public class FlipPanel extends JPanel {
         addRightLabel(totalProfitLabel);
         addRightLabel(buyPrice);
         addRightLabel(sellPrice);
+        addRightLabel(taxPerItem);
         addRightLabel(flipCreatedAt);
 
         rightValuesPanel.setBorder(new EmptyBorder(2, 5, 2, 10));
