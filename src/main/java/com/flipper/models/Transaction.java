@@ -13,6 +13,8 @@ import com.flipper.helpers.GrandExchange;
  */
 @Data
 public class Transaction {
+    public static final double TAX_RATE = 0.01;
+
     public final UUID id;
     private int quantity;
     private int totalQuantity;
@@ -93,5 +95,23 @@ public class Transaction {
 
     public boolean isFilled() {
         return quantity == totalQuantity;
+    }
+
+    /**
+     * The GE floors tax per item.
+     *
+     * @return tax per item of flip
+     */
+    public int getTax() {
+        return (int) Math.floor((double)this.pricePer * TAX_RATE);
+    }
+
+    /**
+     * Gets the total tax of the sale
+     *
+     * @return total tax of sale
+     */
+    public int getTotalTax() {
+        return getTax() * quantity;
     }
 }

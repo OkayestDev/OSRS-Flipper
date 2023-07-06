@@ -33,8 +33,8 @@ public class TransactionPanel extends JPanel {
 
     private final int LABEL_COUNT = 3;
 
-    private JPanel leftInfoTextPanel = new JPanel(new GridLayout(LABEL_COUNT, 1));
-    private JPanel rightValuesPanel = new JPanel(new GridLayout(LABEL_COUNT, 1));
+    private JPanel leftInfoTextPanel;
+    private JPanel rightValuesPanel;
 
     private Transaction transaction;
     private Supplier<JButton> renderExtraComponentSupplier;
@@ -83,6 +83,17 @@ public class TransactionPanel extends JPanel {
         Consumer<UUID> removeTransactionConsumer,
         boolean isPrompt
     ) {
+        if(transaction.isBuy())
+        {
+            leftInfoTextPanel = new JPanel(new GridLayout(LABEL_COUNT, 1));
+            rightValuesPanel = new JPanel(new GridLayout(LABEL_COUNT, 1));
+        }
+        else
+        {
+            leftInfoTextPanel = new JPanel(new GridLayout(LABEL_COUNT+1, 1));
+            rightValuesPanel = new JPanel(new GridLayout(LABEL_COUNT+1, 1));
+        }
+
         SwingUtilities.invokeLater(() -> {
             this.transaction = transaction;
             setLayout(new BorderLayout());
@@ -179,6 +190,15 @@ public class TransactionPanel extends JPanel {
         JLabel pricePerValue = newRightLabel(pricePerString, ColorScheme.GRAND_EXCHANGE_ALCH);
         addLeftLabel(pricePerLabel);
         addRightLabel(pricePerValue);
+
+        if(!transaction.isBuy())
+        {
+            String taxPerString = Numbers.numberWithCommas(transaction.getTax());
+            JLabel taxPerLabel = newLeftLabel("Tax Per:");
+            JLabel taxPerValue = newRightLabel(taxPerString, ColorScheme.PROGRESS_ERROR_COLOR);
+            addLeftLabel(taxPerLabel);
+            addRightLabel(taxPerValue);
+        }
 
         String quantityValueText = transaction.isFilled() 
             ? quantityString
