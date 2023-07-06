@@ -68,4 +68,13 @@ public class Flip {
     public int getTax() {
         return (int) Math.floor((double)this.sellPrice * TAX_RATE);
     }
+
+    /**
+     * Gets the total tax of the sale
+     *
+     * @return total tax of sale
+     */
+    public int getTotalTax() {
+        return getTax() * quantity;
+    }
 }

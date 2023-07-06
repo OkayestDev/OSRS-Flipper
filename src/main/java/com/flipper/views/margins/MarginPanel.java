@@ -7,8 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 
 import com.flipper.helpers.Numbers;
 import com.flipper.helpers.Timestamps;
@@ -27,7 +26,7 @@ import java.util.function.Consumer;
 public class MarginPanel extends JPanel {
     private Flip margin;
 
-    private final int LABEL_COUNT = 4;
+    private final int LABEL_COUNT = 5;
 
     private JPanel container = new JPanel();
     private JPanel itemInfo = new JPanel(new BorderLayout());
@@ -94,11 +93,13 @@ public class MarginPanel extends JPanel {
 
         JLabel buyAtLabel = newLeftLabel("Buy At:");
         JLabel sellAtLabel = newLeftLabel("Sell At:");
+        JLabel taxLabel = newLeftLabel("Tax:");
         JLabel potentialProfitLabel = newLeftLabel("Profit Per:");
         JLabel dateLabel = newLeftLabel("Date:");
 
         addLeftLabel(buyAtLabel);
         addLeftLabel(sellAtLabel);
+        addLeftLabel(taxLabel);
         addLeftLabel(potentialProfitLabel);
         addLeftLabel(dateLabel);
 
@@ -113,6 +114,14 @@ public class MarginPanel extends JPanel {
         return newRightLabel;
     }
 
+    private JLabel newRightLabel(String value, Color fontColor) {
+        JLabel newRightLabel = new JLabel(value);
+        newRightLabel.setHorizontalAlignment(JLabel.RIGHT);
+        newRightLabel.setForeground(fontColor);
+        newRightLabel.setBorder(new EmptyBorder(0, 0, 2, 0));
+        return newRightLabel;
+    }
+
     private void addRightLabel(JLabel newRightLabel) {
         rightValuesPanel.add(newRightLabel);
     }
@@ -120,20 +129,23 @@ public class MarginPanel extends JPanel {
     private void constructRightLabels() {
         rightValuesPanel.setBackground(ColorScheme.DARK_GRAY_COLOR);
 
-        int potentialProfitPer = this.margin.buyPrice - this.margin.sellPrice;
+        int potentialProfitPer = this.margin.buyPrice - this.margin.sellPrice - this.margin.getTax();
 
         String buyAtText = Integer.toString(this.margin.sellPrice);
         String sellAtText = Integer.toString(this.margin.buyPrice);
+        String taxText = Integer.toString(this.margin.getTax());
         String potentialProfitEachText = Integer.toString(potentialProfitPer);
 
         JLabel buyAtLabel = newRightLabel(Numbers.numberWithCommas(buyAtText));
         JLabel sellAtLabel = newRightLabel(Numbers.numberWithCommas(sellAtText));
+        JLabel taxLabel = newRightLabel(Numbers.numberWithCommas(taxText), ColorScheme.PROGRESS_ERROR_COLOR);
         JLabel potentialProfitEachLabel = newRightLabel(Numbers.numberWithCommas(potentialProfitEachText));
         String formattedTimestamp = margin.getCreatedAt() != null ? Timestamps.format(margin.getCreatedAt()) : "--";
         JLabel dateLabel = newRightLabel(formattedTimestamp);
 
         addRightLabel(buyAtLabel);
         addRightLabel(sellAtLabel);
+        addRightLabel(taxLabel);
         addRightLabel(potentialProfitEachLabel);
         addRightLabel(dateLabel);
 
