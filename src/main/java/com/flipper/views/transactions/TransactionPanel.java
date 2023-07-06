@@ -102,7 +102,6 @@ public class TransactionPanel extends JPanel {
                 }
             });
 
-            ItemComposition itemComp = itemManager.getItemComposition(transaction.getItemId());
             container = new JPanel();
             container.setLayout(new BorderLayout());
             container.setBackground(ColorScheme.DARK_GRAY_COLOR);
@@ -110,7 +109,7 @@ public class TransactionPanel extends JPanel {
                 new ItemHeader(
                     transaction.getItemId(),
                     transaction.getPricePer(),
-                    itemComp.getName(),
+                    transaction.getItemName(),
                     itemManager,
                     false,
                     deleteTransactionButton

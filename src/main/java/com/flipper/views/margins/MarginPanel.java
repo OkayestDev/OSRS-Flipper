@@ -51,13 +51,12 @@ public class MarginPanel extends JPanel {
                     setVisible(false);
                 }
             });
-            ItemComposition itemComp = itemManager.getItemComposition(margin.getItemId());
 
             this.setLayout(new BorderLayout());
             this.setBorder(new EmptyBorder(0, 5, 3, 5));
             container.setLayout(new BorderLayout());
             setBackground(ColorScheme.DARK_GRAY_COLOR);
-            container.add(new ItemHeader(margin.getItemId(), 0, itemComp.getName(), itemManager, false, deleteMarginButton), BorderLayout.NORTH);
+            container.add(new ItemHeader(margin.getItemId(), 0, margin.getItemName(), itemManager, false, deleteMarginButton), BorderLayout.NORTH);
             constructItemInfo();
             JButton convertToFlipButton = new JButton("Convert To Flip");
             convertToFlipButton.addActionListener((ActionEvent event) -> {

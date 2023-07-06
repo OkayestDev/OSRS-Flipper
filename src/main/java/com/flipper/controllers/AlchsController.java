@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 import javax.swing.SwingUtilities;
 
 import com.flipper.models.Alch;
+import com.flipper.models.Flip;
 import com.flipper.responses.AlchResponse;
 import com.flipper.views.alchs.AlchPage;
 import com.flipper.views.alchs.AlchPanel;
@@ -22,6 +23,7 @@ import java.awt.BorderLayout;
 import lombok.Getter;
 import lombok.Setter;
 import net.runelite.api.ItemComposition;
+import net.runelite.client.callback.ClientThread;
 import net.runelite.client.game.ItemManager;
 
 public class AlchsController {
@@ -37,13 +39,15 @@ public class AlchsController {
     private ItemManager itemManager;
     private String searchText;
     private Consumer<String> onSearchTextChangedCallback;
+    private ClientThread cThread;
 
-    public AlchsController(ItemManager itemManager, FlipperConfig config) {
+    public AlchsController(ItemManager itemManager, FlipperConfig config, ClientThread cThread) {
         this.alchs = new ArrayList<Alch>();
         this.removeAlchConsumer = id -> this.removeAlch(id);
         this.refreshAlchsRunnable = () -> this.loadAlchs();
         this.itemManager = itemManager;
         this.onSearchTextChangedCallback = (searchText) -> this.onSearchTextChanged(searchText);
+        this.cThread = cThread;
 
         this.alchPage = new AlchPage(
             refreshAlchsRunnable,
@@ -90,7 +94,7 @@ public class AlchsController {
         Consumer<AlchResponse> createAlchCallback = alchResponse -> {
             this.totalProfit = alchResponse.totalProfit;
             this.alchs.add(0, alchResponse.alch);
-            this.buildView();
+            getAlchNamesAndBuild();
         };
         AlchApi.createAlch(alch, createAlchCallback);
     }
@@ -125,10 +129,22 @@ public class AlchsController {
                 this.alchs = alchResponse.alchs;
                 this.filteredAlchs = this.alchs;
             }
-            this.buildView();
+
+            getAlchNamesAndBuild();
         };
 
         AlchApi.getAlchs(getAlchsCallback);
+    }
+
+    public void getAlchNamesAndBuild(){
+        cThread.invoke(() -> {
+            for (Alch alch : alchs) {
+                if (alch.getItemName() == null) {
+                    alch.setItemName(itemManager.getItemComposition(alch.getItemId()).getName());
+                }
+            }
+            this.buildView();
+        });
     }
 
     public void filterList() {

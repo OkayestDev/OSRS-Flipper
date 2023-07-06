@@ -17,6 +17,7 @@ public class Flip {
     public UUID buyId;
     public UUID sellId;
     public int itemId;
+    String itemName;
     public int quantity;
     public int buyPrice;
     public int sellPrice;
@@ -29,6 +30,7 @@ public class Flip {
         this.buyId = buy.id;
         this.sellId = sell.id;
         this.itemId = sell.getItemId();
+        this.itemName = sell.getItemName();
         this.quantity = sell.getQuantity(); 
         this.buyPrice = buy.getPricePer();
         this.sellPrice = sell.getPricePer();
@@ -45,8 +47,8 @@ public class Flip {
         return quantity == 1 && buyPrice >= sellPrice;
     }
 
-    public String describeFlip(String itemName) {
-        return String.valueOf(quantity) + " " + itemName + "(s)";
+    public String describeFlip() {
+        return String.valueOf(quantity) + " " + this.itemName + "(s)";
     }
 
     /**

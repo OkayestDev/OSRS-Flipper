@@ -26,7 +26,7 @@ import net.runelite.client.game.ItemManager;
 public class FlipPanel extends JPanel {
     private Flip flip;
 
-    private static int LABEL_COUNT = 6;
+    private static int LABEL_COUNT = 7;
 
     private JPanel container = new JPanel();
     private JPanel itemInfo = new JPanel(new BorderLayout());
@@ -40,10 +40,9 @@ public class FlipPanel extends JPanel {
         boolean isPrompt
     ) {
         this.flip = flip;
-        ItemComposition itemComp = itemManager.getItemComposition(flip.getItemId());
 
         DeleteButton deleteFlipButton = new DeleteButton((ActionEvent action) -> {
-            String describedBuy = flip.describeFlip(itemComp.getName());
+            String describedBuy = flip.describeFlip();
             int input = isPrompt
                 ? JOptionPane.showConfirmDialog(null, "Delete flip of " + describedBuy + "?")
                 : 0;
@@ -56,7 +55,7 @@ public class FlipPanel extends JPanel {
         this.setLayout(new BorderLayout());
         container.setLayout(new BorderLayout());
         container.setBackground(ColorScheme.DARK_GRAY_COLOR);
-        container.add(new ItemHeader(flip.getItemId(), 0, itemComp.getName(), itemManager, false, deleteFlipButton), BorderLayout.NORTH);
+        container.add(new ItemHeader(flip.getItemId(), 0, flip.getItemName(), itemManager, false, deleteFlipButton), BorderLayout.NORTH);
         constructItemInfo();
         this.setBorder(new EmptyBorder(0, 5, 3, 5));
 

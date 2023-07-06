@@ -23,6 +23,7 @@ import com.flipper.views.margins.MarginPanel;
 import lombok.Getter;
 import lombok.Setter;
 import net.runelite.api.ItemComposition;
+import net.runelite.client.callback.ClientThread;
 import net.runelite.client.game.ItemManager;
 
 public class MarginsController {
@@ -36,16 +37,19 @@ public class MarginsController {
     private ItemManager itemManager;
     private String searchText;
     private Consumer<String> onSearchTextChangedCallback;
+    private ClientThread cThread;
 
     public MarginsController(
         ItemManager itemManager, 
         FlipperConfig config,
-        Consumer<Flip> convertToFlipConsumer
+        Consumer<Flip> convertToFlipConsumer,
+        ClientThread cThread
     ) throws IOException {
         this.removeMarginConsumer = id -> this.removeMargin(id);
         this.itemManager = itemManager;
         this.onSearchTextChangedCallback = (searchText) -> this.onSearchTextChanged(searchText);
         this.marginPage = new MarginPage(this.onSearchTextChangedCallback);
+        this.cThread = cThread;
 
         Consumer<Object> renderItemCallback = (Object margin) -> {
             MarginPanel marginPanel = new MarginPanel(
@@ -115,8 +119,18 @@ public class MarginsController {
 
     private void loadMargins() throws IOException {
         this.margins = Persistor.loadMargins();
-        this.filteredMargins = this.margins;
-        this.buildView();
+
+        cThread.invoke(() -> {
+            for (Flip margin : margins) {
+                if(margin.getItemName().isEmpty())
+                {
+                    margin.setItemName(itemManager.getItemComposition(margin.getItemId()).getName());
+                }
+            }
+
+            this.filteredMargins = this.margins;
+            this.buildView();
+        });
     }
 
     public void saveMargins() {
