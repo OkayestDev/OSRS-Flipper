@@ -30,6 +30,7 @@ import lombok.Setter;
 import java.awt.BorderLayout;
 
 import net.runelite.api.ItemComposition;
+import net.runelite.client.callback.ClientThread;
 import net.runelite.client.game.ItemManager;
 
 public class FlipsController {
@@ -46,8 +47,9 @@ public class FlipsController {
     private ItemManager itemManager;
     private Consumer<String> onSearchTextChangedCallback;
     private boolean isTrackingFlips = true;
+    private ClientThread cThread;
 
-    public FlipsController(ItemManager itemManager, FlipperConfig config) throws IOException {
+    public FlipsController(ItemManager itemManager, FlipperConfig config, ClientThread cThread) throws IOException {
         this.flips = new ArrayList<Flip>();
         this.removeFlipConsumer = id -> this.removeFlip(id);
         this.refreshFlipsRunnable = () -> this.loadFlips();
@@ -62,6 +64,7 @@ public class FlipsController {
             toggleIsTrackingFlipsRunnable,
             this.isTrackingFlips
         );
+        this.cThread = cThread;
         Consumer<Object> renderItemCallback = (Object flip) -> {
             FlipPanel flipPanel = new FlipPanel(
                 (Flip) flip,
@@ -110,7 +113,7 @@ public class FlipsController {
             Consumer<FlipResponse> createFlipCallback = flipResponse -> {
                 this.totalProfit = flipResponse.totalProfit;
                 this.flips.add(0, flipResponse.flip);
-                this.buildView();
+                getFlipNamesAndBuild();
             };
 
             FlipApi.createFlip(flip, createFlipCallback);
@@ -147,11 +150,22 @@ public class FlipsController {
                 this.flips = flipResponse.flips;
                 this.filteredFlips = this.flips;
             }
-    
-            this.buildView();
+
+            getFlipNamesAndBuild();
         };
 
         FlipApi.getFlips(getFlipsCallback);
+    }
+
+    public void getFlipNamesAndBuild(){
+        cThread.invoke(() -> {
+            for (Flip flip : flips) {
+                if (flip.getItemName() == null) {
+                    flip.setItemName(itemManager.getItemComposition(flip.getItemId()).getName());
+                }
+            }
+            this.buildView();
+        });
     }
 
     private void updateFlip(Transaction sell, Transaction buy, Flip flip) {

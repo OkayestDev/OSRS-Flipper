@@ -37,10 +37,9 @@ public class AlchPanel extends JPanel {
 
     public AlchPanel(Alch alch, ItemManager itemManager, Consumer<UUID> removeAlchConsumer, boolean isPrompt) {
         this.alch = alch;
-        ItemComposition itemComp = itemManager.getItemComposition(alch.getItemId());
 
         DeleteButton deleteAlchButton = new DeleteButton((ActionEvent action) -> {
-            String describedAlch = alch.describeAlch(itemComp.getName());
+            String describedAlch = alch.describeAlch();
             int input = isPrompt 
                 ? JOptionPane.showConfirmDialog(
                     null,
@@ -59,7 +58,7 @@ public class AlchPanel extends JPanel {
         container.add(new ItemHeader(
             alch.getItemId(),
             0,
-            itemComp.getName(),
+            alch.getItemName(),
             itemManager,
             false,
             deleteAlchButton

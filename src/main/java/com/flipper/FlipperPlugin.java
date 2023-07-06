@@ -53,6 +53,7 @@ import javax.swing.SwingUtilities;
 import net.runelite.api.GrandExchangeOffer;
 import net.runelite.api.GrandExchangeOfferState;
 import net.runelite.api.events.GrandExchangeOfferChanged;
+import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ClientShutdown;
@@ -72,6 +73,9 @@ public class FlipperPlugin extends Plugin {
     private ItemManager itemManager;
     @Inject
 	private FlipperConfig config;
+    @Inject
+    private ClientThread cThread;
+
     // Controllers
     private BuysController buysController;
     private SellsController sellsController;
@@ -118,9 +122,13 @@ public class FlipperPlugin extends Plugin {
     }
 
     private void alchFromBuy(Transaction buy) {
-        // Create alch from transaction
-        Alch alch = new Alch(buy, itemManager);
-        this.alchsController.addAlch(alch);
+        cThread.invoke(() -> {
+            int haPrice = itemManager.getItemComposition(buy.getItemId()).getHaPrice();
+            int natPrice = itemManager.getItemPriceWithSource(UiUtilities.NATURE_RUNE_ID,true);
+            // Create alch from transaction
+            Alch alch = new Alch(buy, haPrice, natPrice);
+            this.alchsController.addAlch(alch);
+        });
     }
 
     private void flipFromMargin(Flip margin) {
@@ -134,13 +142,15 @@ public class FlipperPlugin extends Plugin {
                 Runnable changeToLoggedOutViewRunnable = () -> this.changeToLoggedOutView();
                 alchsController = new AlchsController(
                     itemManager,
-                    config
+                    config,
+                    cThread
                 );
                 Consumer<Transaction> highAlchCallback = (buy) -> alchFromBuy(buy);
                 Consumer<Flip> convertToFlipConsumer = (margin) -> flipFromMargin(margin);
                 flipsController = new FlipsController(
                     itemManager, 
-                    config
+                    config,
+                    cThread
                 );
                 buysController = new BuysController(
                     itemManager, 
@@ -154,7 +164,8 @@ public class FlipperPlugin extends Plugin {
                 marginsController = new MarginsController(
                     itemManager,
                     config,
-                    convertToFlipConsumer
+                    convertToFlipConsumer,
+                    cThread
                 );
                 this.tabManager.renderLoggedInView(
                     buysController.getPage(),

@@ -15,6 +15,7 @@ public class Alch {
     public UUID userId;
     public UUID buyId;
     public int itemId;
+    String itemName;
     public int quantity;
     public int buyPrice;
     public int natureRunePrice;
@@ -24,21 +25,18 @@ public class Alch {
 
     public Alch() {};
 
-    public Alch(Transaction transaction, ItemManager itemManager) {
-        ItemComposition itemComposition = itemManager.getItemComposition(transaction.getItemId());
+    public Alch(Transaction transaction, int haPrice, int natPrice) {
         this.buyId = transaction.getId();
         this.itemId = transaction.getItemId();
+        this.itemName = transaction.getItemName();
         this.quantity = transaction.getQuantity();
         this.buyPrice = transaction.getPricePer();
-        this.natureRunePrice = itemManager.getItemPriceWithSource(
-            UiUtilities.NATURE_RUNE_ID,
-            true
-        );
-        this.alchPrice = itemComposition.getHaPrice();
+        this.natureRunePrice = natPrice;
+        this.alchPrice = haPrice;
     }
 
-    public String describeAlch(String itemName) {
-        return String.valueOf(quantity) + " " + itemName + "(s)";
+    public String describeAlch() {
+        return String.valueOf(quantity) + " " + this.itemName + "(s)";
     }
 
     public int getTotalProfit() {
